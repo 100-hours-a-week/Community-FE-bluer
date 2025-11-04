@@ -1,5 +1,20 @@
-const $ = (target) => document.querySelector(target);
+import Header from "./src/Header.js";
+import { $ } from "./src/utils.js";
 
-$('#app').innerHTML = `
-  <h1>Hello, Community!</h1>
-`;
+function App() {
+  this.header = new Header({
+    $target: $("#app"),
+    initialState: {},
+  });
+  this.render = () => {
+    this.header.render();
+  };
+
+  this.init = () => {
+    this.render();
+  };
+}
+
+const app = new App();
+
+app.init();

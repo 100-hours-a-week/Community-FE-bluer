@@ -1,1 +1,23 @@
-@import "./reset.css"
+@import "./reset.css";
+
+* {
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    sans-serif;
+}
+
+.header {
+  padding: 36px 0px;
+  text-align: center;
+  font-size: 32px;
+  border-bottom: 1px solid rgba(0, 0, 0, 1);
+}
