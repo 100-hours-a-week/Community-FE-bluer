@@ -9,6 +9,8 @@ function Header({ $target, initialState }) {
       </header>
     `;
   };
+
+  this.render();
 }
 
 export default Header;
