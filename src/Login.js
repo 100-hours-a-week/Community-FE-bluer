@@ -1,16 +1,11 @@
-import Header from "./Header.js";
-
 function Login({ $target, initialState }) {
   this.target = $target;
   this.state = initialState;
   this.$loginPage = document.createElement("div");
-  this.$loginPage.classList.add("login-container");
-
-  this.header = new Header({ $target: this.target, initialState: this.state });
+  this.$loginPage.classList.add("login-page");
 
   this.render = () => {
-    this.target.innerHTML = `
-    <div class="login-page">
+    this.$loginPage.innerHTML = `
       <div class="login-container">
         <h2 class="login-title">로그인</h2>
         <div>
@@ -30,8 +25,9 @@ function Login({ $target, initialState }) {
             <a href="/signup" >회원가입</a>
           </div>
         </div>
-      </div>
     `;
+
+    this.target.appendChild(this.$loginPage);
   };
 
   this.render();
