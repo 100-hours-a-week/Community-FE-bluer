@@ -30,6 +30,12 @@ function Login({ $target, initialState }) {
     this.target.appendChild(this.$loginPage);
   };
 
-  this.render();
+  this.bindEvents = () => {
+    // todo: form preventDefault
+  };
+
+  this.init = () => {
+    this.render();
+  };
 }
 export default Login;

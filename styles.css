@@ -100,3 +100,16 @@ body {
   /* background-color: red; */
   margin-top: 10px;
 }
+
+.post-list-button {
+  background-color: #aca0eb;
+  &:hover {
+    background-color: #7f6aee;
+  }
+
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-weight: 700;
+}
