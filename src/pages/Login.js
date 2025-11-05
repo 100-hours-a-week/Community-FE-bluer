@@ -10,6 +10,14 @@ function Login({ $target, initialState }) {
     this.state = { ...this.state, ...newState };
   };
 
+  this.handleSubmit = () => {
+    try {
+      // TODO: 로그인 API 요청
+    } catch (error) {
+      console.error("로그인 중 오류 발생:", error);
+    }
+  };
+
   this.render = () => {
     this.$loginPage.innerHTML = `
       <div class="login-container">
@@ -37,42 +45,37 @@ function Login({ $target, initialState }) {
   };
 
   this.validateForm = () => {
-    console.log("run fomrm");
     const { email, password } = this.state;
     // todo: 이메일 정규식 검사
-    const isValidEmail = true;
+    const isValidEmail = email => true;
     // todo: password 정규식 검사
-    const isValidPassword = password.length >= 8;
+    const isValidPassword = password => password.length >= 8;
 
-    if (isValidEmail && isValidPassword) {
+    if (isValidEmail(email) && isValidPassword(password)) {
       this.setState({ ...this.state, disabled: false });
-      console.log("run");
+    } else {
+      this.setState({ ...this.state, disabled: true });
     }
   };
 
-  this.handleInputEmail = event => {
-    console.log("input email");
-    const { value } = event.target;
-    this.setState({ ...this.state, email: value });
-    this.validateForm();
-  };
+  this.handleInput = event => {
+    const { name, value } = event.target;
+    const $submitButton = $(".submit-button", this.$loginPage);
 
-  this.handleInputPassword = event => {
-    console.log("input password");
-    const { value } = event.target;
-    this.setState({ ...this.state, password: value });
+    this.setState({ ...this.state, [name]: value });
     this.validateForm();
+
+    if ($submitButton) {
+      $submitButton.disabled = this.state.disabled;
+    }
   };
 
   this.bindEvents = () => {
-    const $inputEmail = $(".input-email", this.$loginPage);
-    const $inputPassword = $(".input-password", this.$loginPage);
     const $submitButton = $(".submit-button", this.$loginPage);
     const $form = $("form", this.$loginPage);
 
-    $inputEmail.addEventListener("input", this.handleInputEmail);
-    $inputPassword.addEventListener("input", this.handleInputPassword);
     $submitButton.addEventListener("click", this.handleSubmit);
+    $form.addEventListener("input", this.handleInput);
     $form.addEventListener("submit", event => {
       event.preventDefault();
       this.handleSubmit();
