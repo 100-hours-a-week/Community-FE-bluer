@@ -45,6 +45,7 @@ body {
     font-size: 24px;
     font-weight: 600;
     text-align: center;
+    margin-bottom: 67px;
   }
 
   form {
@@ -74,7 +75,20 @@ body {
   }
 
   input {
-    padding: 4px 6px;
+    max-width: 355px;
+    height: 33px;
+    border: 1px solid rgba(0, 0, 0, 1);
+    border-radius: 4px;
+    padding: 4px 10px;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 12px;
+    font-family: Inter;
+    font-weight: 400;
+    line-height: 100%;
+    letter-spacing: 0%;
   }
 }
 
@@ -83,29 +97,24 @@ body {
   height: 40px;
 
   background-color: #aca0eb;
+
   border: none;
   border-radius: 8px;
   color: white;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-
-  &:disabled {
-    background-color: #e6e2ff;
-    cursor: not-allowed;
-  }
+}
+.submit-button.isLoading {
+  background-color: #7f6aee;
 }
 
 .signup-container {
-  /* background-color: red; */
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
 .post-list-button {
   background-color: #aca0eb;
-  &:hover {
-    background-color: #7f6aee;
-  }
 
   color: white;
   border: none;

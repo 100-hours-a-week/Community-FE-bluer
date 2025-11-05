@@ -10,7 +10,9 @@ function Header({ $target, initialState }) {
     `;
   };
 
-  this.render();
+  this.init = () => {
+    this.render();
+  };
 }
 
 export default Header;
