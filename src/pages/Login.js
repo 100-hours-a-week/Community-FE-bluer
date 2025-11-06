@@ -14,7 +14,7 @@ function Login({ $target, initialState, moveTo, currentPage }) {
     errorPasswordMessage: "",
   };
   this.$loginPage = document.createElement("div");
-  this.$loginPage.classList.add("login-page");
+  this.$loginPage.classList.add("login-page", "page-layout");
 
   this.renderErrorMessages = () => {
     const $emailErrorMessage = $(".error-message.email", this.$loginPage);
@@ -40,9 +40,9 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   this.render = () => {
     this.$loginPage.innerHTML = `
       <div class="login-container">
-        <h2 class="login-title">로그인</h2>
+        <h2 class="page-title">로그인</h2>
         <div>
-          <form>
+          <form class="form-input-list">
             <div class="input-container">
               <label for="email">이메일</label>
               <input class="input-email" type="email" name="email" placeholder="이메일을 입력하세요">
@@ -55,7 +55,7 @@ function Login({ $target, initialState, moveTo, currentPage }) {
             </div>
             <button type="submit" class="submit-button">로그인</button>
           </form>
-          <div class="signup-container">
+          <div class="link-container signup">
             <a href="/signup">회원가입</a>
           </div>
         </div>
@@ -115,7 +115,7 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   this.bindEvents = () => {
     const $submitButton = $(".submit-button", this.$loginPage);
     const $form = $("form", this.$loginPage);
-    const $signupLink = $(".signup-container a", this.$loginPage);
+    const $signupLink = $(".link-container.signup a", this.$loginPage);
 
     $form.addEventListener("input", this.handleInput);
     $form.addEventListener("submit", event => {

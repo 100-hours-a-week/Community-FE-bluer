@@ -13,6 +13,8 @@
     "Noto Sans KR",
     "Malgun Gothic",
     sans-serif;
+
+  box-sizing: border-box;
 }
 
 body {
@@ -23,43 +25,34 @@ body {
   height: calc(100vh - 104px);
 }
 
+/* Common Style */
+
 .header {
   padding: 36px 0px;
   text-align: center;
   font-size: 32px;
   border-bottom: 1px solid rgba(0, 0, 0, 1);
-  position: fixed;
+  /* position: fixed; */
   width: 100%;
+  min-width: 375px;
 }
 
-.login-page {
+.page-layout {
   width: 100%;
-  height: 100%;
+  min-width: 375px;
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-input-list {
   display: flex;
   flex-direction: column;
-  gap: 41px;
-  justify-content: center;
-  align-items: center;
-
-  h2 {
-    font-size: 24px;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 67px;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    /* width: 300px; */
-  }
-
-  .login-container {
-    /* display: flex; */
-    /* justify-content: center; */
-    text-align: center;
-  }
+  gap: 10px;
+  /* width: 300px; */
 }
 
 .input-container {
@@ -70,8 +63,8 @@ body {
   gap: 8px;
 
   label {
-    font-weight: bold;
-    font-size: 12px;
+    font-weight: 700;
+    font-size: 15px;
   }
 
   input {
@@ -79,7 +72,7 @@ body {
     height: 33px;
     border: 1px solid rgba(0, 0, 0, 1);
     border-radius: 4px;
-    padding: 4px 10px;
+    padding: 0 10px;
   }
 
   .error-message {
@@ -109,16 +102,97 @@ body {
   background-color: #7f6aee;
 }
 
-.signup-container {
+.link-container {
   margin-top: 12px;
 }
 
-.post-list-button {
-  background-color: #aca0eb;
+.link-container.login {
+  text-align: center;
+}
 
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-weight: 700;
+/* Login Page Styles */
+.login-page {
+  height: calc(100vh - 104px);
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 41px;
+  justify-content: center;
+  align-items: center;
+
+  h2 {
+    margin-bottom: 67px;
+  }
+
+  .login-container {
+    /* display: flex; */
+    /* justify-content: center; */
+    text-align: center;
+  }
+}
+
+/* Sign Up Page Styles */
+
+.signup-page {
+  /* background-color: red; */
+  height: calc(100vh - 104px);
+  min-height: 860px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 41px;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-form-container {
+  margin-top: 12px;
+}
+
+.add-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px 0 24px 0;
+}
+
+.add-photo-button {
+  position: relative;
+  width: 149px;
+  height: 149px;
+  border: 1px solid rgba(196, 196, 196, 1);
+  background-color: rgba(196, 196, 196, 1);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  cursor: pointer;
+}
+
+/* 가로줄 */
+.add-photo-button::before,
+.add-photo-button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: black;
+  transform: translate(-50%, -50%);
+}
+
+/* 가로줄 */
+.add-photo-button::before {
+  width: 24px;
+  height: 1px;
+}
+
+/* 세로줄 */
+.add-photo-button::after {
+  width: 1px;
+  height: 24px;
+}
+
+.signup-button {
+  margin-top: 4px;
 }
