@@ -41,7 +41,7 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   this.render = () => {
     this.$loginPage.innerHTML = `
       <div class="login-container">
-        <h2 class="page-title">로그인</h2>
+        <h2 class="page-title bold">로그인</h2>
         <div>
           <form class="form-input-list">
             <div class="input-container">

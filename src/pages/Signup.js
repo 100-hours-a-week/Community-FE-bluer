@@ -1,3 +1,4 @@
+// TODO: link handler
 import { $ } from "../utils/dom.js";
 import { handleInput } from "./handlers.js";
 
@@ -30,8 +31,8 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
 
   this.render = () => {
     this.$signupPage.innerHTML = `
-        <div class="zz">
-          <h2 class="page-title">회원가입</h2>
+        <div>
+          <h2 class="page-title bold">회원가입</h2>
           <div class="signup-form-container">
             <form>
               <div>

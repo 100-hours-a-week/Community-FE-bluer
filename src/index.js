@@ -1,12 +1,13 @@
 import Header from "./components/Header.js";
 import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
+import PostList from "./pages/PostList.js";
 import { $ } from "./utils/dom.js";
 
 function App() {
   this.state = {
-    currentPage: "signup", // login, signup, withdrawal, change-password, post-list, post, post-create
-    pageState: ["signup"],
+    currentPage: "post-list", // login, signup, withdrawal, change-password, post-list, post, post-create
+    pageState: ["post-list"],
   };
 
   this.moveTo = page => {
@@ -36,6 +37,11 @@ function App() {
     initialState: {},
   });
 
+  this.postList = new PostList({
+    $target: $("#app"),
+    initialState: {},
+  });
+
   this.renderPage = () => {
     this.header.render();
 
@@ -45,6 +51,9 @@ function App() {
         break;
       case "signup":
         this.signup.init();
+        break;
+      case "post-list":
+        this.postList.init();
         break;
       default:
         break;

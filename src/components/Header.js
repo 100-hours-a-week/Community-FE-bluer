@@ -4,6 +4,7 @@ function Header({ $target, initialState }) {
   this.$header = document.createElement("header");
 
   this.render = () => {
+    // TODO: backward
     this.$header.classList.add("header");
     this.$header.innerHTML = `
       <h1>아무 말 대잔치</h1>
