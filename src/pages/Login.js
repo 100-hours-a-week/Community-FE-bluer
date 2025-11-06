@@ -1,7 +1,8 @@
 import { $, isValidEmail, isValidPassword } from "../utils/index.js";
 
-function Login({ $target, initialState, moveTo }) {
+function Login({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
+  this.currentPage = currentPage;
   this.state = {
     ...initialState,
     isWaiting: false,
@@ -55,7 +56,7 @@ function Login({ $target, initialState, moveTo }) {
             <button type="submit" class="submit-button">로그인</button>
           </form>
           <div class="signup-container">
-            <a href="/signup" >회원가입</a>
+            <a href="/signup">회원가입</a>
           </div>
         </div>
     `;
@@ -114,16 +115,24 @@ function Login({ $target, initialState, moveTo }) {
   this.bindEvents = () => {
     const $submitButton = $(".submit-button", this.$loginPage);
     const $form = $("form", this.$loginPage);
+    const $signupLink = $(".signup-container a", this.$loginPage);
 
     $form.addEventListener("input", this.handleInput);
     $form.addEventListener("submit", event => {
       event.preventDefault();
       this.handleSubmit();
     });
+    $signupLink.addEventListener("click", event => {
+      event.preventDefault();
+      moveTo("signup");
+    });
   };
 
   this.init = () => {
     // TODO: if (login) moveTo("post-list");
+    if (this.currentPage !== "login") {
+      return;
+    }
     this.render();
     this.bindEvents();
   };

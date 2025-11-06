@@ -6,20 +6,27 @@ import { $ } from "./utils/index.js";
 function App() {
   this.state = {
     currentPage: "login", // login, signup, withdrawal, change-password, post-list, post, post-create
+    pageState: ["login"],
+  };
+
+  this.moveTo = page => {
+    this.state.pageState.push(page);
+    this.state.currentPage = page;
+    this.render();
   };
 
   this.header = new Header({
-    $target: $("#header"),
+    $target: $("#app"),
     initialState: {},
   });
   this.login = new Login({
     $target: $("#app"),
     initialState: {},
     moveTo: page => {
-      this.state.currentPage = page;
-      console.log(this.state);
+      this.moveTo(page);
       this.render();
     },
+    currentPage: this.state.currentPage,
   });
   this.signup = new Signup({
     $target: $("#app"),
