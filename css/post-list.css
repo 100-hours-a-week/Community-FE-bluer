@@ -47,7 +47,9 @@
 }
 
 .post-list {
-  height: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin-top: 20px;
 }
 
