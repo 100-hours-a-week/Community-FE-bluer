@@ -1,3 +1,6 @@
+import { truncateText } from "../lib/utils.js";
+import { POST_TITLE_MAX_LENGTH } from "../lib/constants.js";
+
 function PostList({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
   this.currentPage = currentPage;
@@ -8,7 +11,17 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
   this.$postList = document.createElement("div");
   this.$postList.classList.add("post-list-page", "page-layout");
 
+  this.shortenTitle = title => {
+    return title.length > POST_TITLE_MAX_LENGTH
+      ? truncateText(title, POST_TITLE_MAX_LENGTH)
+      : title;
+  };
   this.render = () => {
+    // TODO: Apply API
+    const title = this.shortenTitle(
+      "제목제목제목제목제목제목제목제목제목제목제목제목제목"
+    );
+
     this.$postList.innerHTML = `
        <div class="introduction" style="text-align: center">
         <span>안녕하세요,</span>
@@ -28,7 +41,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
       <ul class="post-list">
         <li class="post">
           <div class="post-top">
-            <div class="post-title bold">제목 1</div>
+            <div class="post-title bold">${title}</div>
             <div class="post-info">
               <div class="post-info left">
                 <div class="post-info-item">
@@ -65,7 +78,9 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.state = { ...this.state, ...newState };
   };
 
-  this.bindEvents = () => {};
+  this.bindEvents = () => {
+    const $postTitle = $(".post-title", this.$postList);
+  };
 
   this.init = () => {
     this.render();
