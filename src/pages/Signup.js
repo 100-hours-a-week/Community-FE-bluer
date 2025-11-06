@@ -1,8 +1,32 @@
-function Signup({ $target, currentPage }) {
+import { $ } from "../utils/dom.js";
+import { handleInput } from "./handlers.js";
+
+function Signup({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
   this.currentPage = currentPage;
+  this.state = {
+    ...initialState,
+    email: "",
+    password: "",
+    passwordCheck: "",
+    nickname: "",
+    isErrorProfileImage: false,
+    isErrorEmail: false,
+    isErrorPassword: false,
+    isErrorPasswordCheck: false,
+    isErrorNickname: false,
+    errorProfileImageMessage: "",
+    errorEmailMessage: "",
+    errorPasswordMessage: "",
+    errorPasswordCheckMessage: "",
+  };
+
   this.$signupPage = document.createElement("div");
   this.$signupPage.classList.add("signup-page", "page-layout");
+
+  this.setState = newState => {
+    this.state = { ...this.state, ...newState };
+  };
 
   this.render = () => {
     this.$signupPage.innerHTML = `
@@ -62,9 +86,28 @@ function Signup({ $target, currentPage }) {
     `;
     this.target.appendChild(this.$signupPage);
   };
+
+  this.handleInput = event => {
+    handleInput(event, this.state, this.setState);
+  };
+
+  this.handleSubmit = () => {
+    console.log(this.state);
+  };
+
+  this.bindEvents = () => {
+    const $form = $("form", this.$signupPage);
+
+    $form.addEventListener("input", this.handleInput);
+    $form.addEventListener("submit", event => {
+      event.preventDefault();
+      this.handleSubmit();
+    });
+  };
+
   this.init = () => {
-    console.log("Signup 페이지입니다.");
     this.render();
+    this.bindEvents();
   };
 }
 
