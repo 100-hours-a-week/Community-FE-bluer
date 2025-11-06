@@ -30,15 +30,19 @@
 .add-post-button {
   width: 138px;
   height: 39px;
-  border: 1px solid rgba(172, 160, 235, 1);
-  background-color: rgba(172, 160, 235, 1);
+  border: none;
+  background-color: var(--button-bg-color);
+
+  &:hover {
+    background-color: var(--button-bg-color-hover);
+  }
   border-radius: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   align-self: center;
   cursor: pointer;
-  color: rgba(255, 255, 255, 1);
+  color: var(--default-color-white);
   font-weight: 700;
 }
 
@@ -50,8 +54,7 @@
 .post {
   background-color: #fff;
   border-radius: 16px;
-  box-shadow: 3px 4px 4px rgba(204, 204, 204, 0.25);
-
+  box-shadow: 3px 4px 4px var(--post-box-shadow);
   display: flex;
   flex-direction: column;
   line-height: 130%;
@@ -62,7 +65,7 @@
   flex-direction: column;
   gap: 10px;
 
-  border-bottom: 1px solid rgba(204, 204, 204, 1);
+  border-bottom: 1px solid var(--default-color-grey);
   padding: 18px 24px 24px;
 }
 
@@ -95,7 +98,7 @@
 .post-avatar {
   width: 36px;
   height: 36px;
-  background-color: rgba(217, 217, 217, 1);
+  background-color: var(--avatar-fallback-color);
   border-radius: 50%;
 }
 

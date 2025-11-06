@@ -1,10 +1,21 @@
 /* Common Style */
 
+:root {
+  --body-bg-color: #f4f5f7;
+  --button-bg-color: #aca0eb;
+  --button-bg-color-hover: #7f6aee;
+  --border-color-black: #000000;
+  --default-color-white: #ffffff;
+  --default-color-grey: #cccccc;
+  --post-box-shadow: #cccccc40;
+  --avatar-fallback-color: #d9d9d9;
+}
+
 .header {
   padding: 36px 0px;
   text-align: center;
   font-size: 32px;
-  border-bottom: 1px solid rgba(0, 0, 0, 1);
+  border-bottom: 1px solid var(--border-color-black);
   /* position: fixed; */
   width: 100%;
   min-width: 375px;
@@ -46,7 +57,7 @@
   input {
     max-width: 355px;
     height: 33px;
-    border: 1px solid rgba(0, 0, 0, 1);
+    border: 1px solid var(--border-color-black);
     border-radius: 4px;
     padding: 0 10px;
   }

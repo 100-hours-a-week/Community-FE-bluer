@@ -23,7 +23,7 @@
 
 body {
   height: 100%;
-  background-color: rgba(244, 245, 247, 1);
+  background-color: var(--body-bg-color);
 }
 
 #app {

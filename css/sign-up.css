@@ -27,8 +27,8 @@
   position: relative;
   width: 149px;
   height: 149px;
-  border: 1px solid rgba(196, 196, 196, 1);
-  background-color: rgba(196, 196, 196, 1);
+  border: 1px solid var(--default-color-grey);
+  background-color: var(--default-color-grey);
   border-radius: 50%;
   display: flex;
   justify-content: center;
