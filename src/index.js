@@ -2,7 +2,7 @@ import Header from "./components/Header.js";
 import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
 import PostList from "./pages/PostList.js";
-import { $ } from "./utils/dom.js";
+import { $ } from "./lib/dom.js";
 
 function App() {
   this.state = {

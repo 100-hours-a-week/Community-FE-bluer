@@ -1,6 +1,6 @@
 // TODO: link handler
-import { $ } from "../utils/dom.js";
-import { handleInput } from "./handlers.js";
+import { $ } from "../lib/dom.js";
+import { handleInput } from "../lib/handlers.js";
 
 function Signup({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
