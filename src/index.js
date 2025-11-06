@@ -1,17 +1,18 @@
 import Header from "./components/Header.js";
 import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
-import { $ } from "./utils/index.js";
+import { $ } from "./utils/dom.js";
 
 function App() {
   this.state = {
-    currentPage: "login", // login, signup, withdrawal, change-password, post-list, post, post-create
-    pageState: ["login"],
+    currentPage: "signup", // login, signup, withdrawal, change-password, post-list, post, post-create
+    pageState: ["signup"],
   };
 
   this.moveTo = page => {
     this.state.pageState.push(page);
     this.state.currentPage = page;
+
     this.render();
   };
 
@@ -19,6 +20,7 @@ function App() {
     $target: $("#app"),
     initialState: {},
   });
+
   this.login = new Login({
     $target: $("#app"),
     initialState: {},
@@ -28,6 +30,7 @@ function App() {
     },
     currentPage: this.state.currentPage,
   });
+
   this.signup = new Signup({
     $target: $("#app"),
     initialState: {},

@@ -1,4 +1,5 @@
-import { $, isValidEmail, isValidPassword } from "../utils/index.js";
+import { $ } from "../utils/dom.js";
+import { isValidEmail, isValidPassword } from "../utils/validation.js";
 
 function Login({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
