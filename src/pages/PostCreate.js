@@ -1,23 +1,11 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      as="style"
-      crossorigin
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
-    />
-    <link rel="stylesheet" href="./css/styles.css" />
+function PostCreate({ $target, initialState = {} }) {
+  this.$target = $target;
+  this.state = { ...initialState };
+  this.element = document.createElement("div");
+  this.element.className = "post-add-page";
 
-    <title>Document</title>
-  </head>
-  <body>
-    <header>
-      <div class="header">아무 말 대잔치</div>
-    </header>
-    <div class="post-add-page">
+  this.render = () => {
+    const htmlString = `
       <h1 class="page-title bold">게시글 작성</h1>
       <form>
         <div class="form-item">
@@ -44,6 +32,20 @@
           <button class="submit-button" type="submit">완료</button>
         </div>
       </form>
-    </div>
-  </body>
-</html>
+    `;
+
+    this.element.innerHTML = htmlString;
+    this.$target.appendChild(this.element);
+  };
+
+  this.bindEvents = () => {
+    // event 연결해주기
+  };
+
+  this.init = () => {
+    this.render();
+    this.bindEvents();
+  };
+}
+
+export default PostCreate;

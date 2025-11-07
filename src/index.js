@@ -4,6 +4,8 @@ import Signup from "./pages/Signup.js";
 import PostList from "./pages/PostList.js";
 import UserInfo from "./pages/UserInfo.js";
 import ChangePassword from "./pages/ChangePassword.js";
+import PostDetail from "./pages/PostDetail.js";
+import PostCreate from "./pages/PostCreate.js";
 
 import { $ } from "./lib/dom.js";
 
@@ -11,7 +13,7 @@ function App() {
   this.state = {
     // currentPage: "post-list"
     // // login, signup, user-info, change-password, post-list, post, post-create
-    currentPage: "change-password",
+    currentPage: "post-create",
     pageState: ["post-list"],
     isLoggedIn: false,
   };
@@ -63,6 +65,16 @@ function App() {
     initialState: {},
   });
 
+  this.postDetail = new PostDetail({
+    $target: $("#app"),
+    initialState: {},
+  });
+
+  this.postCreate = new PostCreate({
+    $target: $("#app"),
+    initialState: {},
+  });
+
   this.renderPage = () => {
     this.header.render();
 
@@ -76,17 +88,17 @@ function App() {
       case "change-password":
         this.changePassword.init();
         break;
-      case "withdrawal":
-        break;
       case "post-list":
         this.postList.init();
         break;
       case "user-info":
         this.userInfo.init();
         break;
-      case "post":
+      case "post-detail":
+        this.postDetail.init();
         break;
       case "post-create":
+        this.postCreate.init();
         break;
       default:
         break;
