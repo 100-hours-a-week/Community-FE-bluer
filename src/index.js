@@ -2,6 +2,7 @@ import Header from "./components/Header.js";
 import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
 import PostList from "./pages/PostList.js";
+import UserInfo from "./pages/UserInfo.js";
 import { $ } from "./lib/dom.js";
 
 function App() {
@@ -49,6 +50,11 @@ function App() {
     initialState: {},
   });
 
+  this.userInfo = new UserInfo({
+    $target: $("#app"),
+    initialState: {},
+  });
+
   this.renderPage = () => {
     this.header.render();
 
@@ -67,6 +73,7 @@ function App() {
         this.postList.init();
         break;
       case "user-info":
+        this.userInfo.init();
         break;
       case "post":
         break;
