@@ -1,11 +1,14 @@
 import Header from "./components/Header.js";
-import Login from "./pages/Login.js";
-import Signup from "./pages/Signup.js";
-import PostList from "./pages/PostList.js";
-import UserInfo from "./pages/UserInfo.js";
-import ChangePassword from "./pages/ChangePassword.js";
-import PostDetail from "./pages/PostDetail.js";
-import PostCreate from "./pages/PostCreate.js";
+import {
+  Login,
+  Signup,
+  PostList,
+  UserInfo,
+  ChangePassword,
+  PostDetail,
+  PostCreate,
+  PostEdit,
+} from "./pages/index.js";
 
 import { $ } from "./lib/dom.js";
 
@@ -13,7 +16,7 @@ function App() {
   this.state = {
     // currentPage: "post-list"
     // // login, signup, user-info, change-password, post-list, post, post-create
-    currentPage: "post-create",
+    currentPage: "post-edit",
     pageState: ["post-list"],
     isLoggedIn: false,
   };
@@ -75,6 +78,11 @@ function App() {
     initialState: {},
   });
 
+  this.postEdit = new PostEdit({
+    $target: $("#app"),
+    initialState: {},
+  });
+
   this.renderPage = () => {
     this.header.render();
 
@@ -99,6 +107,9 @@ function App() {
         break;
       case "post-create":
         this.postCreate.init();
+        break;
+      case "post-edit":
+        this.postEdit.init();
         break;
       default:
         break;
