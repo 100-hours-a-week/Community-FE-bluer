@@ -59,7 +59,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
           </div>
           <div class="post-bottom">
             <div class="post-author-container">
-              <div class="post-avatar"></div>
+              <div class="post-avatar avatar"></div>
               <span class="post-author bold">${post.author}</span>
             </div>
           </div>

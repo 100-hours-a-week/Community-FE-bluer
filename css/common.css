@@ -9,8 +9,9 @@
   --button-bg-color: #aca0eb;
   --button-bg-color-hover: #7f6aee;
   --post-box-shadow: #cccccc40;
-  --avatar-fallback-color: #d9d9d9;
+  --fallback-color: #d9d9d9;
   --header-height: 104px;
+  --layout-max-width: 600px;
 }
 
 .header {
@@ -167,4 +168,25 @@
 
 .none {
   display: none;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  background-color: var(--fallback-color);
+  border-radius: 50%;
+}
+
+.post-author-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.post-author {
+  font-size: 15px;
+}
+
+button:hover {
+  cursor: pointer;
 }

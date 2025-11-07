@@ -2,7 +2,7 @@
 
 .post-list-page {
   width: 100%;
-  max-width: 600px;
+  max-width: var(--layout-max-width);
   justify-self: center;
   margin-top: 40px;
 }
@@ -89,21 +89,4 @@
 .post-info.left {
   display: flex;
   gap: 10px;
-}
-
-.post-author-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.post-avatar {
-  width: 36px;
-  height: 36px;
-  background-color: var(--avatar-fallback-color);
-  border-radius: 50%;
-}
-
-.post-author {
-  font-size: 15px;
 }
