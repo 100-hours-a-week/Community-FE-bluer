@@ -114,7 +114,10 @@
 
 .signup-form-container {
   margin-top: 12px;
-  /* background-color: red; */
+}
+
+.signup-form-container.password-check {
+  margin-top: 84px;
 }
 
 .add-photo-container {

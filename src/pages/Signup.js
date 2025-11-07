@@ -67,12 +67,12 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
                     id="password-check"
                     name="password-check"
                   />
-                  <span class="error-message email"></span>
+                  <span class="error-message password"></span>
                 </li>
                 <li class="input-container">
                   <label for="nickname">닉네임</label>
                   <input type="text" id="nickname" name="nickname" />
-                  <span class="error-message email"></span>
+                  <span class="error-message nickname"></span>
                 </li>
               </ul>
               <button class="submit-button signup-button" type="submit">
