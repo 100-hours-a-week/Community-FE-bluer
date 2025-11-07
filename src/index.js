@@ -6,8 +6,10 @@ import { $ } from "./lib/dom.js";
 
 function App() {
   this.state = {
-    currentPage: "post-list", // login, signup, withdrawal, change-password, post-list, post, post-create
+    // currentPage: "post-list", // login, signup, withdrawal, user-info, change-password, post-list, post, post-create
+    currentPage: "user-info",
     pageState: ["post-list"],
+    isLoggedIn: false,
   };
 
   this.moveTo = page => {
@@ -19,7 +21,12 @@ function App() {
 
   this.header = new Header({
     $target: $("#app"),
-    initialState: {},
+    initialState: {
+      isLoggedIn: this.state.isLoggedIn,
+    },
+    moveTo: page => {
+      this.moveTo(page);
+    },
   });
 
   this.login = new Login({
@@ -52,14 +59,27 @@ function App() {
       case "signup":
         this.signup.init();
         break;
+      case "change-password":
+        break;
+      case "withdrawal":
+        break;
       case "post-list":
         this.postList.init();
+        break;
+      case "user-info":
+        break;
+      case "post":
+        break;
+      case "post-create":
         break;
       default:
         break;
     }
   };
 
+  // this.setState = newState => {
+  //   this.state = { ...this.state, ...newState };
+  // };
   this.render = () => {
     $("#app").innerHTML = "";
     this.renderPage();
@@ -67,6 +87,11 @@ function App() {
 
   this.init = () => {
     this.render();
+
+    // setTimeout(() => {
+    //   console.log("run");
+    //   this.setState({ ...this.state, isLoggedIn: true });
+    // }, 5000);
   };
 }
 

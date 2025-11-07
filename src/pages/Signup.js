@@ -37,11 +37,11 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
             <form>
               <div>
                 <div>
-                  <strong style="font-weight: 600"> 프로필 사진 </strong>
+                  <strong class="bold"> 프로필 사진 </strong>
                 </div>
                 <span class="error-message profile"></span>
                 <div class="add-photo-container">
-                  <button class="add-photo-button"></button>
+                  <button class="add-profile-photo-button plus"></button>
                 </div>
               </div>
               <ul class="form-input-list">

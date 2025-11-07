@@ -1,6 +1,6 @@
 /* Login Page Styles */
 .login-page {
-  height: calc(100vh - 104px);
+  height: calc(100vh - var(--header-height));
   min-height: 350px;
   display: flex;
   flex-direction: column;

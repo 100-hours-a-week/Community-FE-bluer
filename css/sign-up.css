@@ -2,7 +2,7 @@
 
 .signup-page {
   /* background-color: red; */
-  height: calc(100vh - 104px);
+  height: calc(100vh - var(--header-height));
   min-height: 860px;
 
   display: flex;
@@ -10,54 +10,6 @@
   gap: 41px;
   justify-content: center;
   align-items: center;
-}
-
-.signup-form-container {
-  margin-top: 12px;
-}
-
-.add-photo-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 12px 0 24px 0;
-}
-
-.add-photo-button {
-  position: relative;
-  width: 149px;
-  height: 149px;
-  border: 1px solid var(--default-color-grey);
-  background-color: var(--default-color-grey);
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-self: center;
-  cursor: pointer;
-}
-
-/* 가로줄 */
-.add-photo-button::before,
-.add-photo-button::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  background: black;
-  transform: translate(-50%, -50%);
-}
-
-/* 가로줄 */
-.add-photo-button::before {
-  width: 24px;
-  height: 1px;
-}
-
-/* 세로줄 */
-.add-photo-button::after {
-  width: 1px;
-  height: 24px;
 }
 
 .signup-button {

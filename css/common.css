@@ -2,13 +2,15 @@
 
 :root {
   --body-bg-color: #f4f5f7;
-  --button-bg-color: #aca0eb;
-  --button-bg-color-hover: #7f6aee;
-  --border-color-black: #000000;
+  --default-color-black: #000000;
   --default-color-white: #ffffff;
   --default-color-grey: #cccccc;
+  --border-color-black: #000000;
+  --button-bg-color: #aca0eb;
+  --button-bg-color-hover: #7f6aee;
   --post-box-shadow: #cccccc40;
   --avatar-fallback-color: #d9d9d9;
+  --header-height: 104px;
 }
 
 .header {
@@ -33,6 +35,10 @@
 .page-title {
   font-size: 24px;
   text-align: center;
+}
+
+.page-title.big {
+  font-size: 32px;
 }
 
 .form-input-list {
@@ -62,8 +68,16 @@
     padding: 0 10px;
   }
 
+  .input-readonly {
+    pointer-events: none;
+    color: var(--border-color-black);
+    background-color: inherit;
+    border: none;
+    padding-left: 0;
+  }
+
   .error-message {
-    color: red;
+    color: #ff0000;
     font-size: 12px;
     font-family: Inter;
     font-weight: 400;
@@ -93,6 +107,61 @@
   margin-top: 12px;
 }
 
-.link-container.login {
+.link-container.login,
+.link-container.withdrawal {
   text-align: center;
+}
+
+.signup-form-container {
+  margin-top: 12px;
+  /* background-color: red; */
+}
+
+.add-photo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 12px 0 24px 0;
+}
+
+.add-profile-photo-button {
+  position: relative;
+  width: 149px;
+  height: 149px;
+  padding: 0;
+  border: 1px solid var(--default-color-grey);
+  background-color: var(--default-color-grey);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  cursor: pointer;
+}
+
+/* 가로줄 */
+.add-profile-photo-button.plus::before,
+.add-profile-photo-button.plus::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: black;
+  transform: translate(-50%, -50%);
+}
+
+/* 가로줄 */
+.add-profile-photo-button.plus::before {
+  width: 24px;
+  height: 1px;
+}
+
+/* 세로줄 */
+.add-profile-photo-button.plus::after {
+  width: 1px;
+  height: 24px;
+}
+
+.none {
+  display: none;
 }
