@@ -1,0 +1,86 @@
+.user-info-page {
+  width: 100%;
+  height: calc(100vh - var(--header-height));
+  max-width: 392px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
+
+  /*  */
+  /* border: 1px solid black; */
+}
+
+.add-photo-container.user-info {
+  margin-top: 33px;
+}
+
+.profile-image-container {
+  width: 100%;
+  height: 100%;
+}
+
+.profile-image-container > img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+/* */
+
+.profile-image-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* border-radius: 50%; */
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+}
+
+/* 오버레이 */
+.profile-overlay {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-weight: 600;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  font-size: 14px;
+  border-radius: 50%;
+}
+
+.profile-overlay-text {
+  width: 52px;
+  height: 27px;
+  padding: 5px 10px;
+  font-size: 15px;
+  line-height: 100%;
+
+  border: 1px solid white;
+  border-radius: 25px;
+  padding: 2px;
+  /* background-color: red; */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-image-container:hover .profile-overlay {
+  opacity: 1;
+}
