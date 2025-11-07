@@ -35,6 +35,11 @@
       border-radius: 16px;
     }
 
+    input.form-item-post-title.input-readonly {
+      background: none;
+      padding-left: 0;
+    }
+
     .form-item-post-title {
       padding: 16px 8px;
 
