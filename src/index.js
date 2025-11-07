@@ -3,12 +3,15 @@ import Login from "./pages/Login.js";
 import Signup from "./pages/Signup.js";
 import PostList from "./pages/PostList.js";
 import UserInfo from "./pages/UserInfo.js";
+import ChangePassword from "./pages/ChangePassword.js";
+
 import { $ } from "./lib/dom.js";
 
 function App() {
   this.state = {
-    // currentPage: "post-list", // login, signup, withdrawal, user-info, change-password, post-list, post, post-create
-    currentPage: "user-info",
+    // currentPage: "post-list"
+    // // login, signup, user-info, change-password, post-list, post, post-create
+    currentPage: "change-password",
     pageState: ["post-list"],
     isLoggedIn: false,
   };
@@ -55,6 +58,11 @@ function App() {
     initialState: {},
   });
 
+  this.changePassword = new ChangePassword({
+    $target: $("#app"),
+    initialState: {},
+  });
+
   this.renderPage = () => {
     this.header.render();
 
@@ -66,6 +74,7 @@ function App() {
         this.signup.init();
         break;
       case "change-password":
+        this.changePassword.init();
         break;
       case "withdrawal":
         break;

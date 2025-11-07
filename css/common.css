@@ -121,6 +121,9 @@
 .signup-form-container.password-check {
   margin-top: 84px;
 }
+.signup-form-container.password-check__change-password {
+  margin-top: 94px;
+}
 
 .add-photo-container {
   display: flex;
