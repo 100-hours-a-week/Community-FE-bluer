@@ -5,6 +5,7 @@
 @import "./sign-up.css";
 @import "./user-info.css";
 @import "./post-detail.css";
+@import "./post-add.css";
 
 * {
   font-family:

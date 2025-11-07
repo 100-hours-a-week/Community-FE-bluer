@@ -1,0 +1,67 @@
+.post-add-page {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  justify-self: center;
+  padding-top: 24px;
+  padding-bottom: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 64px;
+  /* background-color: yellow; */
+}
+
+.post-add-page > form {
+  /* background-color: red; */
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 26px;
+
+  .form-item {
+    /* background-color: lime; */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    label {
+      font-weight: 700;
+      font-size: 15px;
+      line-height: 100%;
+    }
+
+    input.form-item-post-title {
+      border: none;
+      border-radius: 16px;
+    }
+
+    .form-item-post-title {
+      padding: 16px 8px;
+
+      font-family: Pretendard;
+      font-size: 16px;
+      line-height: 141%;
+    }
+
+    .form-item-content-area {
+      width: 100%;
+      /* background-color: lime; */
+
+      textarea {
+        width: 100%;
+        height: 277px;
+        padding: 24px 12px;
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 141%;
+        resize: none;
+        border: none;
+        background-color: var(--default-color-white);
+        border-radius: 16px;
+      }
+    }
+  }
+  .button-container {
+    text-align: center;
+  }
+}
