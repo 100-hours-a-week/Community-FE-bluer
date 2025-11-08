@@ -30,7 +30,7 @@ function Header({ $target, initialState }) {
     const { isLoggedIn } = getState();
 
     return `
-      <button class="dropdown-button">
+      <button class="dropdown-button" data-role="menu">
       ${
         isLoggedIn
           ? '<div class="avatar"><img src="./public/profile-sample.jpeg" /></div>'
@@ -42,25 +42,36 @@ function Header({ $target, initialState }) {
 
   this.renderBackButton = () => {
     return `
-      <button>
-        <img style="height:100%" src="./public/left-arrow.png" />
-      </button>
+      <div class="header-back-button-container"> 
+        <button data-role="back">
+          <img style="height:100%" src="./public/left-arrow.png" />
+        </button>
+      </div>
     `;
   };
 
   this.render = () => {
+    const { isLoggedIn, history } = getState();
+    const currentPage = history[history.length - 1];
+
     this.$header.classList.add("header");
     this.$header.innerHTML = `
       <div class="header-content">
-         <div class="header-back-button-container"> 
             ${
-              this.haveBackButtonOnPage(this.state.currentPage)
+              this.haveBackButtonOnPage(currentPage)
                 ? this.renderBackButton()
                 : `<div style="width: 19px"></div>`
             }
-          </div>
           <span class="header-title bold">아무 말 대잔치</span>
-          ${this.renderDropdownButton()}
+          ${
+            isLoggedIn
+              ? `
+                  <button class="dropdown-button" data-role="menu">
+                    <div class="avatar"><img src="./public/profile-sample.jpeg" /></div> 
+                  </button>
+            `
+              : '<div class="avatar bg-none"></div>'
+          }
         </div>
       </div>
       
@@ -68,12 +79,34 @@ function Header({ $target, initialState }) {
     this.target.appendChild(this.$header);
   };
 
+  this.onBackClick = () => {};
+
+  this.onDropdownToggle = () => {};
+
+  this.onDropdownItemClick = () => {};
+
+  this.handleClick = event => {
+    if (event.target.closest(".header-back-button-container")) {
+      console.log("back");
+    } else if (event.target.closest(".dropdown-button")) {
+      console.log("toggle dropdown");
+    }
+  };
+  this.bindEvents = () => {
+    this.$header.addEventListener("click", event => {
+      this.handleClick(event);
+    });
+  };
+
   this.init = () => {
-    const { isLoggedIn, currentPage } = getState();
-    this.setState({ isLoggedIn, currentPage });
+    const { isLoggedIn, history } = getState();
+    this.setState({ isLoggedIn, history });
 
     this.render();
+    this.bindEvents();
   };
+
+  this.init();
 }
 
 export default Header;

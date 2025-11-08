@@ -72,13 +72,14 @@ function App() {
     const page = pages[currentPage];
 
     if (page?.init) {
-      this.header.init();
+      // this.header.init();
       page.init();
     }
   };
 
   this.render = () => {
     $("#app").innerHTML = "";
+    this.header.render();
     this.renderPage();
   };
 
