@@ -6,7 +6,7 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   this.currentPage = currentPage;
   this.state = {
     ...initialState,
-    isWaiting: false,
+    // isWaiting: false,
     email: "",
     password: "",
     isErrorEmail: false,
@@ -131,14 +131,12 @@ function Login({ $target, initialState, moveTo, currentPage }) {
 
   this.init = () => {
     // TODO: if (login) moveTo("post-list");
-    if (this.currentPage !== "login") {
-      return;
-    }
+    // if (this.currentPage !== "login") {
+    //   return;
+    // }
     this.render();
     this.bindEvents();
   };
-
-  this.init();
 }
 
 export default Login;

@@ -1,14 +1,23 @@
 import Header from "./components/Header.js";
-import Login from "./pages/Login.js";
-import Signup from "./pages/Signup.js";
-import PostList from "./pages/PostList.js";
-import UserInfo from "./pages/UserInfo.js";
+import {
+  Login,
+  Signup,
+  PostList,
+  UserInfo,
+  ChangePassword,
+  PostDetail,
+  PostCreate,
+  PostEdit,
+} from "./pages/index.js";
+
 import { $ } from "./lib/dom.js";
 
 function App() {
+  const $app = $("#app");
+
   this.state = {
-    // currentPage: "post-list", // login, signup, withdrawal, user-info, change-password, post-list, post, post-create
-    currentPage: "user-info",
+    // // login, signup, user-info, change-password, post-list, post, post-create
+    currentPage: "post-create",
     pageState: ["post-list"],
     isLoggedIn: false,
   };
@@ -30,57 +39,23 @@ function App() {
     },
   });
 
-  this.login = new Login({
-    $target: $("#app"),
-    initialState: {},
-    moveTo: page => {
-      this.moveTo(page);
-      this.render();
-    },
-    currentPage: this.state.currentPage,
-  });
-
-  this.signup = new Signup({
-    $target: $("#app"),
-    initialState: {},
-  });
-
-  this.postList = new PostList({
-    $target: $("#app"),
-    initialState: {},
-  });
-
-  this.userInfo = new UserInfo({
-    $target: $("#app"),
-    initialState: {},
-  });
+  const pages = {
+    login: new Login({ $target: $app, moveTo: this.moveTo }),
+    signup: new Signup({ $target: $app }),
+    "post-list": new PostList({ $target: $app }),
+    "post-detail": new PostDetail({ $target: $app }),
+    "post-create": new PostCreate({ $target: $app }),
+    "post-edit": new PostEdit({ $target: $app }),
+    "user-info": new UserInfo({ $target: $app }),
+    "change-password": new ChangePassword({ $target: $app }),
+  };
 
   this.renderPage = () => {
     this.header.render();
+    const page = pages[this.state.currentPage];
 
-    switch (this.state.currentPage) {
-      case "login":
-        this.login.init();
-        break;
-      case "signup":
-        this.signup.init();
-        break;
-      case "change-password":
-        break;
-      case "withdrawal":
-        break;
-      case "post-list":
-        this.postList.init();
-        break;
-      case "user-info":
-        this.userInfo.init();
-        break;
-      case "post":
-        break;
-      case "post-create":
-        break;
-      default:
-        break;
+    if (page?.init) {
+      page.init();
     }
   };
 

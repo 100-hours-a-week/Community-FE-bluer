@@ -2,6 +2,7 @@
   width: 100%;
   height: calc(100vh - var(--header-height));
   max-width: 392px;
+  min-height: 370px;
 
   display: flex;
   flex-direction: column;
