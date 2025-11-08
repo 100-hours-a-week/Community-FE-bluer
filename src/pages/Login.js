@@ -1,6 +1,7 @@
 import { $ } from "../lib/dom.js";
-import { isValidEmail, isValidPassword } from "../lib/validation.js";
 import { getState } from "../lib/store.js";
+import { ERROR_MESSAGES, ERROR_TYPE } from "../lib/constants.js";
+import { getLoginInputError } from "../lib/validation.js";
 
 function Login({ $target, initialState, moveTo, currentPage, login }) {
   this.target = $target;
@@ -20,20 +21,23 @@ function Login({ $target, initialState, moveTo, currentPage, login }) {
   this.$loginPage = document.createElement("div");
   this.$loginPage.classList.add("login-page", "page-layout");
 
-  this.renderErrorMessages = () => {
+  this.renderErrorMessages = errorType => {
     const $emailErrorMessage = $(".error-message.email", this.$loginPage);
     const $passwordErrorMessage = $(".error-message.password", this.$loginPage);
 
-    if (this.state.isErrorEmail) {
-      $emailErrorMessage.textContent = this.state.errorEmailMessage;
-    } else {
-      $emailErrorMessage.textContent = "";
-    }
+    $emailErrorMessage.textContent = "";
+    $passwordErrorMessage.textContent = "";
 
-    if (this.state.isErrorPassword) {
-      $passwordErrorMessage.textContent = this.state.errorPasswordMessage;
-    } else {
-      $passwordErrorMessage.textContent = "";
+    switch (errorType) {
+      case ERROR_TYPE.WRONG_FORMAT_EMAIL:
+        $emailErrorMessage.textContent = ERROR_MESSAGES[errorType];
+        break;
+      case ERROR_TYPE.TOO_SHORT_PASSWORD:
+      case ERROR_TYPE.WRONG_FORMAT_PASSWORD:
+        $passwordErrorMessage.textContent = ERROR_MESSAGES[errorType];
+        break;
+      default:
+        break;
     }
   };
 
@@ -71,25 +75,12 @@ function Login({ $target, initialState, moveTo, currentPage, login }) {
   this.handleSubmit = () => {
     this.setState({ isErrorEmail: false, isErrorPassword: false });
 
-    if (!isValidEmail(this.state.email)) {
-      this.setState({
-        isErrorEmail: true,
-        errorEmailMessage: `올바른 이메일 주소 형식을 입력해주세요. (예: example@example.com) `,
-      });
-      this.renderErrorMessages();
-    }
-    if (this.state.password.length < 1) {
-      this.setState({
-        isErrorPassword: true,
-        errorPasswordMessage: `비밀번호를 입력해주세요`,
-      });
-      this.renderErrorMessages();
-    } else if (!isValidPassword(this.state.password)) {
-      this.setState({
-        isErrorPassword: true,
-        errorPasswordMessage: `비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.`,
-      });
-      this.renderErrorMessages();
+    const { errorType } = getLoginInputError(
+      this.state.email,
+      this.state.password
+    );
+    if (errorType) {
+      this.renderErrorMessages(errorType);
       return;
     }
 
@@ -104,6 +95,7 @@ function Login({ $target, initialState, moveTo, currentPage, login }) {
     }
   };
 
+  // TODO: modulation
   this.handleInput = event => {
     const { name, value } = event.target;
 
