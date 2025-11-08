@@ -15,28 +15,52 @@ function Header({ $target, initialState }) {
     2. 게시글 상세조회, 게시글 수정, 게시글 추가 페이지, 회원가입 -> 뒤로가기
   */
 
-  this.renderBackButton = () => {};
-  this.renderDropdownButton = () => {};
+  this.haveBackButtonOnPage = page => {
+    const haveBackButtonPages = [
+      "post-detail",
+      "post-edit",
+      "post-create",
+      "signup",
+    ];
+
+    return haveBackButtonPages.includes(page);
+  };
+
+  this.renderDropdownButton = () => {
+    const { isLoggedIn } = getState();
+
+    return `
+      <button class="dropdown-button">
+      ${
+        isLoggedIn
+          ? '<div class="avatar"><img src="./public/profile-sample.jpeg" /></div>'
+          : '<div class="avatar bg-none"></div>'
+      }
+      </button>
+    `;
+  };
+
+  this.renderBackButton = () => {
+    return `
+      <button>
+        <img style="height:100%" src="./public/left-arrow.png" />
+      </button>
+    `;
+  };
 
   this.render = () => {
-    // TODO: 로그인 상태에 따른 조건부 렌더링
     this.$header.classList.add("header");
     this.$header.innerHTML = `
       <div class="header-content">
          <div class="header-back-button-container"> 
-            <button>
-              <img
-                style="height:100%"
-                src="./public/left-arrow.png"
-              />
-            </button>
+            ${
+              this.haveBackButtonOnPage(this.state.currentPage)
+                ? this.renderBackButton()
+                : `<div style="width: 19px"></div>`
+            }
           </div>
           <span class="header-title bold">아무 말 대잔치</span>
-          <button class="dropdown-button">
-            <div class="avatar">
-              <img src="./public/profile-sample.jpeg" /> 
-            </div>
-          </button>
+          ${this.renderDropdownButton()}
         </div>
       </div>
       
@@ -45,8 +69,8 @@ function Header({ $target, initialState }) {
   };
 
   this.init = () => {
-    const { isLoggedIn } = getState();
-    this.setState({ isLoggedIn });
+    const { isLoggedIn, currentPage } = getState();
+    this.setState({ isLoggedIn, currentPage });
 
     this.render();
   };

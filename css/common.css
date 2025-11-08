@@ -209,6 +209,10 @@
   }
 }
 
+.bg-none {
+  background: none;
+}
+
 .post-author-container {
   display: flex;
   align-items: center;
