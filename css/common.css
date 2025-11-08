@@ -11,7 +11,7 @@
   --post-box-shadow: #cccccc40;
   --fallback-color: #d9d9d9;
   --header-height: 104px;
-  --layout-max-width: 600px;
+  --layout-max-width: 570px;
 }
 
 .header {
@@ -22,6 +22,28 @@
   /* position: fixed; */
   width: 100%;
   min-width: 375px;
+}
+
+.header-content {
+  width: 100%;
+  max-width: var(--layout-max-width);
+  justify-self: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-back-button-container {
+  height: 19px;
+  display: flex;
+  align-items: center;
+
+  button {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border: none;
+  }
 }
 
 .bold {
@@ -179,6 +201,12 @@
   height: 36px;
   background-color: var(--fallback-color);
   border-radius: 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
 }
 
 .post-author-container {
