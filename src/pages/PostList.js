@@ -99,8 +99,6 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.render();
     this.bindEvents();
   };
-
-  this.render();
 }
 
 export default PostList;

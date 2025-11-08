@@ -70,10 +70,10 @@ function App() {
   };
 
   this.renderPage = () => {
-    this.header.render();
     const page = pages[this.state.currentPage];
 
     if (page?.init) {
+      this.header.init();
       page.init();
     }
   };
@@ -85,11 +85,12 @@ function App() {
 
   this.init = () => {
     subscribe((globalState, type) => {
-      if (type === "LOGIN" || type === "LOGOUT") {
-        this.state.isLoggedIn = globalState.isLoggedIn;
-        this.render();
-
-        return;
+      if (type === "LOGIN") {
+        this.state.isLoggedIn = true;
+        this.moveTo("post-list");
+      } else if (type === "LOGOUT") {
+        this.state.isLoggedIn = false;
+        this.moveTo("login");
       }
     });
 
