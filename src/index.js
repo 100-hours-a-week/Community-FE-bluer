@@ -1,25 +1,43 @@
 import Header from "./components/Header.js";
 import {
-  Login,
-  Signup,
-  PostList,
-  UserInfo,
-  ChangePassword,
-  PostDetail,
-  PostCreate,
-  PostEdit,
+  Login as LoginPage,
+  Signup as SignupPage,
+  PostList as PostListPage,
+  UserInfo as UserInfoPage,
+  ChangePassword as ChangePasswordPage,
+  PostDetail as PostDetailPage,
+  PostCreate as PostCreatePage,
+  PostEdit as PostEditPage,
 } from "./pages/index.js";
 
 import { $ } from "./lib/dom.js";
+import { dispatch, subscribe } from "./lib/store.js";
+import { LOGIN_DELAY_MILLISECONDS } from "./lib/constants.js";
 
 function App() {
   const $app = $("#app");
 
   this.state = {
     // // login, signup, user-info, change-password, post-list, post, post-create
-    currentPage: "post-create",
+    currentPage: "login",
     pageState: ["post-list"],
     isLoggedIn: false,
+  };
+
+  this.login = ({ email, password }) => {
+    try {
+      // TODO: 로그인 API 요청
+      if (email === "test@test.com" && password === "Testtest1!") {
+        // SUCCESS CASE
+        $(".submit-button").classList.add("isLoading");
+        setTimeout(() => {
+          dispatch("LOGIN", { userToken: "LOGIN_SUCCESS_TOKEN" });
+        }, LOGIN_DELAY_MILLISECONDS);
+      }
+    } catch (error) {
+      // TODO: 아이디 또는 비밀번호를 확인해 주세요
+      console.error("로그인 중 오류 발생:", error);
+    }
   };
 
   this.moveTo = page => {
@@ -40,40 +58,46 @@ function App() {
   });
 
   const pages = {
-    login: new Login({ $target: $app, moveTo: this.moveTo }),
-    signup: new Signup({ $target: $app }),
-    "post-list": new PostList({ $target: $app }),
-    "post-detail": new PostDetail({ $target: $app }),
-    "post-create": new PostCreate({ $target: $app }),
-    "post-edit": new PostEdit({ $target: $app }),
-    "user-info": new UserInfo({ $target: $app }),
-    "change-password": new ChangePassword({ $target: $app }),
+    login: new LoginPage({
+      $target: $app,
+      moveTo: this.moveTo,
+      login: this.login,
+    }),
+    signup: new SignupPage({ $target: $app }),
+    "post-list": new PostListPage({ $target: $app, moveTo: this.moveTo }),
+    "post-detail": new PostDetailPage({ $target: $app }),
+    "post-create": new PostCreatePage({ $target: $app }),
+    "post-edit": new PostEditPage({ $target: $app }),
+    "user-info": new UserInfoPage({ $target: $app }),
+    "change-password": new ChangePasswordPage({ $target: $app }),
   };
 
   this.renderPage = () => {
-    this.header.render();
     const page = pages[this.state.currentPage];
 
     if (page?.init) {
+      this.header.init();
       page.init();
     }
   };
 
-  // this.setState = newState => {
-  //   this.state = { ...this.state, ...newState };
-  // };
   this.render = () => {
     $("#app").innerHTML = "";
     this.renderPage();
   };
 
   this.init = () => {
-    this.render();
+    subscribe((globalState, type) => {
+      if (type === "LOGIN") {
+        this.state.isLoggedIn = true;
+        this.moveTo("post-list");
+      } else if (type === "LOGOUT") {
+        this.state.isLoggedIn = false;
+        this.moveTo("login");
+      }
+    });
 
-    // setTimeout(() => {
-    //   console.log("run");
-    //   this.setState({ ...this.state, isLoggedIn: true });
-    // }, 5000);
+    this.render();
   };
 }
 

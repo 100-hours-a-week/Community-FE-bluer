@@ -1,12 +1,16 @@
 import { $ } from "../lib/dom.js";
-import { isValidEmail, isValidPassword } from "../lib/validation.js";
+import { getState } from "../lib/store.js";
+import { ERROR_MESSAGES, ERROR_TYPE } from "../lib/constants.js";
+import { getLoginInputError } from "../lib/validation.js";
 
-function Login({ $target, initialState, moveTo, currentPage }) {
+function Login({ $target, initialState, moveTo, currentPage, login }) {
   this.target = $target;
   this.currentPage = currentPage;
+  this.moveTo = moveTo;
+  this.login = login;
+
   this.state = {
     ...initialState,
-    // isWaiting: false,
     email: "",
     password: "",
     isErrorEmail: false,
@@ -17,20 +21,23 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   this.$loginPage = document.createElement("div");
   this.$loginPage.classList.add("login-page", "page-layout");
 
-  this.renderErrorMessages = () => {
+  this.renderErrorMessages = errorType => {
     const $emailErrorMessage = $(".error-message.email", this.$loginPage);
     const $passwordErrorMessage = $(".error-message.password", this.$loginPage);
 
-    if (this.state.isErrorEmail) {
-      $emailErrorMessage.textContent = this.state.errorEmailMessage;
-    } else {
-      $emailErrorMessage.textContent = "";
-    }
+    $emailErrorMessage.textContent = "";
+    $passwordErrorMessage.textContent = "";
 
-    if (this.state.isErrorPassword) {
-      $passwordErrorMessage.textContent = this.state.errorPasswordMessage;
-    } else {
-      $passwordErrorMessage.textContent = "";
+    switch (errorType) {
+      case ERROR_TYPE.WRONG_FORMAT_EMAIL:
+        $emailErrorMessage.textContent = ERROR_MESSAGES[errorType];
+        break;
+      case ERROR_TYPE.TOO_SHORT_PASSWORD:
+      case ERROR_TYPE.WRONG_FORMAT_PASSWORD:
+        $passwordErrorMessage.textContent = ERROR_MESSAGES[errorType];
+        break;
+      default:
+        break;
     }
   };
 
@@ -68,45 +75,27 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   this.handleSubmit = () => {
     this.setState({ isErrorEmail: false, isErrorPassword: false });
 
-    if (!isValidEmail(this.state.email)) {
-      this.setState({
-        isErrorEmail: true,
-        errorEmailMessage: `올바른 이메일 주소 형식을 입력해주세요. (예: example@example.com) `,
-      });
-      this.renderErrorMessages();
-    }
-    if (this.state.password.length < 1) {
-      this.setState({
-        isErrorPassword: true,
-        errorPasswordMessage: `비밀번호를 입력해주세요`,
-      });
-      this.renderErrorMessages();
-    } else if (!isValidPassword(this.state.password)) {
-      this.setState({
-        isErrorPassword: true,
-        errorPasswordMessage: `비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.`,
-      });
-      this.renderErrorMessages();
+    const { errorType } = getLoginInputError(
+      this.state.email,
+      this.state.password
+    );
+    if (errorType) {
+      this.renderErrorMessages(errorType);
       return;
     }
 
     try {
-      // TODO: 로그인 API 요청
-      if (
-        this.state.email === "test@test.com" &&
-        this.state.password === "Testtest1!"
-      ) {
-        $(".submit-button").classList.add("isLoading");
-        setTimeout(() => {
-          moveTo("signup");
-        }, 3000);
-      }
+      this.login({
+        email: this.state.email,
+        password: this.state.password,
+      });
     } catch (error) {
-      // TODO: 아이디 또는 비밀번호를 확인해 주세요
-      console.error("로그인 중 오류 발생:", error);
+      // TODO: "아이디 또는 비밀번호를 확인해 주세요."
+      console.log(error);
     }
   };
 
+  // TODO: modulation
   this.handleInput = event => {
     const { name, value } = event.target;
 
@@ -114,7 +103,6 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   };
 
   this.bindEvents = () => {
-    const $submitButton = $(".submit-button", this.$loginPage);
     const $form = $("form", this.$loginPage);
     const $signupLink = $(".link-container.signup a", this.$loginPage);
 
@@ -125,15 +113,17 @@ function Login({ $target, initialState, moveTo, currentPage }) {
     });
     $signupLink.addEventListener("click", event => {
       event.preventDefault();
-      moveTo("signup");
+      this.moveTo("signup");
     });
   };
 
   this.init = () => {
-    // TODO: if (login) moveTo("post-list");
-    // if (this.currentPage !== "login") {
-    //   return;
-    // }
+    const { isLoggedIn } = getState();
+
+    if (isLoggedIn) {
+      this.moveTo("post-list");
+      return;
+    }
     this.render();
     this.bindEvents();
   };
