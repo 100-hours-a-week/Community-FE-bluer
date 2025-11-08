@@ -1,12 +1,15 @@
 import { $ } from "../lib/dom.js";
 import { isValidEmail, isValidPassword } from "../lib/validation.js";
+import { getState } from "../lib/store.js";
 
-function Login({ $target, initialState, moveTo, currentPage }) {
+function Login({ $target, initialState, moveTo, currentPage, login }) {
   this.target = $target;
   this.currentPage = currentPage;
+  this.moveTo = moveTo;
+  this.login = login;
+
   this.state = {
     ...initialState,
-    // isWaiting: false,
     email: "",
     password: "",
     isErrorEmail: false,
@@ -91,19 +94,13 @@ function Login({ $target, initialState, moveTo, currentPage }) {
     }
 
     try {
-      // TODO: 로그인 API 요청
-      if (
-        this.state.email === "test@test.com" &&
-        this.state.password === "Testtest1!"
-      ) {
-        $(".submit-button").classList.add("isLoading");
-        setTimeout(() => {
-          moveTo("signup");
-        }, 3000);
-      }
+      this.login({
+        email: this.state.email,
+        password: this.state.password,
+      });
     } catch (error) {
-      // TODO: 아이디 또는 비밀번호를 확인해 주세요
-      console.error("로그인 중 오류 발생:", error);
+      // TODO: "아이디 또는 비밀번호를 확인해 주세요."
+      console.log(error);
     }
   };
 
@@ -114,7 +111,6 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   };
 
   this.bindEvents = () => {
-    const $submitButton = $(".submit-button", this.$loginPage);
     const $form = $("form", this.$loginPage);
     const $signupLink = $(".link-container.signup a", this.$loginPage);
 
@@ -125,15 +121,17 @@ function Login({ $target, initialState, moveTo, currentPage }) {
     });
     $signupLink.addEventListener("click", event => {
       event.preventDefault();
-      moveTo("signup");
+      this.moveTo("signup");
     });
   };
 
   this.init = () => {
-    // TODO: if (login) moveTo("post-list");
-    // if (this.currentPage !== "login") {
-    //   return;
-    // }
+    const { isLoggedIn } = getState();
+
+    if (isLoggedIn) {
+      this.moveTo("post-list");
+      return;
+    }
     this.render();
     this.bindEvents();
   };

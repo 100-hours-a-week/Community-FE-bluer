@@ -28,7 +28,7 @@ export const subscribe = listener => {
   return () => listeners.delete(listener);
 };
 
-export const dispatch = (type, payload) => {
+export const dispatch = (type, payload = {}) => {
   if (!VALID_ACTIONS.includes(type)) {
     console.error(`Invalid dispatch type: "${type}"`);
     return;
@@ -36,7 +36,13 @@ export const dispatch = (type, payload) => {
 
   switch (type) {
     case "LOGIN":
-      setState({ isLoggedIn: true, userToken: payload }, type);
+      setState(
+        {
+          isLoggedIn: true,
+          userToken: payload.token,
+        },
+        type
+      );
       break;
 
     case "LOGOUT":
