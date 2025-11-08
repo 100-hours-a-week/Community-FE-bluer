@@ -12,6 +12,7 @@ import {
 
 import { $ } from "./lib/dom.js";
 import { dispatch, subscribe } from "./lib/store.js";
+import { LOGIN_DELAY_MILLISECONDS } from "./lib/constants.js";
 
 function App() {
   const $app = $("#app");
@@ -29,7 +30,9 @@ function App() {
       if (email === "test@test.com" && password === "Testtest1!") {
         // SUCCESS CASE
         $(".submit-button").classList.add("isLoading");
-        dispatch("LOGIN", { userToken: "LOGIN_SUCCESS_TOKEN" });
+        setTimeout(() => {
+          dispatch("LOGIN", { userToken: "LOGIN_SUCCESS_TOKEN" });
+        }, LOGIN_DELAY_MILLISECONDS);
       }
     } catch (error) {
       // TODO: 아이디 또는 비밀번호를 확인해 주세요
