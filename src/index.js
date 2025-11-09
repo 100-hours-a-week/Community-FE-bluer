@@ -11,7 +11,7 @@ import {
 } from "./pages/index.js";
 
 import { $ } from "./lib/dom.js";
-import { dispatch, subscribe } from "./lib/store.js";
+import { dispatch, getState, subscribe } from "./lib/store.js";
 import { LOGIN_DELAY_MILLISECONDS } from "./lib/constants.js";
 
 function App() {
@@ -19,9 +19,7 @@ function App() {
 
   this.state = {
     // // login, signup, user-info, change-password, post-list, post, post-create
-    currentPage: "login",
     pageState: ["post-list"],
-    isLoggedIn: false,
   };
 
   this.login = ({ email, password }) => {
@@ -30,9 +28,9 @@ function App() {
       if (email === "test@test.com" && password === "Testtest1!") {
         // SUCCESS CASE
         $(".submit-button").classList.add("isLoading");
-        setTimeout(() => {
-          dispatch("LOGIN", { userToken: "LOGIN_SUCCESS_TOKEN" });
-        }, LOGIN_DELAY_MILLISECONDS);
+        // setTimeout(() => {
+        dispatch("LOGIN", { userToken: "LOGIN_SUCCESS_TOKEN" });
+        // }, LOGIN_DELAY_MILLISECONDS);
       }
     } catch (error) {
       // TODO: 아이디 또는 비밀번호를 확인해 주세요
@@ -41,17 +39,13 @@ function App() {
   };
 
   this.moveTo = page => {
-    this.state.pageState.push(page);
-    this.state.currentPage = page;
+    dispatch("PUSH_STATE", { page });
 
     this.render();
   };
 
   this.header = new Header({
     $target: $("#app"),
-    initialState: {
-      isLoggedIn: this.state.isLoggedIn,
-    },
     moveTo: page => {
       this.moveTo(page);
     },
@@ -73,26 +67,27 @@ function App() {
   };
 
   this.renderPage = () => {
-    const page = pages[this.state.currentPage];
+    const { history } = getState();
+    const currentPage = history[history.length - 1];
+    const page = pages[currentPage];
 
     if (page?.init) {
-      this.header.init();
+      // this.header.init();
       page.init();
     }
   };
 
   this.render = () => {
     $("#app").innerHTML = "";
+    this.header.render();
     this.renderPage();
   };
 
   this.init = () => {
     subscribe((globalState, type) => {
       if (type === "LOGIN") {
-        this.state.isLoggedIn = true;
         this.moveTo("post-list");
       } else if (type === "LOGOUT") {
-        this.state.isLoggedIn = false;
         this.moveTo("login");
       }
     });
