@@ -5,9 +5,8 @@ import {
   getPasswordError,
   getPasswordCheckError,
   getNicknameError,
-  getSignupInputError,
 } from "../lib/validation.js";
-import { ERROR_MESSAGES } from "../lib/constants.js";
+import { ERROR_TYPE, ERROR_MESSAGES } from "../lib/constants.js";
 
 function Signup({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
@@ -27,6 +26,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       profileImgUrl: false,
     },
   };
+  this.moveTo = moveTo;
 
   this.$signupPage = document.createElement("div");
   this.$signupPage.classList.add("signup-page", "page-layout");
@@ -35,7 +35,27 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     this.state = { ...this.state, ...newState };
   };
 
-  this.validateField = name => {
+  this.validateImageField = () => {
+    if (!this.state.profileImgUrl) {
+      const errorElement = $(`.error-message.profile`, this.$signupPage);
+      errorElement.innerText =
+        ERROR_MESSAGES[ERROR_TYPE.EMPTY_PROFILE_IMAGE] || "";
+      this.state.isValid[name] = false;
+    }
+  };
+
+  this.updateSubmitButtonState = () => {
+    const { isValid } = this.state;
+    const allValid = Object.values(isValid).every(v => v);
+    const $signupButton = $(".signup-button", this.$signupPage);
+
+    if ($signupButton) {
+      $signupButton.disabled = !allValid;
+      $signupButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
+    }
+  };
+
+  this.validateTextField = name => {
     let errorType = null;
 
     if (name === "email") {
@@ -68,17 +88,6 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     this.updateSubmitButtonState();
   };
 
-  this.updateSubmitButtonState = () => {
-    const { isValid } = this.state;
-    const allValid = Object.values(isValid).every(v => v);
-    const $signupButton = $(".signup-button", this.$signupPage);
-
-    if ($signupButton) {
-      $signupButton.disabled = !allValid;
-      $signupButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
-    }
-  };
-
   this.getPhotoButtonHTML = () => {
     if (this.state.profileImgUrl?.length > 0) {
       return `
@@ -108,13 +117,13 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
             <ul class="form-input-list">
               <li class="input-container">
                 <label for="email">이메일</label>
-                <input class="input-email" type="email" name="email" placeholder="이메일을 입력하세요" />
+                <input id="email" class="input-email" type="email" name="email" placeholder="이메일을 입력하세요" />
                 <span class="error-message email"></span>
               </li>
               <li class="input-container">
                 <label for="password">비밀번호</label>
                 <input type="password" id="password" name="password" />
-                <span class="error-message password"></span>
+                <span class="error-message password">1</span>
               </li>
               <li class="input-container">
                 <label for="passwordcheck">비밀번호 확인</label>
@@ -154,22 +163,16 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       return;
     }
 
-    this.validateField(name);
+    this.validateTextField(name);
+    this.validateImageField();
   };
 
   this.handleSubmit = event => {
     event.preventDefault();
 
-    const { errorType } = getSignupInputError(this.state);
-
-    if (errorType) {
-      const message = ERROR_MESSAGES[errorType];
-
-      alert(message || "입력값을 다시 확인해주세요.");
-      return;
-    }
-    // TODO: add routing
-    alert("TODO: 가입 성공 및 로그인 페이지로 이동");
+    // TODO: api handling for signing event
+    this.moveTo("login");
+    // alert("TODO: 가입 성공 및 로그인 페이지로 이동");
   };
 
   this.handleChangeFileInput = event => {
