@@ -167,6 +167,14 @@
   align-items: center;
   align-self: center;
   cursor: pointer;
+
+  .plus {
+    background-color: var(--default-color-grey);
+  }
+}
+
+.add-photo-file-input {
+  display: none;
 }
 
 /* 가로줄 */
