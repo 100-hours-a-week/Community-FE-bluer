@@ -32,6 +32,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
 
   this.$signupPage = document.createElement("div");
   this.$signupPage.classList.add("signup-page", "page-layout");
+  this.$errorElement = name => $(`.error-message.${name}`, this.$signupPage);
 
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
@@ -57,37 +58,54 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     }
   };
 
-  this.validateTextField = name => {
-    let errorType = null;
+  this.getFormFieldErrorType = formName => {
+    const validatorMap = {
+      email: () => getEmailError(this.state.email),
+      password: () => getPasswordError(this.state.password),
+      passwordcheck: () =>
+        getPasswordCheckError(this.state.password, this.state.passwordcheck),
+      nickname: () => getNicknameError(this.state.nickname),
+    };
 
-    if (name === "email") {
-      const { errorType: type } = getEmailError(this.state.email);
-      errorType = type;
-    } else if (name === "password") {
-      const { errorType: type } = getPasswordError(this.state.password);
-      errorType = type;
-    } else if (name === "passwordcheck") {
-      const { errorType: type } = getPasswordCheckError(
-        this.state.password,
-        this.state.passwordcheck
-      );
-      errorType = type;
-    } else if (name === "nickname") {
-      const { errorType: type } = getNicknameError(this.state.nickname);
-      errorType = type;
+    const validator = validatorMap[formName];
+    if (!validator) {
+      return null;
     }
 
-    const errorElement = $(`.error-message.${name}`, this.$signupPage);
+    const { errorType } = validator();
+
+    return errorType;
+  };
+
+  this.validateTextField = name => {
+    const errorType = this.getFormFieldErrorType(name);
 
     if (errorType) {
-      errorElement.innerText = ERROR_MESSAGES[errorType] || "";
+      this.$errorElement(name).innerText = ERROR_MESSAGES[errorType] || "";
       this.state.isValid[name] = false;
     } else {
-      errorElement.innerText = "";
+      this.$errorElement(name).innerText = "";
       this.state.isValid[name] = true;
     }
 
     this.updateSubmitButtonState();
+  };
+
+  this.initFileInput = () => {
+    const $photoContainer = $(".add-profile-photo-container", this.$signupPage);
+
+    $photoContainer.innerHTML =
+      '<button type="button" class="add-profile-photo-button plus"></button>';
+  };
+
+  this.renderProfileImage = file => {
+    const $photoContainer = $(".add-profile-photo-container", this.$signupPage);
+    const blobUrl = URL.createObjectURL(file);
+
+    this.setState({ profileImgUrl: blobUrl });
+
+    $photoContainer.innerHTML = signupTemplate.photoButton(this.state);
+    $(".error-message.profile", this.$signupPage).innerText = "";
   };
 
   this.render = () => {
@@ -124,23 +142,6 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     // TODO: api handling for signing event
     this.moveTo("login");
     // alert("TODO: 가입 성공 및 로그인 페이지로 이동");
-  };
-
-  this.initFileInput = () => {
-    const $photoContainer = $(".add-profile-photo-container", this.$signupPage);
-
-    $photoContainer.innerHTML =
-      '<button type="button" class="add-profile-photo-button plus"></button>';
-  };
-
-  this.renderProfileImage = file => {
-    const $photoContainer = $(".add-profile-photo-container", this.$signupPage);
-    const blobUrl = URL.createObjectURL(file);
-
-    this.setState({ profileImgUrl: blobUrl });
-
-    $photoContainer.innerHTML = signupTemplate.photoButton(this.state);
-    $(".error-message.profile", this.$signupPage).innerText = "";
   };
 
   this.handleChangeFileInput = event => {
