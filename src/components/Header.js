@@ -1,8 +1,9 @@
 import { getState } from "../lib/store.js";
+import { $ } from "../lib/dom.js";
 
 function Header({ $target, initialState }) {
   this.target = $target;
-  this.state = { ...initialState };
+  this.state = { isOpen: false, ...initialState };
   this.$header = document.createElement("header");
   this.$header.classList.add("header");
 
@@ -24,20 +25,6 @@ function Header({ $target, initialState }) {
     ];
 
     return haveBackButtonPages.includes(page);
-  };
-
-  this.renderDropdownButton = () => {
-    const { isLoggedIn } = getState();
-
-    return `
-      <button class="dropdown-button" data-role="menu">
-      ${
-        isLoggedIn
-          ? '<div class="avatar"><img src="./public/profile-sample.jpeg" /></div>'
-          : '<div class="avatar bg-none"></div>'
-      }
-      </button>
-    `;
   };
 
   this.renderBackButton = () => {
@@ -66,9 +53,16 @@ function Header({ $target, initialState }) {
           ${
             isLoggedIn
               ? `
-                  <button class="dropdown-button" data-role="menu">
-                    <div class="avatar"><img src="./public/profile-sample.jpeg" /></div> 
-                  </button>
+                  <div class="dropdown-button-container">
+                    <button class="dropdown-button" data-role="menu">
+                      <div class="avatar"><img src="./public/profile-sample.jpeg" /></div> 
+                    </button>
+                    <ul class="dropdown-list none">
+                      <li class="dropdown-item user-info">회원정보수정</li>
+                      <li class="dropdown-item change-password">비밀번호수정</li>
+                      <li class="dropdown-item logout">로그아웃</li>
+                    </ul>
+                  </div>
             `
               : '<div class="avatar bg-none"></div>'
           }
@@ -81,17 +75,30 @@ function Header({ $target, initialState }) {
 
   this.onBackClick = () => {};
 
-  this.onDropdownToggle = () => {};
+  this.onDropdownToggle = () => {
+    const $dropdownList = $(".dropdown-list");
+
+    this.setState({ isOpen: !this.state.isOpen });
+
+    if (this.state.isOpen) {
+      $dropdownList.classList.remove("none");
+    } else {
+      $dropdownList.classList.add("none");
+    }
+  };
 
   this.onDropdownItemClick = () => {};
 
   this.handleClick = event => {
     if (event.target.closest(".header-back-button-container")) {
-      console.log("back");
+      this.onBackClick();
     } else if (event.target.closest(".dropdown-button")) {
-      console.log("toggle dropdown");
+      this.onDropdownToggle();
+    } else {
+      console.log(event.target);
     }
   };
+
   this.bindEvents = () => {
     this.$header.addEventListener("click", event => {
       this.handleClick(event);
