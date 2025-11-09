@@ -1,9 +1,11 @@
-import { getState } from "../lib/store.js";
+import { getState, dispatch } from "../lib/store.js";
 import { $ } from "../lib/dom.js";
 
-function Header({ $target, initialState }) {
+function Header({ $target, moveTo, initialState }) {
   this.target = $target;
+  this.moveTo = moveTo;
   this.state = { isOpen: false, ...initialState };
+
   this.$header = document.createElement("header");
   this.$header.classList.add("header");
 
@@ -12,7 +14,6 @@ function Header({ $target, initialState }) {
   };
 
   /*
-    1. 로그인한 상태 -> 우측 유저 드롭다운 버튼
     2. 게시글 상세조회, 게시글 수정, 게시글 추가 페이지, 회원가입 -> 뒤로가기
   */
 
@@ -58,9 +59,9 @@ function Header({ $target, initialState }) {
                       <div class="avatar"><img src="./public/profile-sample.jpeg" /></div> 
                     </button>
                     <ul class="dropdown-list none">
-                      <li class="dropdown-item user-info">회원정보수정</li>
-                      <li class="dropdown-item change-password">비밀번호수정</li>
-                      <li class="dropdown-item logout">로그아웃</li>
+                      <li class="dropdown-item" data-action="user-info">회원정보수정</li>
+                      <li class="dropdown-item" data-action="change-password">비밀번호수정</li>
+                      <li class="dropdown-item" data-action="logout">로그아웃</li>
                     </ul>
                   </div>
             `
@@ -87,15 +88,33 @@ function Header({ $target, initialState }) {
     }
   };
 
-  this.onDropdownItemClick = () => {};
+  this.onDropdownItemClick = target => {
+    const action = target.dataset?.action;
+    const actionMap = {
+      "user-info": () => {
+        this.moveTo("user-info");
+      },
+      "change-password": () => {
+        this.moveTo("change-password");
+      },
+      logout: () => {
+        dispatch("LOGOUT");
+      },
+    };
+
+    this.onDropdownToggle();
+    actionMap[action]?.();
+  };
 
   this.handleClick = event => {
-    if (event.target.closest(".header-back-button-container")) {
+    const { target } = event;
+
+    if (target.closest(".header-back-button-container")) {
       this.onBackClick();
-    } else if (event.target.closest(".dropdown-button")) {
+    } else if (target.closest(".dropdown-button")) {
       this.onDropdownToggle();
-    } else {
-      console.log(event.target);
+    } else if (target.closest(".dropdown-item")) {
+      this.onDropdownItemClick(event.target);
     }
   };
 

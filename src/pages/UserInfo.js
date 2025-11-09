@@ -70,7 +70,6 @@ function UserInfo({ $target, initialState, currentPage }) {
     this.target.appendChild(this.$userInfoPage);
   };
   this.init = () => {
-    console.log("run");
     this.render();
   };
 }
