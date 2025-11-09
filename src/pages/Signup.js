@@ -12,7 +12,9 @@ import { signupTemplate } from "../template/SignupTemplate.js";
 
 function Signup({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
+  this.moveTo = moveTo;
   this.currentPage = currentPage;
+
   this.state = {
     ...initialState,
     email: "",
@@ -25,10 +27,8 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       password: false,
       passwordcheck: false,
       nickname: false,
-      profileImgUrl: false,
     },
   };
-  this.moveTo = moveTo;
 
   this.$signupPage = document.createElement("div");
   this.$signupPage.classList.add("signup-page", "page-layout");
@@ -38,18 +38,12 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     this.state = { ...this.state, ...newState };
   };
 
-  this.validateImageField = () => {
-    if (!this.state.profileImgUrl) {
-      const errorElement = $(`.error-message.profile`, this.$signupPage);
-      errorElement.innerText =
-        ERROR_MESSAGES[ERROR_TYPE.EMPTY_PROFILE_IMAGE] || "";
-      this.state.isValid[name] = false;
-    }
-  };
-
   this.updateSubmitButtonState = () => {
     const { isValid } = this.state;
-    const allValid = Object.values(isValid).every(v => v);
+    const allValid =
+      Object.values(isValid).every(v => v) &&
+      this.state.profileImgUrl?.length > 0;
+
     const $signupButton = $(".signup-button", this.$signupPage);
 
     if ($signupButton) {
@@ -58,6 +52,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     }
   };
 
+  // TODO: 외부 파일로
   this.getFormFieldErrorType = formName => {
     const validatorMap = {
       email: () => getEmailError(this.state.email),
@@ -77,18 +72,17 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     return errorType;
   };
 
-  this.validateTextField = name => {
-    const errorType = this.getFormFieldErrorType(name);
+  /* Render */
+  this.initTextFieldError = name => {
+    this.$errorElement(name).innerText = "";
+  };
 
+  this.renderTextFieldError = (name, errorType) => {
     if (errorType) {
       this.$errorElement(name).innerText = ERROR_MESSAGES[errorType] || "";
-      this.state.isValid[name] = false;
     } else {
       this.$errorElement(name).innerText = "";
-      this.state.isValid[name] = true;
     }
-
-    this.updateSubmitButtonState();
   };
 
   this.initFileInput = () => {
@@ -98,24 +92,21 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       '<button type="button" class="add-profile-photo-button plus"></button>';
   };
 
-  this.renderProfileImage = file => {
+  this.renderProfileImage = () => {
     const $photoContainer = $(".add-profile-photo-container", this.$signupPage);
-    const blobUrl = URL.createObjectURL(file);
-
-    this.setState({ profileImgUrl: blobUrl });
 
     $photoContainer.innerHTML = signupTemplate.photoButton(this.state);
     $(".error-message.profile", this.$signupPage).innerText = "";
   };
 
-  this.render = () => {
-    this.$signupPage.innerHTML = signupTemplate.page({
-      photoButtonHtmlString: signupTemplate.photoButton(this.state),
-    });
+  this.renderImageFieldError = () => {
+    const errorElement = $(`.error-message.profile`, this.$signupPage);
 
-    this.target.appendChild(this.$signupPage);
+    errorElement.innerText =
+      ERROR_MESSAGES[ERROR_TYPE.EMPTY_PROFILE_IMAGE] || "";
   };
 
+  /* handlers */
   this.handleInput = event => {
     const { name, value } = event.target;
 
@@ -132,8 +123,21 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       return;
     }
 
-    this.validateTextField(name);
-    this.validateImageField();
+    const errorType = this.getFormFieldErrorType(name);
+
+    if (errorType) {
+      this.renderTextFieldError(name);
+      // TODO: setState
+      this.state.isValid[name] = false;
+    } else {
+      this.initTextFieldError(name);
+      this.state.isValid[name] = true;
+    }
+    this.updateSubmitButtonState();
+
+    if (!this.state.profileImgUrl) {
+      this.renderImageFieldError();
+    }
   };
 
   this.handleSubmit = event => {
@@ -150,11 +154,13 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     if (!file) {
       this.setState({ profileImgUrl: null });
       this.initFileInput();
-      return;
     } else {
+      const blobUrl = URL.createObjectURL(file);
+
+      this.setState({ profileImgUrl: blobUrl });
       this.renderProfileImage(file);
-      this.updateSubmitButtonState();
     }
+    this.updateSubmitButtonState();
   };
 
   this.onHiddenFileInputClick = () => {
@@ -171,6 +177,14 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     $form.addEventListener("submit", this.handleSubmit);
     $fileInput.addEventListener("change", this.handleChangeFileInput);
     $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
+  };
+
+  this.render = () => {
+    this.$signupPage.innerHTML = signupTemplate.page({
+      photoButtonHtmlString: signupTemplate.photoButton(this.state),
+    });
+
+    this.target.appendChild(this.$signupPage);
   };
 
   this.init = () => {

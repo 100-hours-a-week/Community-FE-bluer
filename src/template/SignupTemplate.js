@@ -51,7 +51,7 @@ export const signupTemplate = {
             </form>
             <div class="link-container login"><a href="/login">로그인하러 가기</a></div>
           </div>
-          <input type="file" accept="image/*" class="add-photo-file-input" />
+          <input name="profileImgUrl" type="file" accept="image/*" class="add-photo-file-input" />
         </div>
     `;
   },
