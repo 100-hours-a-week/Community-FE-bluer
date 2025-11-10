@@ -1,6 +1,6 @@
 import { getErrorMessage } from "../lib/validation.js";
 import { $ } from "../lib/dom.js";
-import { showToast } from "../lib/utils.js";
+import { showModal, showToast } from "../lib/utils.js";
 import { getNicknameError } from "../lib/validation.js";
 
 function UserInfo({ $target }) {
@@ -54,7 +54,6 @@ function UserInfo({ $target }) {
                 value=${this.state.email}             
               />
               <!-- TODO: value: with api -->
-              <span class="error-message email"></span>
             </li>
             <li class="input-container">
               <label for="nickname">닉네임</label>
@@ -72,8 +71,10 @@ function UserInfo({ $target }) {
             수정하기
           </button>
         </form>
-        <div class="link-container withdrawal">
-          <a href="/withdrawal">회원 탈퇴</a>
+        <div class="withdrawal-button-container">
+          <button type="button" class="withdrawal-button">
+            회원 탈퇴
+          </button>
         </div>
       </div>
     `;
@@ -84,7 +85,6 @@ function UserInfo({ $target }) {
   this.initErrorMessage = () => {
     const errorElement = $(`.error-message.profile`, this.$signupPage);
 
-    const emailErrorElement = $(`.error-message.email`, this.$userInfoPage);
     const nicknameErrorElement = $(
       `.error-message.nickname`,
       this.$userInfoPage
@@ -92,7 +92,6 @@ function UserInfo({ $target }) {
 
     errorElement.innerText = "";
     nicknameErrorElement.innerText = "";
-    emailErrorElement.innerText = "";
   };
 
   this.renderErrorMessage = (message = "히히") => {
@@ -129,12 +128,27 @@ function UserInfo({ $target }) {
     this.setState({ ...this.state, [name]: value });
   };
 
+  this.handleWithdrawalClick = () => {
+    showModal({
+      modalTitle: "회원탈퇴 하시겠습니까?",
+      modalDescription: "작성된 게시글과 댓글은 삭제됩니다.",
+      positiveText: "확인",
+      negativeText: "취소",
+      onPositive: () => {
+        alert("TODO: withdrawal api request");
+      },
+    });
+  };
   this.bindEvents = () => {
     const $form = $("form", this.$userInfoPage);
+    const $withdrawalButton = $(".withdrawal-button", this.$userInfoPage);
 
     $form.addEventListener("input", this.handleInput);
     $form.addEventListener("submit", this.handleSubmit);
+    $withdrawalButton.addEventListener("click", this.handleWithdrawalClick);
   };
+
+  this.handleWithdrawal = () => {};
 
   this.init = () => {
     // TODO: set initialValue with api, 최초 닉네임은 중복 검사 대상에서 제외하기 위해 따로 저장

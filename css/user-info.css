@@ -85,3 +85,10 @@
 .profile-image-container:hover .profile-overlay {
   opacity: 1;
 }
+
+.withdrawal-button-container {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
