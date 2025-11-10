@@ -1,19 +1,41 @@
+import { DUMMY_POSTS } from "../lib/constants.js";
+import { getState } from "../lib/store.js";
+
 function PostDetail({ $target, initialState = {} }) {
   this.$target = $target;
-  this.state = { ...initialState };
+  this.state = {
+    ...initialState,
+    post: {
+      id: null,
+      title: "",
+      content: "",
+      author: "",
+      createdAt: "",
+      likes: 0,
+      comments: 0,
+      views: 0,
+    },
+  };
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
 
+  this.setState = newState => {
+    this.state = { ...this.state, ...newState };
+  };
+
   this.render = () => {
+    const { post } = this.state;
+    const { title, content, author, createdAt, likes, comments, views } = post;
+
     const htmlString = `<div class="post-basic-info">
-        <h1 class="post-title bold">제목 1</h1>
+        <h1 class="post-title bold">${title}</h1>
         <div class="post-author-info">
           <div class="post-author-container left">
             <div class="post-author-container">
               <div class="post-avatar avatar"></div>
-              <span class="post-author bold">더미 작성자 1</span>
+              <span class="post-author bold">${author}</span>
             </div>
-            <span class="post-info-item">2021-01-01 00:00:00</span>
+            <span class="post-info-item">${createdAt}</span>
           </div>
           <div class="post-author-container right">
             <button class="post-author-container-button">수정</button>
@@ -26,32 +48,20 @@ function PostDetail({ $target, initialState = {} }) {
         <div class="post-content">
           <div class="post-content-image"></div>
           <p>
-            무엇을 얘기할까요? 아무말이라면, 삶은 항상 놀라운 모험이라고
-            생각합니다. 우리는 매일 새로운 경험을 하고 배우며 성장합니다. 때로는
-            어려움과 도전이 있지만, 그것들이 우리를 더 강하고 지혜롭게 만듭니다.
-            또한 우리는 주변의 사람들과 연결되며 사랑과 지지를 받습니다. 그래서
-            우리의 삶은 소중하고 의미가 있습니다. 자연도 아름다운 이야기입니다.
-            우리 주변의 자연은 끝없는 아름다움과 신비로움을 담고 있습니다. 산,
-            바다, 숲, 하늘 등 모든 것이 우리를 놀라게 만들고 감동시킵니다.
-            자연은 우리의 생명과 안정을 지키며 우리에게 힘을 주는 곳입니다.
-            마지막으로, 지식을 향한 탐구는 항상 흥미로운 여정입니다. 우리는
-            끝없는 지식의 바다에서 배우고 발견할 수 있으며, 이것이 우리를 더
-            깊이 이해하고 세상을 더 넓게 보게 해줍니다. 그런 의미에서, 삶은
-            놀라움과 경이로움으로 가득 차 있습니다. 새로운 경험을 즐기고 항상
-            앞으로 나아가는 것이 중요하다고 생각합니다.
+            ${content}
           </p>
         </div>
         <ul class="post-stats">
           <li class="post-stats-item bold">
-            <span class="item-content">123</span>
+            <span class="item-content">${likes}</span>
             <span class="item-title">좋아요수</span>
           </li>
           <li class="post-stats-item bold">
-            <span class="item-content">123</span>
+            <span class="item-content">${views}</span>
             <span class="item-title">조회수</span>
           </li>
           <li class="post-stats-item bold">
-            <span class="item-content">123</span>
+            <span class="item-content">${comments}</span>
             <span class="item-title">댓글</span>
           </li>
         </ul>
@@ -143,6 +153,12 @@ function PostDetail({ $target, initialState = {} }) {
   };
 
   this.init = () => {
+    const postId =
+      getState().history[getState().history.length - 1].query.postId;
+    const post = DUMMY_POSTS.find(post => post.id === postId);
+
+    this.setState({ post: { ...post } });
+
     this.render();
     this.bindEvents();
   };
