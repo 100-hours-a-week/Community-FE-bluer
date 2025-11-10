@@ -55,7 +55,7 @@ function App() {
     }),
     signup: new SignupPage({ $target: $app, moveTo: this.moveTo }),
     "post-list": new PostListPage({ $target: $app, moveTo: this.moveTo }),
-    "post-detail": new PostDetailPage({ $target: $app }),
+    "post-detail": new PostDetailPage({ $target: $app, moveTo: this.moveTo }),
     "post-create": new PostCreatePage({ $target: $app }),
     "post-edit": new PostEditPage({ $target: $app }),
     "user-info": new UserInfoPage({ $target: $app }),

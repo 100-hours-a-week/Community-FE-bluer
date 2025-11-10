@@ -1,8 +1,10 @@
-import { DUMMY_POSTS } from "../lib/constants.js";
+import { $ } from "../lib/dom.js";
 import { getState } from "../lib/store.js";
+import { DUMMY_POSTS } from "../lib/constants.js";
 
-function PostDetail({ $target, initialState = {} }) {
+function PostDetail({ $target, moveTo, initialState = {} }) {
   this.$target = $target;
+  this.moveTo = moveTo;
   this.state = {
     ...initialState,
     post: {
@@ -27,7 +29,8 @@ function PostDetail({ $target, initialState = {} }) {
     const { post } = this.state;
     const { title, content, author, createdAt, likes, comments, views } = post;
 
-    const htmlString = `<div class="post-basic-info">
+    const htmlString = `
+      <div class="post-basic-info">
         <h1 class="post-title bold">${title}</h1>
         <div class="post-author-info">
           <div class="post-author-container left">
@@ -38,8 +41,8 @@ function PostDetail({ $target, initialState = {} }) {
             <span class="post-info-item">${createdAt}</span>
           </div>
           <div class="post-author-container right">
-            <button class="post-author-container-button">수정</button>
-            <button class="post-author-container-button">삭제</button>
+            <button class="post-author-container-button post-modify">수정</button>
+            <button class="post-author-container-button post-delete">삭제</button>
           </div>
         </div>
       </div>
@@ -88,8 +91,8 @@ function PostDetail({ $target, initialState = {} }) {
                 <span class="post-info-item">2021-01-01 00:00:00</span>
               </div>
               <div class="post-author-container right post-comment">
-                <button class="post-author-container-button">수정</button>
-                <button class="post-author-container-button">삭제</button>
+                <button class="post-author-container-button comment-modify">수정</button>
+                <button class="post-author-container-button comment-delete">삭제</button>
               </div>
             </div>
             <p class="post-comment-content">
@@ -99,57 +102,36 @@ function PostDetail({ $target, initialState = {} }) {
               unde eaque ipsum dolorem tenetur hic.
             </p>
           </li>
-          <li class="post-comment">
-            <div class="post-author-info">
-              <div class="post-author-container left">
-                <div class="post-author-container">
-                  <div class="post-avatar avatar"></div>
-                  <span class="post-author bold">더미 작성자 1</span>
-                </div>
-                <span class="post-info-item">2021-01-01 00:00:00</span>
-              </div>
-              <div class="post-author-container right post-comment">
-                <button class="post-author-container-button">수정</button>
-                <button class="post-author-container-button">삭제</button>
-              </div>
-            </div>
-            <p class="post-comment-content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Cupiditate illum itaque facilis quisquam debitis laudantium a
-              nisi, commodi quas exercitationem sit eligendi, aliquid architecto
-              unde eaque ipsum dolorem tenetur hic.
-            </p>
-          </li>
-          <li class="post-comment">
-            <div class="post-author-info">
-              <div class="post-author-container left">
-                <div class="post-author-container">
-                  <div class="post-avatar avatar"></div>
-                  <span class="post-author bold">더미 작성자 1</span>
-                </div>
-                <span class="post-info-item">2021-01-01 00:00:00</span>
-              </div>
-              <div class="post-author-container right post-comment">
-                <button class="post-author-container-button">수정</button>
-                <button class="post-author-container-button">삭제</button>
-              </div>
-            </div>
-            <p class="post-comment-content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Cupiditate illum itaque facilis quisquam debitis laudantium a
-              nisi, commodi quas exercitationem sit eligendi, aliquid architecto
-              unde eaque ipsum dolorem tenetur hic.
-            </p>
-          </li>
-        </ul>
+         </ul>
       </main>`;
 
     this.element.innerHTML = htmlString;
     this.$target.appendChild(this.element);
   };
 
+  this.onClickPostModify = () => {
+    this.moveTo("post-edit", { postId: this.state.post.id });
+  };
+
+  this.onClickPostDelete = () => {};
+
+  this.onClickCommentModify = () => {};
+
+  this.onClickCommentDelete = () => {};
+
   this.bindEvents = () => {
-    // event 연결해주기
+    const $postModifyButton = $(".post-modify", this.element);
+    const $postDeleteButton = $(".post-delete", this.element);
+
+    $postModifyButton.addEventListener("click", this.onClickPostModify);
+    $postDeleteButton.addEventListener("click", this.onClickPostDelete);
+    /*
+      1) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
+      2) 포스트 삭제 버튼 누르면 삭제 모달 => author에게만 허용
+      3) 좋아요 버튼 active / inactive
+      4) 댓글 입력 글자수에 따른 버튼 상태 관리 핸들링
+      5) 댓글 수정
+    */
   };
 
   this.init = () => {
