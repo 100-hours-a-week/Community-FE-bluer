@@ -130,7 +130,7 @@
 }
 
 .submit-button.isLoading {
-  background-color: #7f6aee;
+  background-color: var(--button-bg-color-hover);
 }
 
 .link-container {
