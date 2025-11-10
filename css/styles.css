@@ -6,6 +6,8 @@
 @import "./user-info.css";
 @import "./post-detail.css";
 @import "./post-add.css";
+@import "./toast.css";
+@import "./modal.css";
 
 * {
   font-family:
