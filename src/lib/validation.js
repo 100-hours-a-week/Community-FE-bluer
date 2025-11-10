@@ -1,5 +1,6 @@
 import {
   ERROR_TYPE,
+  ERROR_MESSAGES,
   DUPLICATE_EMAILS,
   DUPLICATE_NICKNAMES,
 } from "./constants.js";
@@ -74,7 +75,7 @@ export const getPasswordCheckError = (password, passwordcheck) => {
 };
 
 export const getNicknameError = nickname => {
-  if (!nickname) {
+  if (!nickname || nickname?.length < 1) {
     return { errorType: ERROR_TYPE.EMPTY_NICKNAME };
   }
 
@@ -129,3 +130,5 @@ export const getSignupInputError = ({
 
   return { errorType: null };
 };
+
+export const getErrorMessage = errorType => ERROR_MESSAGES[errorType] || "";

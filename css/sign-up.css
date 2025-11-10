@@ -23,3 +23,7 @@
   border-radius: 50%;
   display: block;
 }
+
+.error-message {
+  height: 15px;
+}
