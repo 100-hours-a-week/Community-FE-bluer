@@ -53,7 +53,7 @@ export const showModal = ({
 
   const close = () => {
     $modal.classList.add("hidden");
-    $modal.innerHTML = ""; // 내부 완전히 비워서 다음 호출 시 새로 생성되도록
+    $modal.innerHTML = "";
   };
 
   const handlePositive = () => {
