@@ -1,8 +1,11 @@
-import { getState } from "../lib/store.js";
+import { getState, dispatch } from "../lib/store.js";
+import { $ } from "../lib/dom.js";
 
-function Header({ $target, initialState }) {
+function Header({ $target, moveTo, initialState }) {
   this.target = $target;
-  this.state = { ...initialState };
+  this.moveTo = moveTo;
+  this.state = { isOpen: false, ...initialState };
+
   this.$header = document.createElement("header");
   this.$header.classList.add("header");
 
@@ -11,7 +14,6 @@ function Header({ $target, initialState }) {
   };
 
   /*
-    1. 로그인한 상태 -> 우측 유저 드롭다운 버튼
     2. 게시글 상세조회, 게시글 수정, 게시글 추가 페이지, 회원가입 -> 뒤로가기
   */
 
@@ -24,20 +26,6 @@ function Header({ $target, initialState }) {
     ];
 
     return haveBackButtonPages.includes(page);
-  };
-
-  this.renderDropdownButton = () => {
-    const { isLoggedIn } = getState();
-
-    return `
-      <button class="dropdown-button" data-role="menu">
-      ${
-        isLoggedIn
-          ? '<div class="avatar"><img src="./public/profile-sample.jpeg" /></div>'
-          : '<div class="avatar bg-none"></div>'
-      }
-      </button>
-    `;
   };
 
   this.renderBackButton = () => {
@@ -66,9 +54,16 @@ function Header({ $target, initialState }) {
           ${
             isLoggedIn
               ? `
-                  <button class="dropdown-button" data-role="menu">
-                    <div class="avatar"><img src="./public/profile-sample.jpeg" /></div> 
-                  </button>
+                  <div class="dropdown-button-container">
+                    <button class="dropdown-button" data-role="menu">
+                      <div class="avatar"><img src="./public/profile-sample.jpeg" /></div> 
+                    </button>
+                    <ul class="dropdown-list none">
+                      <li class="dropdown-item" data-action="user-info">회원정보수정</li>
+                      <li class="dropdown-item" data-action="change-password">비밀번호수정</li>
+                      <li class="dropdown-item" data-action="logout">로그아웃</li>
+                    </ul>
+                  </div>
             `
               : '<div class="avatar bg-none"></div>'
           }
@@ -81,17 +76,48 @@ function Header({ $target, initialState }) {
 
   this.onBackClick = () => {};
 
-  this.onDropdownToggle = () => {};
+  this.onDropdownToggle = () => {
+    const $dropdownList = $(".dropdown-list");
 
-  this.onDropdownItemClick = () => {};
+    this.setState({ isOpen: !this.state.isOpen });
 
-  this.handleClick = event => {
-    if (event.target.closest(".header-back-button-container")) {
-      console.log("back");
-    } else if (event.target.closest(".dropdown-button")) {
-      console.log("toggle dropdown");
+    if (this.state.isOpen) {
+      $dropdownList.classList.remove("none");
+    } else {
+      $dropdownList.classList.add("none");
     }
   };
+
+  this.onDropdownItemClick = target => {
+    const action = target.dataset?.action;
+    const actionMap = {
+      "user-info": () => {
+        this.moveTo("user-info");
+      },
+      "change-password": () => {
+        this.moveTo("change-password");
+      },
+      logout: () => {
+        dispatch("LOGOUT");
+      },
+    };
+
+    this.onDropdownToggle();
+    actionMap[action]?.();
+  };
+
+  this.handleClick = event => {
+    const { target } = event;
+
+    if (target.closest(".header-back-button-container")) {
+      this.onBackClick();
+    } else if (target.closest(".dropdown-button")) {
+      this.onDropdownToggle();
+    } else if (target.closest(".dropdown-item")) {
+      this.onDropdownItemClick(event.target);
+    }
+  };
+
   this.bindEvents = () => {
     this.$header.addEventListener("click", event => {
       this.handleClick(event);

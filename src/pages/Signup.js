@@ -1,109 +1,190 @@
-// TODO: link handler
 import { $ } from "../lib/dom.js";
-import { handleInput } from "../lib/handlers.js";
+
+import {
+  getEmailError,
+  getPasswordError,
+  getPasswordCheckError,
+  getNicknameError,
+} from "../lib/validation.js";
+import { ERROR_TYPE, ERROR_MESSAGES } from "../lib/constants.js";
+
+import { signupTemplate } from "../template/SignupTemplate.js";
 
 function Signup({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
+  this.moveTo = moveTo;
   this.currentPage = currentPage;
+
   this.state = {
     ...initialState,
     email: "",
     password: "",
-    passwordCheck: "",
+    passwordcheck: "",
     nickname: "",
-    isErrorProfileImage: false,
-    isErrorEmail: false,
-    isErrorPassword: false,
-    isErrorPasswordCheck: false,
-    isErrorNickname: false,
-    errorProfileImageMessage: "",
-    errorEmailMessage: "",
-    errorPasswordMessage: "",
-    errorPasswordCheckMessage: "",
+    profileImgUrl: null,
+    isValid: {
+      email: false,
+      password: false,
+      passwordcheck: false,
+      nickname: false,
+    },
   };
 
   this.$signupPage = document.createElement("div");
   this.$signupPage.classList.add("signup-page", "page-layout");
+  this.$errorElement = name => $(`.error-message.${name}`, this.$signupPage);
 
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
   };
 
-  this.render = () => {
-    this.$signupPage.innerHTML = `
-        <div>
-          <h2 class="page-title bold">회원가입</h2>
-          <div class="signup-form-container">
-            <form>
-              <div>
-                <div>
-                  <strong class="bold"> 프로필 사진 </strong>
-                </div>
-                <span class="error-message profile"></span>
-                <div class="add-photo-container">
-                  <button class="add-profile-photo-button plus"></button>
-                </div>
-              </div>
-              <ul class="form-input-list">
-                <li class="input-container">
-                  <label for="email">이메일</label>
-                  <input
-                    class="input-email"
-                    type="email"
-                    name="email"
-                    placeholder="이메일을 입력하세요"
-                  />
-                  <span class="error-message email"></span>
-                </li>
-                <li class="input-container">
-                  <label for="password">비밀번호</label>
-                  <input type="password" id="password" name="password" />
-                  <span class="error-message email"></span>
-                </li>
-                <li class="input-container">
-                  <label for="password-check">비밀번호 확인</label>
-                  <input
-                    type="password"
-                    id="password-check"
-                    name="password-check"
-                  />
-                  <span class="error-message password"></span>
-                </li>
-                <li class="input-container">
-                  <label for="nickname">닉네임</label>
-                  <input type="text" id="nickname" name="nickname" />
-                  <span class="error-message nickname"></span>
-                </li>
-              </ul>
-              <button class="submit-button signup-button" type="submit">
-                회원가입
-              </button>
-            </form>
-            <div class="link-container login">
-              <a href="/login">로그인하러 가기</a>
-            </div>
-          </div>
-        </div>
-    `;
-    this.target.appendChild(this.$signupPage);
+  this.updateSubmitButtonState = () => {
+    const { isValid } = this.state;
+    const allValid =
+      Object.values(isValid).every(v => v) &&
+      this.state.profileImgUrl?.length > 0;
+
+    const $signupButton = $(".signup-button", this.$signupPage);
+
+    if ($signupButton) {
+      $signupButton.disabled = !allValid;
+      $signupButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
+    }
   };
 
+  // TODO: 외부 파일로
+  this.getFormFieldErrorType = formName => {
+    const validatorMap = {
+      email: () => getEmailError(this.state.email),
+      password: () => getPasswordError(this.state.password),
+      passwordcheck: () =>
+        getPasswordCheckError(this.state.password, this.state.passwordcheck),
+      nickname: () => getNicknameError(this.state.nickname),
+    };
+
+    const validator = validatorMap[formName];
+    if (!validator) {
+      return null;
+    }
+
+    const { errorType } = validator();
+
+    return errorType;
+  };
+
+  /* Render */
+  this.initTextFieldError = name => {
+    this.$errorElement(name).innerText = "";
+  };
+
+  this.renderTextFieldError = (name, errorType) => {
+    if (errorType) {
+      this.$errorElement(name).innerText = ERROR_MESSAGES[errorType] || "";
+    } else {
+      this.$errorElement(name).innerText = "";
+    }
+  };
+
+  this.initFileInput = () => {
+    const $photoContainer = $(".add-profile-photo-container", this.$signupPage);
+
+    $photoContainer.innerHTML =
+      '<button type="button" class="add-profile-photo-button plus"></button>';
+  };
+
+  this.renderProfileImage = () => {
+    const $photoContainer = $(".add-profile-photo-container", this.$signupPage);
+
+    $photoContainer.innerHTML = signupTemplate.photoButton(this.state);
+    $(".error-message.profile", this.$signupPage).innerText = "";
+  };
+
+  this.renderImageFieldError = () => {
+    const errorElement = $(`.error-message.profile`, this.$signupPage);
+
+    errorElement.innerText =
+      ERROR_MESSAGES[ERROR_TYPE.EMPTY_PROFILE_IMAGE] || "";
+  };
+
+  /* handlers */
   this.handleInput = event => {
-    handleInput(event, this.state, this.setState);
+    const { name, value } = event.target;
+
+    if (this.state[name] !== undefined) {
+      this.setState({ [name]: value });
+    }
   };
 
-  this.handleSubmit = () => {
-    console.log(this.state);
+  this.handleBlur = event => {
+    const { target } = event;
+    const { name } = target;
+
+    if (target.tagName !== "INPUT") {
+      return;
+    }
+
+    const errorType = this.getFormFieldErrorType(name);
+
+    if (errorType) {
+      this.renderTextFieldError(name);
+      // TODO: setState
+      this.state.isValid[name] = false;
+    } else {
+      this.initTextFieldError(name);
+      this.state.isValid[name] = true;
+    }
+    this.updateSubmitButtonState();
+
+    if (!this.state.profileImgUrl) {
+      this.renderImageFieldError();
+    }
+  };
+
+  this.handleSubmit = event => {
+    event.preventDefault();
+
+    // TODO: api handling for signing event
+    this.moveTo("login");
+    // alert("TODO: 가입 성공 및 로그인 페이지로 이동");
+  };
+
+  this.handleChangeFileInput = event => {
+    const file = event.target.files[0];
+
+    if (!file) {
+      this.setState({ profileImgUrl: null });
+      this.initFileInput();
+    } else {
+      const blobUrl = URL.createObjectURL(file);
+
+      this.setState({ profileImgUrl: blobUrl });
+      this.renderProfileImage(file);
+    }
+    this.updateSubmitButtonState();
+  };
+
+  this.onHiddenFileInputClick = () => {
+    $(".add-photo-file-input", this.$signupPage).click();
   };
 
   this.bindEvents = () => {
     const $form = $("form", this.$signupPage);
+    const $fileInput = $(".add-photo-file-input", this.$signupPage);
+    const $addPhotoContainer = $(".add-photo-container", this.$signupPage);
 
     $form.addEventListener("input", this.handleInput);
-    $form.addEventListener("submit", event => {
-      event.preventDefault();
-      this.handleSubmit();
+    $form.addEventListener("blur", this.handleBlur, true);
+    $form.addEventListener("submit", this.handleSubmit);
+    $fileInput.addEventListener("change", this.handleChangeFileInput);
+    $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
+  };
+
+  this.render = () => {
+    this.$signupPage.innerHTML = signupTemplate.page({
+      photoButtonHtmlString: signupTemplate.photoButton(this.state),
     });
+
+    this.target.appendChild(this.$signupPage);
   };
 
   this.init = () => {

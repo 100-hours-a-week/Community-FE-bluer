@@ -17,11 +17,6 @@ import { LOGIN_DELAY_MILLISECONDS } from "./lib/constants.js";
 function App() {
   const $app = $("#app");
 
-  this.state = {
-    // // login, signup, user-info, change-password, post-list, post, post-create
-    pageState: ["post-list"],
-  };
-
   this.login = ({ email, password }) => {
     try {
       // TODO: 로그인 API 요청
@@ -38,6 +33,7 @@ function App() {
     }
   };
 
+  // TODO: modulation as routing module
   this.moveTo = page => {
     dispatch("PUSH_STATE", { page });
 
@@ -57,7 +53,7 @@ function App() {
       moveTo: this.moveTo,
       login: this.login,
     }),
-    signup: new SignupPage({ $target: $app }),
+    signup: new SignupPage({ $target: $app, moveTo: this.moveTo }),
     "post-list": new PostListPage({ $target: $app, moveTo: this.moveTo }),
     "post-detail": new PostDetailPage({ $target: $app }),
     "post-create": new PostCreatePage({ $target: $app }),
