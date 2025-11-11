@@ -13,7 +13,7 @@ export const apiManager = {
     return restClient.get("/users/profile");
   },
 
-  getDuplicatedNickname: ({ nickname = null, email = null }) => {
+  checkAvailability: ({ nickname = null, email = null }) => {
     const params = { nickname, email };
     if (!nickname) {
       delete params.nickname;
@@ -23,6 +23,11 @@ export const apiManager = {
     }
     return restClient.get("/users/check", params);
   },
+  updateProfile: ({ nickname }) => {
+    const params = { nickname };
+    return restClient.put("/users/profile", params);
+  },
+
   // Post
   getPost: postId => {
     const params = {};
