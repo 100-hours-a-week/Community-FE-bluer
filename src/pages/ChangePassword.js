@@ -2,6 +2,7 @@ import { $ } from "../lib/dom.js";
 import { getPasswordError, getPasswordCheckError } from "../lib/validation.js";
 import { ERROR_MESSAGES } from "../lib/constants.js";
 import { showToast } from "../lib/utils.js";
+import { apiManager } from "../lib/api/apiManager.js";
 
 function ChangePassword({ $target, initialState = {}, moveTo }) {
   this.target = $target;
@@ -91,9 +92,9 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
     event.preventDefault();
 
     try {
-      // await apiManager.updatePassword({
-      //   password: this.state.password,
-      // });
+      await apiManager.updatePassword({
+        password: this.state.password,
+      });
     } catch (error) {
       console.error(error);
       showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");

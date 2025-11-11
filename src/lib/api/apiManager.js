@@ -23,6 +23,10 @@ export const apiManager = {
     }
     return restClient.get("/users/check", params);
   },
+  updatePassword: ({ password }) => {
+    const params = { password };
+    return restClient.put("/users/password", params);
+  },
   updateProfile: ({ nickname }) => {
     const params = { nickname };
     return restClient.put("/users/profile", params);

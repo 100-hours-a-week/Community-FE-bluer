@@ -57,7 +57,6 @@ function UserInfo({ $target }) {
                 readonly
                 value=${this.state.email}             
               />
-              <!-- TODO: value: with api -->
             </li>
             <li class="input-container">
               <label for="nickname">닉네임</label>
@@ -67,7 +66,6 @@ function UserInfo({ $target }) {
                 name="nickname"
                 value=${this.state.nickname}
               />
-              <!-- TODO: value: with api -->
               <span class="error-message nickname"></span>
             </li>
           </ul>
