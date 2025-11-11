@@ -1,6 +1,7 @@
+import { getState, subscribe } from "../store.js";
+
 const END_POINT = "http://localhost:5501/proxy";
 const DEFAULT_TIMEOUT = 5000;
-
 const commonHeaders = {
   "Content-Type": "application/json",
 };
@@ -46,12 +47,25 @@ async function extractDataFromResponse(promise) {
   return { status: response.status, data: responseData.data };
 }
 
+let authHeader = {};
+
+const updateAuthHeader = state => {
+  authHeader = state.isLoggedIn
+    ? {
+        Authorization: `Bearer ${state.userToken}`,
+      }
+    : {};
+};
+
+subscribe(updateAuthHeader);
+
 const isFetchError = err => err?.name === "AbortError" || err instanceof Error;
 
 async function request(url, options = {}) {
   const mergedOptions = {
     ...options,
     headers: {
+      ...authHeader,
       ...commonHeaders,
       ...(options.headers || {}),
     },

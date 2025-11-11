@@ -43,7 +43,7 @@ export const dispatch = (type, payload = {}) => {
       setState(
         {
           isLoggedIn: true,
-          userToken: payload.token,
+          userToken: payload.userToken,
         },
         type
       );
