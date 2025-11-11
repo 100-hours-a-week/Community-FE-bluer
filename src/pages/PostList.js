@@ -1,5 +1,6 @@
 import { truncateText } from "../lib/utils.js";
 import { POST_TITLE_MAX_LENGTH, DUMMY_POSTS } from "../lib/constants.js";
+import PostListItem from "../components/PostListItem.js";
 
 function PostList({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
@@ -41,37 +42,22 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     `;
 
     // TODO: Apply API
-    this.$postList.innerHTML = DUMMY_POSTS.map(post => {
-      const title = this.shortenTitle(post.title);
+    this.$postList.innerHTML = "";
 
-      return `
-        <li class="post" data-post-id="${post.id}">
-          <div class="post-top">
-            <div class="post-title bold">${title}</div>
-            <div class="post-info">
-              <div class="post-info left">
-                <div class="post-info-item"><span>좋아요 ${post.likes}</span></div>
-                <div class="post-info-item"><span>댓글 ${post.comments}</span></div>
-                <div class="post-info-item"><span>조회수 ${post.views}</span></div>
-              </div>
-              <div class="post-info right">
-                <div class="post-info-item"><span>${post.createdAt}</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="post-bottom">
-            <div class="post-author-container">
-              <div class="post-avatar avatar"></div>
-              <span class="post-author bold">${post.author}</span>
-            </div>
-          </div>
-        </li>
-      `;
-    }).join("");
+    DUMMY_POSTS.forEach(post => {
+      const shortenedPost = { ...post, title: this.shortenTitle(post.title) };
+      new PostListItem({
+        $target: this.$postList,
+        post: shortenedPost,
+        onClick: this.handleClickPost,
+      });
+    });
 
-    this.$postListPage.appendChild(this.$introductionArea);
-    this.$postListPage.appendChild(this.$addPostButtonContainer);
-    this.$postListPage.appendChild(this.$postList);
+    this.$postListPage.append(
+      this.$introductionArea,
+      this.$addPostButtonContainer,
+      this.$postList
+    );
 
     this.target.appendChild(this.$postListPage);
   };
