@@ -3,6 +3,7 @@ import { $ } from "../lib/dom.js";
 import { showModal, showToast } from "../lib/utils.js";
 import { getNicknameError } from "../lib/validation.js";
 import { apiManager } from "../lib/api/apiManager.js";
+import { ERROR_MESSAGES, ERROR_TYPE } from "../lib/constants.js";
 
 function UserInfo({ $target }) {
   this.target = $target;
@@ -108,7 +109,7 @@ function UserInfo({ $target }) {
   // TODO: api 연동
   this.isDuplicatedNickname = nickname => nickname === "중복";
 
-  this.handleSubmit = event => {
+  this.handleSubmit = async event => {
     event.preventDefault();
     this.initErrorMessage();
 
@@ -120,8 +121,34 @@ function UserInfo({ $target }) {
       return;
     }
 
+    try {
+      const { data } = await apiManager.getDuplicatedNickname({ nickname });
+
+      if (!data.available) {
+        this.renderErrorMessage(getErrorMessage(ERROR_TYPE.DUPLICATE_NICKNAME));
+
+        return;
+      }
+
+      // 2) 수정 요청
+      // const { data: updateData } = await apiManager.updateUserInfo({
+      //   nickname,
+      // });
+
+      showToast("수정 완료");
+    } catch (error) {
+      // 3) 실패 시
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+
+    /*
+      1) 중복 닉네임인지 체크 api => true: error
+      2) 요청 => 성공: 성공 토스트
+      3) 실패: 실패 토스트
+    */
+
     // TODO: API 요청
-    showToast("수정 완료");
   };
 
   this.handleInput = event => {

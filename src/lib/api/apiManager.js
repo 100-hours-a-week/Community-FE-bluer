@@ -12,6 +12,17 @@ export const apiManager = {
   getUserProfile: () => {
     return restClient.get("/users/profile");
   },
+
+  getDuplicatedNickname: ({ nickname = null, email = null }) => {
+    const params = { nickname, email };
+    if (!nickname) {
+      delete params.nickname;
+    }
+    if (!email) {
+      delete params.email;
+    }
+    return restClient.get("/users/check", params);
+  },
   // Post
   getPost: postId => {
     const params = {};
