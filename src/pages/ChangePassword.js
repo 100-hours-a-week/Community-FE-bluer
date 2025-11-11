@@ -1,7 +1,8 @@
 import { $ } from "../lib/dom.js";
 import { getPasswordError, getPasswordCheckError } from "../lib/validation.js";
-import { ERROR_MESSAGES, ERROR_TYPE } from "../lib/constants.js";
+import { ERROR_MESSAGES } from "../lib/constants.js";
 import { showToast } from "../lib/utils.js";
+import { apiManager } from "../lib/api/apiManager.js";
 
 function ChangePassword({ $target, initialState = {}, moveTo }) {
   this.target = $target;
@@ -43,49 +44,62 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
     };
 
     const validator = validatorMap[formName];
-    if (!validator) return null;
+    if (!validator) {
+      return null;
+    }
 
     const { errorType } = validator();
     return errorType;
   };
 
-  this.renderTextFieldError = (name, errorType) => {
-    if (errorType) {
-      this.$errorElement(name).innerText = ERROR_MESSAGES[errorType] || "";
-    } else {
-      this.$errorElement(name).innerText = "";
-    }
+  this.validateField = name => {
+    const errorType = this.getFormFieldErrorType(name);
+    return { errorType, isValid: !errorType };
   };
 
-  this.handleInput = e => {
-    const { name, value } = e.target;
-    if (this.state[name] !== undefined) {
-      this.setState({ [name]: value });
+  this.updateFieldErrorView = (name, errorType) => {
+    const $error = this.$errorElement(name);
+
+    if (!$error) {
+      return;
     }
+
+    $error.innerText = errorType ? ERROR_MESSAGES[errorType] : "";
   };
 
-  this.handleBlur = e => {
-    const { target } = e;
-    if (target.tagName !== "INPUT") return;
+  this.handleInput = event => {
+    const { name, value } = event.target;
+
+    this.setState({ [name]: value });
+  };
+
+  this.handleBlur = event => {
+    const { target } = event;
+    if (target.tagName !== "INPUT") {
+      return;
+    }
 
     const { name } = target;
-    const errorType = this.getFormFieldErrorType(name);
+    const { errorType, isValid } = this.validateField(name);
 
-    if (errorType) {
-      this.renderTextFieldError(name, errorType);
-      this.state.isValid[name] = false;
-    } else {
-      this.renderTextFieldError(name, null);
-      this.state.isValid[name] = true;
-    }
+    this.setState({ isValid: { ...this.state.isValid, [name]: isValid } });
+    this.updateFieldErrorView(name, errorType);
 
     this.updateSubmitButtonState();
   };
 
-  this.handleSubmit = e => {
-    e.preventDefault();
+  this.handleSubmit = async event => {
+    event.preventDefault();
 
-    // TODO: 실제 비밀번호 변경 API 요청
+    try {
+      await apiManager.updatePassword({
+        password: this.state.password,
+      });
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+      return;
+    }
 
     showToast("수정 완료");
   };

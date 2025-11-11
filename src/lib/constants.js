@@ -51,6 +51,8 @@ export const DUMMY_POSTS = [
 export const LOGIN_DELAY_MILLISECONDS = 3000;
 
 export const ERROR_TYPE = Object.freeze({
+  LOGIN_FAILED: "login-failed",
+
   WRONG_FORMAT_EMAIL: "wrong-format-email",
   DUPLICATE_EMAIL: "duplicate-email",
   EMPTY_EMAIL: "empty-email",
@@ -69,6 +71,7 @@ export const ERROR_TYPE = Object.freeze({
 });
 
 export const ERROR_MESSAGES = {
+  [ERROR_TYPE.LOGIN_FAILED]: "아이디 또는 비밀번호를 확인해 주세요",
   [ERROR_TYPE.EMPTY_EMAIL]: "* 이메일을 입력해주세요.",
   [ERROR_TYPE.WRONG_FORMAT_EMAIL]:
     "* 올바른 이메일 주소 형식을 입력해주세요. (예: example@example.com)",

@@ -1,13 +1,18 @@
 import { $ } from "../lib/dom.js";
-import { getState } from "../lib/store.js";
-import { ERROR_MESSAGES, ERROR_TYPE } from "../lib/constants.js";
+import { getState, dispatch } from "../lib/store.js";
+import {
+  ERROR_MESSAGES,
+  ERROR_TYPE,
+  LOGIN_DELAY_MILLISECONDS,
+} from "../lib/constants.js";
 import { getLoginInputError } from "../lib/validation.js";
 
-function Login({ $target, initialState, moveTo, currentPage, login }) {
+import { apiManager } from "../lib/api/apiManager.js";
+
+function Login({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
   this.currentPage = currentPage;
   this.moveTo = moveTo;
-  this.login = login;
 
   this.state = {
     ...initialState,
@@ -36,8 +41,27 @@ function Login({ $target, initialState, moveTo, currentPage, login }) {
       case ERROR_TYPE.WRONG_FORMAT_PASSWORD:
         $passwordErrorMessage.textContent = ERROR_MESSAGES[errorType];
         break;
+      case ERROR_TYPE.LOGIN_FAILED:
+        $passwordErrorMessage.textContent = ERROR_MESSAGES[errorType];
+        break;
       default:
         break;
+    }
+  };
+
+  this.login = async ({ email, password }) => {
+    try {
+      const result = await apiManager.login({ email, password });
+
+      $(".submit-button", this.$loginPage).classList.add("isLoading");
+      setTimeout(() => {
+        dispatch("LOGIN", { userToken: result.data.token });
+      }, LOGIN_DELAY_MILLISECONDS);
+    } catch (error) {
+      console.error("로그인 중 오류 발생:", error);
+      this.renderErrorMessages(ERROR_TYPE.LOGIN_FAILED);
+    } finally {
+      $(".submit-button", this.$loginPage).classList.remove("isLoading");
     }
   };
 
@@ -79,20 +103,16 @@ function Login({ $target, initialState, moveTo, currentPage, login }) {
       this.state.email,
       this.state.password
     );
+
     if (errorType) {
       this.renderErrorMessages(errorType);
       return;
     }
 
-    try {
-      this.login({
-        email: this.state.email,
-        password: this.state.password,
-      });
-    } catch (error) {
-      // TODO: "아이디 또는 비밀번호를 확인해 주세요."
-      console.log(error);
-    }
+    this.login({
+      email: this.state.email,
+      password: this.state.password,
+    });
   };
 
   // TODO: modulation

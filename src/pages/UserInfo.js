@@ -2,6 +2,9 @@ import { getErrorMessage } from "../lib/validation.js";
 import { $ } from "../lib/dom.js";
 import { showModal, showToast } from "../lib/utils.js";
 import { getNicknameError } from "../lib/validation.js";
+import { apiManager } from "../lib/api/apiManager.js";
+import { ERROR_TYPE } from "../lib/constants.js";
+import { dispatch } from "../lib/store.js";
 
 function UserInfo({ $target }) {
   this.target = $target;
@@ -9,6 +12,7 @@ function UserInfo({ $target }) {
     email: "",
     nickname: "",
     profileImgUrl: null,
+    initialNickname: "",
   };
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
@@ -53,7 +57,6 @@ function UserInfo({ $target }) {
                 readonly
                 value=${this.state.email}             
               />
-              <!-- TODO: value: with api -->
             </li>
             <li class="input-container">
               <label for="nickname">닉네임</label>
@@ -63,11 +66,10 @@ function UserInfo({ $target }) {
                 name="nickname"
                 value=${this.state.nickname}
               />
-              <!-- TODO: value: with api -->
               <span class="error-message nickname"></span>
             </li>
           </ul>
-          <button class="submit-button signup-button" type="submit">
+          <button class="submit-button signup-button" disabled type="submit">
             수정하기
           </button>
         </form>
@@ -103,10 +105,7 @@ function UserInfo({ $target }) {
     nicknameErrorElement.innerText = message;
   };
 
-  // TODO: api 연동
-  this.isDuplicatedNickname = nickname => nickname === "중복";
-
-  this.handleSubmit = event => {
+  this.handleSubmit = async event => {
     event.preventDefault();
     this.initErrorMessage();
 
@@ -118,14 +117,44 @@ function UserInfo({ $target }) {
       return;
     }
 
-    // TODO: API 요청
-    showToast("수정 완료");
+    try {
+      const { data } = await apiManager.checkAvailability({ nickname });
+
+      if (!data.available) {
+        this.renderErrorMessage(getErrorMessage(ERROR_TYPE.DUPLICATE_NICKNAME));
+
+        return;
+      }
+
+      const { data: updateData } = await apiManager.updateProfile({
+        nickname,
+      });
+      showToast("수정 완료");
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
   };
 
   this.handleInput = event => {
     const { name, value } = event.target;
 
     this.setState({ ...this.state, [name]: value });
+
+    $(".submit-button").disabled =
+      this.state.nickname === this.state.initialNickname;
+  };
+
+  this.handleWithdrawal = async () => {
+    try {
+      await apiManager.withdrawProfile();
+
+      showToast("회원 탈퇴 완료");
+      dispatch("LOGOUT");
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
   };
 
   this.handleWithdrawalClick = () => {
@@ -135,10 +164,11 @@ function UserInfo({ $target }) {
       positiveText: "확인",
       negativeText: "취소",
       onPositive: () => {
-        alert("TODO: withdrawal api request");
+        this.handleWithdrawal();
       },
     });
   };
+
   this.bindEvents = () => {
     const $form = $("form", this.$userInfoPage);
     const $withdrawalButton = $(".withdrawal-button", this.$userInfoPage);
@@ -148,16 +178,24 @@ function UserInfo({ $target }) {
     $withdrawalButton.addEventListener("click", this.handleWithdrawalClick);
   };
 
-  this.handleWithdrawal = () => {};
+  this.getUserProfile = async () => {
+    try {
+      const { data } = await apiManager.getUserProfile();
 
-  this.init = () => {
-    // TODO: set initialValue with api, 최초 닉네임은 중복 검사 대상에서 제외하기 위해 따로 저장
-    this.setState({
-      email: "startupcode@gmail.com",
-      nickname: "스타트업코드",
-      profileImgUrl: "/public/profile-sample.jpeg",
-      initialNickname: "스타트업코드",
-    });
+      this.setState({
+        email: data.email,
+        nickname: data.nickname,
+        profileImgUrl: data.profileImageUrl,
+        initialNickname: data.nickname,
+      });
+    } catch (error) {
+      showToast(`Error: 유저 정보 조회 중 에러 발생`);
+      console.error(error);
+    }
+  };
+
+  this.init = async () => {
+    await this.getUserProfile();
 
     this.render();
     this.bindEvents();

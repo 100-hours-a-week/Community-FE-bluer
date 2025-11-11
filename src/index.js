@@ -12,26 +12,9 @@ import {
 
 import { $ } from "./lib/dom.js";
 import { dispatch, getState, subscribe } from "./lib/store.js";
-import { LOGIN_DELAY_MILLISECONDS } from "./lib/constants.js";
 
 function App() {
   const $app = $("#app");
-
-  this.login = ({ email, password }) => {
-    try {
-      // TODO: 로그인 API 요청
-      if (email === "test@test.com" && password === "Testtest1!") {
-        // SUCCESS CASE
-        $(".submit-button").classList.add("isLoading");
-        // setTimeout(() => {
-        dispatch("LOGIN", { userToken: "LOGIN_SUCCESS_TOKEN" });
-        // }, LOGIN_DELAY_MILLISECONDS);
-      }
-    } catch (error) {
-      // TODO: 아이디 또는 비밀번호를 확인해 주세요
-      console.error("로그인 중 오류 발생:", error);
-    }
-  };
 
   // TODO: modulation as routing module
   this.moveTo = (page, query = null) => {
@@ -51,7 +34,6 @@ function App() {
     login: new LoginPage({
       $target: $app,
       moveTo: this.moveTo,
-      login: this.login,
     }),
     signup: new SignupPage({ $target: $app, moveTo: this.moveTo }),
     "post-list": new PostListPage({ $target: $app, moveTo: this.moveTo }),
