@@ -4,6 +4,7 @@ import { showModal, showToast } from "../lib/utils.js";
 import { getNicknameError } from "../lib/validation.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { ERROR_TYPE } from "../lib/constants.js";
+import { dispatch } from "../lib/store.js";
 
 function UserInfo({ $target }) {
   this.target = $target;
@@ -146,6 +147,18 @@ function UserInfo({ $target }) {
       this.state.nickname === this.state.initialNickname;
   };
 
+  this.handleWithdrawal = async () => {
+    try {
+      await apiManager.withdrawProfile();
+
+      showToast("회원 탈퇴 완료");
+      dispatch("LOGOUT");
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
   this.handleWithdrawalClick = () => {
     showModal({
       modalTitle: "회원탈퇴 하시겠습니까?",
@@ -153,7 +166,7 @@ function UserInfo({ $target }) {
       positiveText: "확인",
       negativeText: "취소",
       onPositive: () => {
-        alert("TODO: withdrawal api request");
+        this.handleWithdrawal();
       },
     });
   };
@@ -166,8 +179,6 @@ function UserInfo({ $target }) {
     $form.addEventListener("submit", this.handleSubmit);
     $withdrawalButton.addEventListener("click", this.handleWithdrawalClick);
   };
-
-  this.handleWithdrawal = () => {};
 
   this.getUserProfile = async () => {
     try {

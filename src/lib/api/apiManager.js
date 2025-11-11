@@ -27,7 +27,9 @@ export const apiManager = {
     const params = { nickname };
     return restClient.put("/users/profile", params);
   },
-
+  withdrawProfile: () => {
+    return restClient.delete("/users/profile");
+  },
   // Post
   getPost: postId => {
     const params = {};

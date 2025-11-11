@@ -39,7 +39,6 @@ export const dispatch = (type, payload = {}) => {
 
   switch (type) {
     case "LOGIN":
-      // payload: {token: "sample-user-token"}
       setState(
         {
           isLoggedIn: true,
