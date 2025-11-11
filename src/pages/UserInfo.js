@@ -69,7 +69,7 @@ function UserInfo({ $target }) {
               <span class="error-message nickname"></span>
             </li>
           </ul>
-          <button class="submit-button signup-button" type="submit">
+          <button class="submit-button signup-button" disabled type="submit">
             수정하기
           </button>
         </form>
@@ -128,6 +128,9 @@ function UserInfo({ $target }) {
     const { name, value } = event.target;
 
     this.setState({ ...this.state, [name]: value });
+
+    $(".submit-button").disabled =
+      this.state.nickname === this.state.initialNickname;
   };
 
   this.handleWithdrawalClick = () => {
@@ -168,8 +171,6 @@ function UserInfo({ $target }) {
   };
 
   this.init = async () => {
-    // TODO: 최초 닉네임은 중복 검사 대상에서 제외하기 위해 따로 저장
-
     await this.getUserProfile();
 
     this.render();
