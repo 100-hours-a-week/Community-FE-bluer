@@ -1,7 +1,7 @@
 import { $ } from "../lib/dom.js";
 import { getState } from "../lib/store.js";
 import { DUMMY_POSTS } from "../lib/constants.js";
-import { restClient } from "../lib/api.js";
+import { restClient } from "../lib/restClient.js";
 
 function PostDetail({ $target, moveTo, initialState = {} }) {
   this.$target = $target;
