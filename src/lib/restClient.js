@@ -34,12 +34,12 @@ async function extractDataFromResponse(promise) {
   const response = await promise;
 
   const contentType = response.headers.get("content-type");
-  const data =
+  const responseData =
     contentType && contentType.includes("application/json")
       ? await response.json()
       : await response.text();
 
-  return { status: response.status, data };
+  return { status: response.status, data: responseData.data };
 }
 
 const isFetchError = err => err?.name === "AbortError" || err instanceof Error;
