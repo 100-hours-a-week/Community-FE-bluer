@@ -2,6 +2,7 @@ import { getErrorMessage } from "../lib/validation.js";
 import { $ } from "../lib/dom.js";
 import { showModal, showToast } from "../lib/utils.js";
 import { getNicknameError } from "../lib/validation.js";
+import { apiManager } from "../lib/api/apiManager.js";
 
 function UserInfo({ $target }) {
   this.target = $target;
@@ -9,6 +10,7 @@ function UserInfo({ $target }) {
     email: "",
     nickname: "",
     profileImgUrl: null,
+    initialNickname: "",
   };
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
@@ -150,14 +152,25 @@ function UserInfo({ $target }) {
 
   this.handleWithdrawal = () => {};
 
-  this.init = () => {
-    // TODO: set initialValue with api, 최초 닉네임은 중복 검사 대상에서 제외하기 위해 따로 저장
-    this.setState({
-      email: "startupcode@gmail.com",
-      nickname: "스타트업코드",
-      profileImgUrl: "/public/profile-sample.jpeg",
-      initialNickname: "스타트업코드",
-    });
+  this.getUserProfile = async () => {
+    try {
+      const { data } = await apiManager.getUserProfile();
+      this.setState({
+        email: data.email,
+        nickname: data.nickname,
+        profileImgUrl: data.profileImageUrl,
+        initialNickname: data.nickname,
+      });
+    } catch (error) {
+      showToast(`Error: 유저 정보 조회 중 에러 발생`);
+      console.error(error);
+    }
+  };
+
+  this.init = async () => {
+    // TODO: 최초 닉네임은 중복 검사 대상에서 제외하기 위해 따로 저장
+
+    await this.getUserProfile();
 
     this.render();
     this.bindEvents();

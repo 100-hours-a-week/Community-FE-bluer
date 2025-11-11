@@ -9,6 +9,9 @@ export const apiManager = {
     return restClient.post("/users/signin", params);
   },
 
+  getUserProfile: () => {
+    return restClient.get("/users/profile");
+  },
   // Post
   getPost: postId => {
     const params = {};
