@@ -1,7 +1,7 @@
 const listeners = new Set();
 
 const state = {
-  isLoggedIn: true,
+  isLoggedIn: false,
   userToken: null,
   // ex) PAGE_PATH: login, signup, user-info, change-password, post-list, post-detail, post-create
   // {page: 'post-detail', query: {id: 1}}

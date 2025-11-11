@@ -1,4 +1,4 @@
-const StatusCode = {
+export const StatusCode = {
   /**
    * Successful 2xx
    */
@@ -61,5 +61,3 @@ const StatusCode = {
   // Custom
   PERMISSION_DENIED: 520,
 };
-
-export default StatusCode;

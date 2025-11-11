@@ -33,6 +33,10 @@ function fetchWithTimeout(resource, options = {}) {
 async function extractDataFromResponse(promise) {
   const response = await promise;
 
+  if (!response.ok) {
+    throw new Error(`${response.status} ${response.statusText}`);
+  }
+
   const contentType = response.headers.get("content-type");
   const responseData =
     contentType && contentType.includes("application/json")
@@ -53,16 +57,9 @@ async function request(url, options = {}) {
     },
   };
 
-  try {
-    const response = await fetchWithTimeout(
-      `${END_POINT}${url}`,
-      mergedOptions
-    );
-    return extractDataFromResponse(Promise.resolve(response));
-  } catch (error) {
-    console.error("[restClient error]", error);
-    throw error;
-  }
+  const response = await fetchWithTimeout(`${END_POINT}${url}`, mergedOptions);
+
+  return extractDataFromResponse(Promise.resolve(response));
 }
 
 export const restClient = {
