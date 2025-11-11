@@ -1,8 +1,21 @@
+import { DUMMY_POSTS } from "../lib/constants.js";
+import { getState } from "../lib/store.js";
+
 function PostEdit({ $target, initialState = {} }) {
   this.$target = $target;
-  this.state = { ...initialState };
+  this.state = {
+    ...initialState,
+    id: null,
+    title: "",
+    content: "",
+    imageUrl: null,
+  };
   this.element = document.createElement("div");
   this.element.className = "post-add-page";
+
+  this.setState = nextState => {
+    this.state = { ...this.state, ...nextState };
+  };
 
   this.render = () => {
     const htmlString = `
@@ -16,13 +29,13 @@ function PostEdit({ $target, initialState = {} }) {
               name="title"
               placeholder="제목을 입력해 주세요. (최대 26글자)"
               maxlength="26"
-              value="제목 1"
+              value=${this.state.title}
             />
           </div>
           <div class="form-item">
             <label>내용 *</label>
             <div class="form-item-content-area">
-              <textarea placeholder="내용을 입력해주세요."></textarea>
+              <textarea placeholder="내용을 입력해주세요.">${this.state.content}</textarea>
               <span class="error-message"></span>
             </div>
           </div>
@@ -46,6 +59,11 @@ function PostEdit({ $target, initialState = {} }) {
   };
 
   this.init = () => {
+    const postId =
+      getState().history[getState().history.length - 1].query.postId;
+    const post = DUMMY_POSTS.find(post => post.id === postId);
+
+    this.setState({ id: post.id, title: post.title, content: post.content });
     this.render();
     this.bindEvents();
   };

@@ -34,8 +34,8 @@ function App() {
   };
 
   // TODO: modulation as routing module
-  this.moveTo = page => {
-    dispatch("PUSH_STATE", { page });
+  this.moveTo = (page, query = null) => {
+    dispatch("PUSH_STATE", { page, query });
 
     this.render();
   };
@@ -47,7 +47,7 @@ function App() {
     },
   });
 
-  const pages = {
+  this.pages = {
     login: new LoginPage({
       $target: $app,
       moveTo: this.moveTo,
@@ -55,7 +55,7 @@ function App() {
     }),
     signup: new SignupPage({ $target: $app, moveTo: this.moveTo }),
     "post-list": new PostListPage({ $target: $app, moveTo: this.moveTo }),
-    "post-detail": new PostDetailPage({ $target: $app }),
+    "post-detail": new PostDetailPage({ $target: $app, moveTo: this.moveTo }),
     "post-create": new PostCreatePage({ $target: $app }),
     "post-edit": new PostEditPage({ $target: $app }),
     "user-info": new UserInfoPage({ $target: $app }),
@@ -64,8 +64,8 @@ function App() {
 
   this.renderPage = () => {
     const { history } = getState();
-    const currentPage = history[history.length - 1];
-    const page = pages[currentPage];
+    const currentRoute = history[history.length - 1];
+    const page = this.pages[currentRoute.page];
 
     if (page?.init) {
       // this.header.init();

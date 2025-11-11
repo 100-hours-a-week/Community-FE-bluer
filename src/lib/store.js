@@ -1,14 +1,14 @@
 const listeners = new Set();
 
 const state = {
-  isLoggedIn: false,
+  isLoggedIn: true,
   userToken: null,
-  history: ["login"],
+  // ex) PAGE_PATH: login, signup, user-info, change-password, post-list, post-detail, post-create
+  // {page: 'post-detail', query: {id: 1}}
+  history: [{ page: "post-list", query: null }],
 };
 
 const VALID_ACTIONS = ["LOGIN", "LOGOUT", "PUSH_STATE", "POP_STATE"];
-
-export const getState = () => ({ ...state });
 
 const setState = (newState, type) => {
   const prevState = { ...state };
@@ -22,6 +22,8 @@ const setState = (newState, type) => {
     listeners.forEach(listener => listener({ ...state }, type, newState));
   }
 };
+
+export const getState = () => ({ ...state });
 
 export const subscribe = listener => {
   listeners.add(listener);
@@ -57,15 +59,23 @@ export const dispatch = (type, payload = {}) => {
         ex) PAGE_PATH: login, signup, user-info, change-password, post-list, post-detail, post-create
     */
     case "PUSH_STATE":
-      const pushedHistory = [...state.history, payload.page];
+      const newRoute = {
+        page: payload.page,
+        query: payload.query || null,
+      };
+      const pushedHistory = [...state.history, newRoute];
 
       setState({ history: pushedHistory }, type);
       break;
 
     case "POP_STATE":
-      const poppedHistory = [...state.history].pop();
+      if (state.history.length > 1) {
+        const poppedHistory = [...state.history];
 
-      setState({ history: poppedHistory }, type);
+        poppedHistory.pop();
+
+        setState({ history: poppedHistory }, type);
+      }
       break;
     default:
       break;

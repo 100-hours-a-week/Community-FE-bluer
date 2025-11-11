@@ -4,6 +4,8 @@ import { POST_TITLE_MAX_LENGTH, DUMMY_POSTS } from "../lib/constants.js";
 function PostList({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
   this.currentPage = currentPage;
+  this.moveTo = moveTo;
+
   this.state = {
     ...initialState,
   };
@@ -87,8 +89,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
 
     const postId = $post?.dataset?.postId;
 
-    // TODO: 이동
-    alert(`postId: ${postId}인 게시글로 이동`);
+    this.moveTo("post-detail", { postId });
   };
 
   this.bindEvents = () => {
