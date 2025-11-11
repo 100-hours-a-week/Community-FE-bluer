@@ -2,6 +2,7 @@ import { $ } from "../lib/dom.js";
 import { getState } from "../lib/store.js";
 import { DUMMY_POSTS } from "../lib/constants.js";
 import { restClient } from "../lib/restClient.js";
+import StatusCode from "../lib/statusCode.js";
 
 function PostDetail({ $target, moveTo, initialState = {} }) {
   this.$target = $target;
@@ -9,14 +10,14 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.state = {
     ...initialState,
     post: {
-      id: null,
+      postId: null,
       title: "",
       content: "",
       author: "",
       createdAt: "",
-      likes: 0,
-      comments: 0,
-      views: 0,
+      likeCount: 0,
+      commentsCount: 0,
+      viewsCount: 0,
     },
   };
   this.element = document.createElement("div");
@@ -28,7 +29,16 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
   this.render = () => {
     const { post } = this.state;
-    const { title, content, author, createdAt, likes, comments, views } = post;
+    const {
+      title,
+      content,
+      authorName,
+      authorProfileImageUrl,
+      createdAt,
+      likeCount,
+      commentCount,
+      viewCount,
+    } = post;
 
     const htmlString = `
       <div class="post-basic-info">
@@ -36,8 +46,10 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
         <div class="post-author-info">
           <div class="post-author-container left">
             <div class="post-author-container">
-              <div class="post-avatar avatar"></div>
-              <span class="post-author bold">${author}</span>
+              <div class="post-avatar avatar">
+              <img src=${authorProfileImageUrl} />
+              </div>
+              <span class="post-author bold">${authorName}</span>
             </div>
             <span class="post-info-item">${createdAt}</span>
           </div>
@@ -57,15 +69,15 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
         </div>
         <ul class="post-stats">
           <li class="post-stats-item bold">
-            <span class="item-content">${likes}</span>
+            <span class="item-content">${likeCount}</span>
             <span class="item-title">좋아요수</span>
           </li>
           <li class="post-stats-item bold">
-            <span class="item-content">${views}</span>
+            <span class="item-content">${viewCount}</span>
             <span class="item-title">조회수</span>
           </li>
           <li class="post-stats-item bold">
-            <span class="item-content">${comments}</span>
+            <span class="item-content">${commentCount}</span>
             <span class="item-title">댓글</span>
           </li>
         </ul>
@@ -86,7 +98,8 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
             <div class="post-author-info">
               <div class="post-author-container left">
                 <div class="post-author-container">
-                  <div class="post-avatar avatar"></div>
+                  <div class="post-avatar avatar">
+                  </div>
                   <span class="post-author bold">더미 작성자 1</span>
                 </div>
                 <span class="post-info-item">2021-01-01 00:00:00</span>
@@ -123,6 +136,14 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
   this.onClickCommentDelete = () => {};
 
+  this.getPost = async postId => {
+    const response = await restClient.get(`/posts/${postId}`);
+
+    if (response.status === StatusCode.OK) {
+      this.setState({ post: response.data });
+    }
+  };
+
   this.bindEvents = () => {
     const $postModifyButton = $(".post-modify", this.element);
     const $postDeleteButton = $(".post-delete", this.element);
@@ -130,20 +151,21 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     $postModifyButton.addEventListener("click", this.onClickPostModify);
     $postDeleteButton.addEventListener("click", this.onClickPostDelete);
     /*
-      1) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
-      2) 포스트 삭제 버튼 누르면 삭제 모달 => author에게만 허용
-      3) 좋아요 버튼 active / inactive
-      4) 댓글 입력 글자수에 따른 버튼 상태 관리 핸들링
-      5) 댓글 수정
+      0) 댓글 fetch
+      1) 댓글 입력 글자수에 따른 버튼 상태 관리 핸들링
+      2) 댓글 수정
+      3) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
+      4) 포스트 삭제 버튼 누르면 삭제 모달 => author에게만 허용
+      5) 좋아요 버튼 active / inactive => login한 유저에게만 허용
     */
   };
 
-  this.init = () => {
-    const postId =
-      getState().history[getState().history.length - 1].query.postId;
-    const post = DUMMY_POSTS.find(post => post.id === postId);
+  this.init = async () => {
+    // TODO: set postId from list or history
+    const postId = "84e43942-7d5e-41aa-a314-8f0148c032b7";
+    // getState().history[getState().history.length - 1].query.postId;
 
-    this.setState({ post: { ...post } });
+    await this.getPost(postId);
 
     this.render();
     this.bindEvents();
