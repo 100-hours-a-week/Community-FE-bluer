@@ -6,15 +6,23 @@ function PostListItem({ $target, post, onClick }) {
   this.$post.dataset.postId = this.post.id;
 
   this.render = () => {
-    const { id, title, likes, comments, views, createdAt, author } = this.post;
+    const {
+      id,
+      title,
+      likeCount,
+      commentCount,
+      viewCount,
+      createdAt,
+      authorName,
+    } = this.post;
     const htmlString = `<li class="post" data-post-id="${id}">
           <div class="post-top">
             <div class="post-title bold">${title}</div>
             <div class="post-info">
               <div class="post-info left">
-                <div class="post-info-item"><span>좋아요 ${likes}</span></div>
-                <div class="post-info-item"><span>댓글 ${comments}</span></div>
-                <div class="post-info-item"><span>조회수 ${views}</span></div>
+                <div class="post-info-item"><span>좋아요 ${likeCount}</span></div>
+                <div class="post-info-item"><span>댓글 ${commentCount}</span></div>
+                <div class="post-info-item"><span>조회수 ${viewCount}</span></div>
               </div>
               <div class="post-info right">
                 <div class="post-info-item"><span>${createdAt}</span></div>
@@ -24,7 +32,7 @@ function PostListItem({ $target, post, onClick }) {
           <div class="post-bottom">
             <div class="post-author-container">
               <div class="post-avatar avatar"></div>
-              <span class="post-author bold">${author}</span>
+              <span class="post-author bold">${authorName}</span>
             </div>
           </div>
         </li>`;

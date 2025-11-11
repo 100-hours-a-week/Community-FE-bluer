@@ -1,6 +1,7 @@
-import { truncateText } from "../lib/utils.js";
-import { POST_TITLE_MAX_LENGTH, DUMMY_POSTS } from "../lib/constants.js";
+import { showToast, truncateText } from "../lib/utils.js";
+import { POST_TITLE_MAX_LENGTH } from "../lib/constants.js";
 import PostListItem from "../components/PostListItem.js";
+import { apiManager } from "../lib/api/apiManager.js";
 
 function PostList({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
@@ -9,6 +10,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
 
   this.state = {
     ...initialState,
+    posts: [],
   };
 
   this.$postListPage = document.createElement("div");
@@ -25,6 +27,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
       ? truncateText(title, POST_TITLE_MAX_LENGTH)
       : title;
   };
+
   this.render = () => {
     this.$introductionArea.innerHTML = `
     <span>안녕하세요,</span>
@@ -41,11 +44,11 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     </button>
     `;
 
-    // TODO: Apply API
+    // NOTE: check this logic after applying infinite scroll
     this.$postList.innerHTML = "";
-
-    DUMMY_POSTS.forEach(post => {
+    this.state.posts?.forEach(post => {
       const shortenedPost = { ...post, title: this.shortenTitle(post.title) };
+
       new PostListItem({
         $target: this.$postList,
         post: shortenedPost,
@@ -82,7 +85,21 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.$postList.addEventListener("click", this.onClickPost);
   };
 
-  this.init = () => {
+  this.getPosts = async () => {
+    try {
+      const { data } = await apiManager.getPosts();
+      const { posts } = data;
+
+      this.setState({ posts: [...posts] });
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.init = async () => {
+    await this.getPosts();
+
     this.render();
     this.bindEvents();
   };
