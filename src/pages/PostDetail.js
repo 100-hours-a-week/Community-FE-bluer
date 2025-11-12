@@ -105,7 +105,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.render = () => {};
 
   this.onClickPostModify = () => {
-    this.moveTo("post-edit", { postId: this.state.post.id });
+    this.moveTo("post-edit", { postId: this.state.post.postId });
   };
 
   this.onClickPostDelete = async () => {
@@ -127,11 +127,8 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       return;
     }
 
-    // PostComment에 수정할 내용 전달
     this.setState({ editingComment: targetComment });
     this.postComment.setEditMode(targetComment.content);
-
-    // console.log(`modify: ${commentId}`);
   };
 
   this.deleteComment = async commentId => {
@@ -203,7 +200,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     $postModifyButton.addEventListener("click", this.onClickPostModify);
     $postDeleteButton.addEventListener("click", this.onClickPostDelete);
     /*
-      2) 댓글 수정
       3) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
       4) 포스트 삭제 버튼 누르면 삭제 모달 => author에게만 허용
       5) 좋아요 버튼 active / inactive => login한 유저에게만 허용
@@ -218,7 +214,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
     this.$target.appendChild(this.element);
     this.render();
-    // this.bindEvents();
+    this.bindEvents();
   };
 }
 
