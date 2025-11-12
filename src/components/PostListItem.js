@@ -3,19 +3,13 @@ function PostListItem({ $target, post, onClick }) {
   this.post = post;
   this.$post = document.createElement("li");
   this.$post.className = "post";
-  this.$post.dataset.postId = this.post.id;
+  this.$post.dataset.postId = this.post.postId;
 
   this.render = () => {
-    const {
-      id,
-      title,
-      likeCount,
-      commentCount,
-      viewCount,
-      createdAt,
-      authorName,
-    } = this.post;
-    const htmlString = `<li class="post" data-post-id="${id}">
+    const { title, likeCount, commentCount, viewCount, createdAt, authorName } =
+      this.post;
+
+    const htmlString = `
           <div class="post-top">
             <div class="post-title bold">${title}</div>
             <div class="post-info">
@@ -35,7 +29,7 @@ function PostListItem({ $target, post, onClick }) {
               <span class="post-author bold">${authorName}</span>
             </div>
           </div>
-        </li>`;
+        `;
 
     this.$post.innerHTML = htmlString;
     this.$target.appendChild(this.$post);

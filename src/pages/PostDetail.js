@@ -1,8 +1,8 @@
 import { $ } from "../lib/dom.js";
-import { getState } from "../lib/store.js";
-import { DUMMY_POSTS } from "../lib/constants.js";
-import { restClient } from "../lib/api/restClient.js";
+import { getCurrentPageInfo } from "../lib/store.js";
+import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
+import { showToast } from "../lib/utils.js";
 
 function PostDetail({ $target, moveTo, initialState = {} }) {
   this.$target = $target;
@@ -42,16 +42,16 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
     const htmlString = `
       <div class="post-basic-info">
-        <h1 class="post-title bold">${title}</h1>
+        <h1 class="post-title bold">${title ?? ""}</h1>
         <div class="post-author-info">
           <div class="post-author-container left">
             <div class="post-author-container">
               <div class="post-avatar avatar">
-              <img src=${authorProfileImageUrl} />
+              ${authorProfileImageUrl ? `<img src=${authorProfileImageUrl} />` : ""}
               </div>
-              <span class="post-author bold">${authorName}</span>
+              <span class="post-author bold">${authorName ?? "-"}</span>
             </div>
-            <span class="post-info-item">${createdAt}</span>
+            <span class="post-info-item">${createdAt ?? "-"}</span>
           </div>
           <div class="post-author-container right">
             <button class="post-author-container-button post-modify">수정</button>
@@ -64,20 +64,20 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
         <div class="post-content">
           <div class="post-content-image"></div>
           <p>
-            ${content}
+            ${content ?? ""}
           </p>
         </div>
         <ul class="post-stats">
           <li class="post-stats-item bold">
-            <span class="item-content">${likeCount}</span>
+            <span class="item-content">${likeCount ?? 0}</span>
             <span class="item-title">좋아요수</span>
           </li>
           <li class="post-stats-item bold">
-            <span class="item-content">${viewCount}</span>
+            <span class="item-content">${viewCount ?? 0}</span>
             <span class="item-title">조회수</span>
           </li>
           <li class="post-stats-item bold">
-            <span class="item-content">${commentCount}</span>
+            <span class="item-content">${commentCount ?? 0}</span>
             <span class="item-title">댓글</span>
           </li>
         </ul>
@@ -129,7 +129,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
   this.onClickPostDelete = async () => {
     console.log("click");
-    await restClient.get("/posts/84e43942-7d5e-41aa-a314-8f0148c032b7");
   };
 
   this.onClickCommentModify = async () => {};
@@ -137,10 +136,15 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.onClickCommentDelete = () => {};
 
   this.getPost = async postId => {
-    const response = await restClient.get(`/posts/${postId}`);
+    try {
+      const response = await apiManager.getPost(postId);
 
-    if (response.status === StatusCode.OK) {
-      this.setState({ post: response.data });
+      if (response.status === StatusCode.OK) {
+        this.setState({ post: response.data });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
@@ -161,9 +165,8 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
 
   this.init = async () => {
-    // TODO: set postId from list or history
-    const postId = "84e43942-7d5e-41aa-a314-8f0148c032b7";
-    // getState().history[getState().history.length - 1].query.postId;
+    const { query } = getCurrentPageInfo();
+    const { postId } = query;
 
     await this.getPost(postId);
 
