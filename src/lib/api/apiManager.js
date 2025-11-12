@@ -63,6 +63,14 @@ export const apiManager = {
     const params = {};
     return restClient.delete(`/posts/${postId}`, params);
   },
+  addLikePost: postId => {
+    const params = {};
+    return restClient.post(`/posts/${postId}/likes`, params);
+  },
+  deleteLikePost: postId => {
+    const params = {};
+    return restClient.delete(`/posts/${postId}/likes`, params);
+  },
 
   // Comments
   getComments: postId => {

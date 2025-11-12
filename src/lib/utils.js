@@ -5,6 +5,11 @@ export const truncateText = (text, maxLength) => {
   return text.slice(0, maxLength);
 };
 
+export const formatToK = num => {
+  if (num < 1000) return num.toString();
+  return Math.floor(num / 1000) + "k";
+};
+
 export const showToast = (message, duration = 3000) => {
   const container = document.getElementById("toast-container");
 

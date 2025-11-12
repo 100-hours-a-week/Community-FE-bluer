@@ -74,7 +74,8 @@
   margin-bottom: 30px;
 }
 
-.post-stats-item {
+.post-stats-item,
+.button-item-content {
   display: flex;
   flex-direction: column;
   row-gap: 1px;
@@ -90,6 +91,10 @@
 .post-stats-item > .item-content {
   font-size: 20px;
   line-height: 130%;
+}
+.post-stats-item > button.item-content {
+  width: 100%;
+  height: 100%;
 }
 
 .post-stats-item > .item-title {

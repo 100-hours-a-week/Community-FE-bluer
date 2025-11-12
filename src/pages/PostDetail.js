@@ -26,6 +26,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       likeCount: 0,
       commentsCount: 0,
       viewsCount: 0,
+      likedByMe: false,
     },
     comments: [],
     editingComment: null,
@@ -45,6 +46,9 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.postStats = new PostStats({
     $target: this.element,
     post: this.state.post,
+    handleClick: () => {
+      this.onClickLike();
+    },
   });
 
   new Divider({ $target: this.element });
@@ -234,6 +238,53 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     }
   };
 
+  this.addLike = async () => {
+    try {
+      const { post } = this.state;
+      const response = await apiManager.addLikePost(post.postId);
+      if (response.status === StatusCode.OK) {
+        this.setState({
+          post: { ...post, likeCount: post.likeCount + 1, likedByMe: true },
+        });
+      }
+      showToast("좋아요 완료");
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.deleteLike = async () => {
+    try {
+      const { post } = this.state;
+      const response = await apiManager.deleteLikePost(post.postId);
+      if (response.status === StatusCode.OK) {
+        this.setState({
+          post: { ...post, likeCount: post.likeCount - 1, likedByMe: false },
+        });
+      }
+      showToast("좋아요 취소 완료");
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.onClickLike = () => {
+    const currentUserId = this.getCurrentUserId();
+
+    if (!currentUserId) {
+      showToast("로그인이 필요합니다.");
+      return;
+    }
+
+    if (this.state.post.likedByMe) {
+      this.deleteLike();
+    } else {
+      this.addLike();
+    }
+  };
+
   this.bindEvents = () => {
     const $postModifyButton = $(".post-modify", this.element);
     const $postDeleteButton = $(".post-delete", this.element);
@@ -241,8 +292,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     $postModifyButton.addEventListener("click", this.onClickPostModify);
     $postDeleteButton.addEventListener("click", this.onClickPostDelete);
     /*
-      3) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
-      4) 포스트 삭제 버튼 누르면 삭제 모달 => author에게만 허용
       5) 좋아요 버튼 active / inactive => login한 유저에게만 허용
     */
   };
