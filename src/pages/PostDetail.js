@@ -28,6 +28,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       viewsCount: 0,
     },
     comments: [],
+    editingComment: null,
   };
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
@@ -75,17 +76,29 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
   this.onSubmitComment = async content => {
     try {
-      const response = await apiManager.postComment({
-        postId: this.state.post.postId,
-        content,
-      });
+      const { editingComment, post } = this.state;
+
+      let response;
+      if (editingComment) {
+        response = await apiManager.updateComment({
+          postId: post.postId,
+          commentId: editingComment.commentId,
+          content,
+        });
+      } else {
+        response = await apiManager.postComment({
+          postId: post.postId,
+          content,
+        });
+      }
 
       if (response.status === StatusCode.OK) {
-        // todo: 최신 상태 가져오기 및 요청 분리
         await this.init();
+        this.setState({ editingComment: null });
       }
     } catch (error) {
       console.error(error);
+      showToast("댓글 처리 중 오류가 발생했습니다.");
     }
   };
 
@@ -101,10 +114,22 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
   this.onClickCommentModify = async (commentId, authorId) => {
     const currentUserId = this.getCurrentUserId();
+
     if (authorId !== currentUserId) {
       showToast("권한이 없습니다.");
       return;
     }
+
+    const targetComment = this.state.comments.find(
+      comment => comment.commentId === commentId
+    );
+    if (!targetComment) {
+      return;
+    }
+
+    // PostComment에 수정할 내용 전달
+    this.setState({ editingComment: targetComment });
+    this.postComment.setEditMode(targetComment.content);
 
     // console.log(`modify: ${commentId}`);
   };

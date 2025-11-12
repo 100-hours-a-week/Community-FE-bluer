@@ -8,6 +8,7 @@ function PostComment({ $target, onSubmit }) {
 
   this.state = {
     content: "",
+    isEditMode: false,
   };
 
   this.setState = newState => {
@@ -18,6 +19,15 @@ function PostComment({ $target, onSubmit }) {
 
     $button.disabled = !enabled;
     $button.style.backgroundColor = enabled ? "#7F6AEE" : "#ACA0EB";
+  };
+
+  this.setEditMode = content => {
+    this.setState({ content, isEditMode: true });
+    const $textarea = $("textarea", this.$element);
+    const $text = $(".button-text");
+
+    $text.innerText = "댓글 수정";
+    $textarea.innerText = content;
   };
 
   this.handleInput = event => {
@@ -46,7 +56,7 @@ function PostComment({ $target, onSubmit }) {
       <div class="divider"></div>
       <div class="post-comment-submit-button-container">
         <button type="button" class="post-comment-submit-button" disabled>
-          <span>댓글 등록</span>
+          <span class="button-text">댓글 등록</span>
         </button>
       </div>
     `;

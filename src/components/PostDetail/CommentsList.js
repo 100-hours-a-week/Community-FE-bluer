@@ -19,7 +19,7 @@ function CommentList({ $target, comments, onModify, onDelete }) {
     const { commentId, authorId } = target.closest("li").dataset;
 
     if (mode === "modify") {
-      onModify(commentId);
+      onModify(commentId, authorId);
     } else if (mode === "delete") {
       onDelete(commentId, authorId);
     }

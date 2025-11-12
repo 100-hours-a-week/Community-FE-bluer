@@ -58,4 +58,8 @@ export const apiManager = {
     const params = {};
     return restClient.delete(`/post/${postId}/comments/${commentId}`, params);
   },
+  updateComment: ({ postId, commentId, content }) => {
+    const params = { content };
+    return restClient.put(`/post/${postId}/comments/${commentId}`, params);
+  },
 };
