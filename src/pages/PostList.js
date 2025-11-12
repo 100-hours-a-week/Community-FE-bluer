@@ -81,8 +81,13 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.moveTo("post-detail", { postId });
   };
 
+  this.onClickAddPost = () => {
+    this.moveTo("post-create");
+  };
+
   this.bindEvents = () => {
     this.$postList.addEventListener("click", this.onClickPost);
+    this.$addPostButtonContainer.addEventListener("click", this.onClickAddPost);
   };
 
   this.getPosts = async () => {

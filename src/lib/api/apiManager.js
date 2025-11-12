@@ -45,6 +45,10 @@ export const apiManager = {
 
     return restClient.get("/posts", params);
   },
+  addPost: ({ title, content }) => {
+    const params = { title, content };
+    return restClient.post("/posts", params);
+  },
   updatePost: ({ postId, title, content }) => {
     const params = { title, content };
     return restClient.put(`/posts/${postId}`, params);
