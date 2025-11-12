@@ -3,6 +3,12 @@ import { getCurrentPageInfo } from "../lib/store.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
 import { showToast } from "../lib/utils.js";
+import PostBasicInfo from "../components/PostDetail/PostBasicInfo.js";
+import PostContent from "../components/PostDetail/PostContent.js";
+import Divider from "../components/Divider.js";
+import PostStats from "../components/PostDetail/PostStats.js";
+import CommentList from "../components/PostDetail/CommentsList.js";
+import PostComment from "../components/PostDetail/PostComment.js";
 
 function PostDetail({ $target, moveTo, initialState = {} }) {
   this.$target = $target;
@@ -23,105 +29,42 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
 
+  this.postBasicInfo = new PostBasicInfo({ $target: this.element });
+
+  new Divider({ $target: this.element });
+
+  this.postContent = new PostContent({
+    $target: this.element,
+    post: this.state.post,
+  });
+  this.postStats = new PostStats({
+    $target: this.element,
+    post: this.state.post,
+  });
+
+  new Divider({ $target: this.element });
+
+  this.postComment = new PostComment({
+    $target: this.element,
+  });
+
+  this.commentList = new CommentList({
+    $target: this.element,
+    post: this.state.post,
+  });
+
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
+
+    this.postBasicInfo.setState(this.state.post);
+    this.postContent.setState(this.state.post);
+    this.postStats.setState(this.state.post);
+
+    // this.postComment.setState(this.state.post.comments);
+    this.commentList.setState(this.state.post);
   };
 
-  this.render = () => {
-    const { post } = this.state;
-    const {
-      title,
-      content,
-      authorName,
-      authorProfileImageUrl,
-      createdAt,
-      likeCount,
-      commentCount,
-      viewCount,
-    } = post;
-
-    const htmlString = `
-      <div class="post-basic-info">
-        <h1 class="post-title bold">${title ?? ""}</h1>
-        <div class="post-author-info">
-          <div class="post-author-container left">
-            <div class="post-author-container">
-              <div class="post-avatar avatar">
-              ${authorProfileImageUrl ? `<img src=${authorProfileImageUrl} />` : ""}
-              </div>
-              <span class="post-author bold">${authorName ?? "-"}</span>
-            </div>
-            <span class="post-info-item">${createdAt ?? "-"}</span>
-          </div>
-          <div class="post-author-container right">
-            <button class="post-author-container-button post-modify">수정</button>
-            <button class="post-author-container-button post-delete">삭제</button>
-          </div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <main class="post-content-container">
-        <div class="post-content">
-          <div class="post-content-image"></div>
-          <p>
-            ${content ?? ""}
-          </p>
-        </div>
-        <ul class="post-stats">
-          <li class="post-stats-item bold">
-            <span class="item-content">${likeCount ?? 0}</span>
-            <span class="item-title">좋아요수</span>
-          </li>
-          <li class="post-stats-item bold">
-            <span class="item-content">${viewCount ?? 0}</span>
-            <span class="item-title">조회수</span>
-          </li>
-          <li class="post-stats-item bold">
-            <span class="item-content">${commentCount ?? 0}</span>
-            <span class="item-title">댓글</span>
-          </li>
-        </ul>
-        <div class="divider"></div>
-        <div class="post-comment-container">
-          <div class="post-comment-textarea-wrapper">
-            <textarea class="post-comment-textarea">작성할 댓글 내용</textarea>
-          </div>
-          <div class="divider"></div>
-          <div class="post-comment-submit-button-container">
-            <button class="post-comment-submit-button">
-              <span>댓글 등록</span>
-            </button>
-          </div>
-        </div>
-        <ul class="post-comment-list">
-          <li class="post-comment">
-            <div class="post-author-info">
-              <div class="post-author-container left">
-                <div class="post-author-container">
-                  <div class="post-avatar avatar">
-                  </div>
-                  <span class="post-author bold">더미 작성자 1</span>
-                </div>
-                <span class="post-info-item">2021-01-01 00:00:00</span>
-              </div>
-              <div class="post-author-container right post-comment">
-                <button class="post-author-container-button comment-modify">수정</button>
-                <button class="post-author-container-button comment-delete">삭제</button>
-              </div>
-            </div>
-            <p class="post-comment-content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Cupiditate illum itaque facilis quisquam debitis laudantium a
-              nisi, commodi quas exercitationem sit eligendi, aliquid architecto
-              unde eaque ipsum dolorem tenetur hic.
-            </p>
-          </li>
-         </ul>
-      </main>`;
-
-    this.element.innerHTML = htmlString;
-    this.$target.appendChild(this.element);
-  };
+  this.render = () => {};
 
   this.onClickPostModify = () => {
     this.moveTo("post-edit", { postId: this.state.post.id });
@@ -170,8 +113,9 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
     await this.getPost(postId);
 
+    this.$target.appendChild(this.element);
     this.render();
-    this.bindEvents();
+    // this.bindEvents();
   };
 }
 
