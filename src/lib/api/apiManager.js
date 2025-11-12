@@ -49,6 +49,10 @@ export const apiManager = {
     const params = { title, content };
     return restClient.put(`/posts/${postId}`, params);
   },
+  deletePost: postId => {
+    const params = {};
+    return restClient.delete(`/posts/${postId}`, params);
+  },
 
   // Comments
   getComments: postId => {

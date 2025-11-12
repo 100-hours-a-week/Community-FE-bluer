@@ -105,11 +105,52 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.render = () => {};
 
   this.onClickPostModify = () => {
+    const currentUserId = this.getCurrentUserId();
+    const authorId = this.state.post.authorId;
+
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
     this.moveTo("post-edit", { postId: this.state.post.postId });
   };
 
+  this.deletePost = async () => {
+    try {
+      const postId = this.state.post.postId;
+      const response = await apiManager.deletePost(postId);
+
+      if (response.status === StatusCode.OK) {
+        showToast("삭제 완료");
+        setTimeout(() => {
+          this.moveTo("post-list");
+        }, 500);
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
   this.onClickPostDelete = async () => {
-    console.log("click");
+    const currentUserId = this.getCurrentUserId();
+    const authorId = this.state.post.authorId;
+    const postId = this.state.post.postId;
+
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
+
+    showModal({
+      modalTitle: "게시글을 삭제하시겠습니까?",
+      modalDescription: "삭제한 내용은 복구할 수 없습니다.",
+      positiveText: "확인",
+      negativeText: "취소",
+      onPositive: () => {
+        this.deletePost(postId);
+      },
+    });
   };
 
   this.onClickCommentModify = async (commentId, authorId) => {
