@@ -25,6 +25,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       commentsCount: 0,
       viewsCount: 0,
     },
+    comments: [],
   };
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
@@ -50,7 +51,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
   this.commentList = new CommentList({
     $target: this.element,
-    post: this.state.post,
+    comments: this.state.comments,
   });
 
   this.setState = newState => {
@@ -60,8 +61,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     this.postContent.setState(this.state.post);
     this.postStats.setState(this.state.post);
 
-    // this.postComment.setState(this.state.post.comments);
-    this.commentList.setState(this.state.post);
+    this.commentList.setState({ comments: this.state.comments });
   };
 
   this.render = () => {};
@@ -91,6 +91,19 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     }
   };
 
+  this.getComments = async postId => {
+    try {
+      const response = await apiManager.getComments(postId);
+
+      if (response.status === StatusCode.OK) {
+        this.setState({ comments: response.data });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
   this.bindEvents = () => {
     const $postModifyButton = $(".post-modify", this.element);
     const $postDeleteButton = $(".post-delete", this.element);
@@ -111,7 +124,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     const { query } = getCurrentPageInfo();
     const { postId } = query;
 
-    await this.getPost(postId);
+    Promise.all([await this.getPost(postId)], await this.getComments(postId));
 
     this.$target.appendChild(this.element);
     this.render();

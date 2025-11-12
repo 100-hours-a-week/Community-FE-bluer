@@ -1,5 +1,3 @@
-import CommentList from "./CommentsList.js";
-
 function PostComment({ $target }) {
   this.$target = $target;
   this.$element = document.createElement("div");
