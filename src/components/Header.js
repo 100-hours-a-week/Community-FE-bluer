@@ -1,9 +1,10 @@
 import { getState, dispatch } from "../lib/store.js";
 import { $ } from "../lib/dom.js";
 
-function Header({ $target, moveTo, initialState }) {
+function Header({ $target, moveTo, toBack, initialState }) {
   this.target = $target;
   this.moveTo = moveTo;
+  this.toBack = toBack;
   this.state = { isOpen: false, ...initialState };
 
   this.$header = document.createElement("header");
@@ -40,7 +41,7 @@ function Header({ $target, moveTo, initialState }) {
 
   this.render = () => {
     const { isLoggedIn, history } = getState();
-    const currentPage = history[history.length - 1].page;
+    const currentPage = history[history.length - 1]?.page ?? "login";
 
     this.$header.classList.add("header");
     this.$header.innerHTML = `
@@ -74,7 +75,9 @@ function Header({ $target, moveTo, initialState }) {
     this.target.appendChild(this.$header);
   };
 
-  this.onBackClick = () => {};
+  this.onBackClick = () => {
+    this.toBack();
+  };
 
   this.onDropdownToggle = () => {
     const $dropdownList = $(".dropdown-list");

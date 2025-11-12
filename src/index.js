@@ -23,10 +23,19 @@ function App() {
     this.render();
   };
 
+  this.toBack = () => {
+    dispatch("POP_STATE");
+
+    this.render();
+  };
+
   this.header = new Header({
     $target: $("#app"),
     moveTo: page => {
       this.moveTo(page);
+    },
+    toBack: () => {
+      this.toBack();
     },
   });
 
@@ -38,8 +47,8 @@ function App() {
     signup: new SignupPage({ $target: $app, moveTo: this.moveTo }),
     "post-list": new PostListPage({ $target: $app, moveTo: this.moveTo }),
     "post-detail": new PostDetailPage({ $target: $app, moveTo: this.moveTo }),
-    "post-create": new PostCreatePage({ $target: $app }),
-    "post-edit": new PostEditPage({ $target: $app }),
+    "post-create": new PostCreatePage({ $target: $app, moveTo: this.moveTo }),
+    "post-edit": new PostEditPage({ $target: $app, moveTo: this.moveTo }),
     "user-info": new UserInfoPage({ $target: $app }),
     "change-password": new ChangePasswordPage({ $target: $app }),
   };
@@ -47,7 +56,9 @@ function App() {
   this.renderPage = () => {
     const { history } = getState();
     const currentRoute = history[history.length - 1];
-    const page = this.pages[currentRoute.page];
+    const page = currentRoute?.page
+      ? this.pages[currentRoute.page]
+      : this.pages.login;
 
     if (page?.init) {
       // this.header.init();

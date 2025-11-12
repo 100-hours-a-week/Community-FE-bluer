@@ -1,8 +1,14 @@
 import { $ } from "../lib/dom.js";
-import { getState } from "../lib/store.js";
-import { DUMMY_POSTS } from "../lib/constants.js";
-import { restClient } from "../lib/api/restClient.js";
+import { getCurrentPageInfo, getState } from "../lib/store.js";
+import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
+import { showModal, showToast } from "../lib/utils.js";
+import PostBasicInfo from "../components/PostDetail/PostBasicInfo.js";
+import PostContent from "../components/PostDetail/PostContent.js";
+import Divider from "../components/Divider.js";
+import PostStats from "../components/PostDetail/PostStats.js";
+import CommentList from "../components/PostDetail/CommentsList.js";
+import PostComment from "../components/PostDetail/PostComment.js";
 
 function PostDetail({ $target, moveTo, initialState = {} }) {
   this.$target = $target;
@@ -13,134 +19,218 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       postId: null,
       title: "",
       content: "",
-      author: "",
+      authorId: "",
+      authorNamae: "",
+      authorProfileImageUrl: "",
       createdAt: "",
       likeCount: 0,
       commentsCount: 0,
       viewsCount: 0,
     },
+    comments: [],
+    editingComment: null,
   };
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
+  this.getCurrentUserId = () => getState().userId;
+
+  this.postBasicInfo = new PostBasicInfo({ $target: this.element });
+
+  new Divider({ $target: this.element });
+
+  this.postContent = new PostContent({
+    $target: this.element,
+    post: this.state.post,
+  });
+  this.postStats = new PostStats({
+    $target: this.element,
+    post: this.state.post,
+  });
+
+  new Divider({ $target: this.element });
+
+  this.postComment = new PostComment({
+    $target: this.element,
+    onSubmit: event => this.onSubmitComment(event),
+  });
+
+  this.commentList = new CommentList({
+    $target: this.element,
+    comments: this.state.comments,
+    onModify: (commentId, authorId) => {
+      this.onClickCommentModify(commentId, authorId);
+    },
+    onDelete: (commentId, authorId) =>
+      this.onClickCommentDelete(commentId, authorId),
+  });
 
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
+
+    this.postBasicInfo.setState(this.state.post);
+    this.postContent.setState(this.state.post);
+    this.postStats.setState(this.state.post);
+
+    this.commentList.setState({ comments: this.state.comments });
   };
 
-  this.render = () => {
-    const { post } = this.state;
-    const {
-      title,
-      content,
-      authorName,
-      authorProfileImageUrl,
-      createdAt,
-      likeCount,
-      commentCount,
-      viewCount,
-    } = post;
+  this.onSubmitComment = async content => {
+    try {
+      const { editingComment, post } = this.state;
 
-    const htmlString = `
-      <div class="post-basic-info">
-        <h1 class="post-title bold">${title}</h1>
-        <div class="post-author-info">
-          <div class="post-author-container left">
-            <div class="post-author-container">
-              <div class="post-avatar avatar">
-              <img src=${authorProfileImageUrl} />
-              </div>
-              <span class="post-author bold">${authorName}</span>
-            </div>
-            <span class="post-info-item">${createdAt}</span>
-          </div>
-          <div class="post-author-container right">
-            <button class="post-author-container-button post-modify">수정</button>
-            <button class="post-author-container-button post-delete">삭제</button>
-          </div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <main class="post-content-container">
-        <div class="post-content">
-          <div class="post-content-image"></div>
-          <p>
-            ${content}
-          </p>
-        </div>
-        <ul class="post-stats">
-          <li class="post-stats-item bold">
-            <span class="item-content">${likeCount}</span>
-            <span class="item-title">좋아요수</span>
-          </li>
-          <li class="post-stats-item bold">
-            <span class="item-content">${viewCount}</span>
-            <span class="item-title">조회수</span>
-          </li>
-          <li class="post-stats-item bold">
-            <span class="item-content">${commentCount}</span>
-            <span class="item-title">댓글</span>
-          </li>
-        </ul>
-        <div class="divider"></div>
-        <div class="post-comment-container">
-          <div class="post-comment-textarea-wrapper">
-            <textarea class="post-comment-textarea">작성할 댓글 내용</textarea>
-          </div>
-          <div class="divider"></div>
-          <div class="post-comment-submit-button-container">
-            <button class="post-comment-submit-button">
-              <span>댓글 등록</span>
-            </button>
-          </div>
-        </div>
-        <ul class="post-comment-list">
-          <li class="post-comment">
-            <div class="post-author-info">
-              <div class="post-author-container left">
-                <div class="post-author-container">
-                  <div class="post-avatar avatar">
-                  </div>
-                  <span class="post-author bold">더미 작성자 1</span>
-                </div>
-                <span class="post-info-item">2021-01-01 00:00:00</span>
-              </div>
-              <div class="post-author-container right post-comment">
-                <button class="post-author-container-button comment-modify">수정</button>
-                <button class="post-author-container-button comment-delete">삭제</button>
-              </div>
-            </div>
-            <p class="post-comment-content">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Cupiditate illum itaque facilis quisquam debitis laudantium a
-              nisi, commodi quas exercitationem sit eligendi, aliquid architecto
-              unde eaque ipsum dolorem tenetur hic.
-            </p>
-          </li>
-         </ul>
-      </main>`;
+      let response;
+      if (editingComment) {
+        response = await apiManager.updateComment({
+          postId: post.postId,
+          commentId: editingComment.commentId,
+          content,
+        });
+      } else {
+        response = await apiManager.postComment({
+          postId: post.postId,
+          content,
+        });
+      }
 
-    this.element.innerHTML = htmlString;
-    this.$target.appendChild(this.element);
+      if (response.status === StatusCode.OK) {
+        await this.init();
+        this.setState({ editingComment: null });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("댓글 처리 중 오류가 발생했습니다.");
+    }
   };
+
+  this.render = () => {};
 
   this.onClickPostModify = () => {
-    this.moveTo("post-edit", { postId: this.state.post.id });
+    const currentUserId = this.getCurrentUserId();
+    const authorId = this.state.post.authorId;
+
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
+    this.moveTo("post-edit", { postId: this.state.post.postId });
+  };
+
+  this.deletePost = async () => {
+    try {
+      const postId = this.state.post.postId;
+      const response = await apiManager.deletePost(postId);
+
+      if (response.status === StatusCode.OK) {
+        showToast("삭제 완료");
+        setTimeout(() => {
+          this.moveTo("post-list");
+        }, 500);
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
   };
 
   this.onClickPostDelete = async () => {
-    console.log("click");
-    await restClient.get("/posts/84e43942-7d5e-41aa-a314-8f0148c032b7");
+    const currentUserId = this.getCurrentUserId();
+    const authorId = this.state.post.authorId;
+    const postId = this.state.post.postId;
+
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
+
+    showModal({
+      modalTitle: "게시글을 삭제하시겠습니까?",
+      modalDescription: "삭제한 내용은 복구할 수 없습니다.",
+      positiveText: "확인",
+      negativeText: "취소",
+      onPositive: () => {
+        this.deletePost(postId);
+      },
+    });
   };
 
-  this.onClickCommentModify = async () => {};
+  this.onClickCommentModify = async (commentId, authorId) => {
+    const currentUserId = this.getCurrentUserId();
 
-  this.onClickCommentDelete = () => {};
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
+
+    const targetComment = this.state.comments.find(
+      comment => comment.commentId === commentId
+    );
+    if (!targetComment) {
+      return;
+    }
+
+    this.setState({ editingComment: targetComment });
+    this.postComment.setEditMode(targetComment.content);
+  };
+
+  this.deleteComment = async commentId => {
+    try {
+      const postId = this.state.post.postId;
+      const response = await apiManager.deleteComment({
+        postId,
+        commentId,
+      });
+
+      if (response.status === StatusCode.OK) {
+        await this.init();
+        showToast("삭제 완료");
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.onClickCommentDelete = async (commentId, authorId) => {
+    const currentUserId = this.getCurrentUserId();
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
+
+    showModal({
+      modalTitle: "댓글을 삭제하시겠습니까?",
+      modalDescription: "삭제한 내용은 복구할 수 없습니다.",
+      positiveText: "확인",
+      negativeText: "취소",
+      onPositive: () => {
+        this.deleteComment(commentId);
+      },
+    });
+  };
 
   this.getPost = async postId => {
-    const response = await restClient.get(`/posts/${postId}`);
+    try {
+      const response = await apiManager.getPost(postId);
 
-    if (response.status === StatusCode.OK) {
-      this.setState({ post: response.data });
+      if (response.status === StatusCode.OK) {
+        this.setState({ post: response.data });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.getComments = async postId => {
+    try {
+      const response = await apiManager.getComments(postId);
+
+      if (response.status === StatusCode.OK) {
+        this.setState({ comments: response.data });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
   };
 
@@ -151,9 +241,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     $postModifyButton.addEventListener("click", this.onClickPostModify);
     $postDeleteButton.addEventListener("click", this.onClickPostDelete);
     /*
-      0) 댓글 fetch
-      1) 댓글 입력 글자수에 따른 버튼 상태 관리 핸들링
-      2) 댓글 수정
       3) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
       4) 포스트 삭제 버튼 누르면 삭제 모달 => author에게만 허용
       5) 좋아요 버튼 active / inactive => login한 유저에게만 허용
@@ -161,12 +248,12 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
 
   this.init = async () => {
-    // TODO: set postId from list or history
-    const postId = "84e43942-7d5e-41aa-a314-8f0148c032b7";
-    // getState().history[getState().history.length - 1].query.postId;
+    const { query } = getCurrentPageInfo();
+    const { postId } = query;
 
-    await this.getPost(postId);
+    Promise.all([await this.getPost(postId)], await this.getComments(postId));
 
+    this.$target.appendChild(this.element);
     this.render();
     this.bindEvents();
   };

@@ -1,5 +1,7 @@
-import { truncateText } from "../lib/utils.js";
-import { POST_TITLE_MAX_LENGTH, DUMMY_POSTS } from "../lib/constants.js";
+import { showToast, truncateText } from "../lib/utils.js";
+import { POST_TITLE_MAX_LENGTH } from "../lib/constants.js";
+import PostListItem from "../components/PostListItem.js";
+import { apiManager } from "../lib/api/apiManager.js";
 
 function PostList({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
@@ -8,6 +10,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
 
   this.state = {
     ...initialState,
+    posts: [],
   };
 
   this.$postListPage = document.createElement("div");
@@ -24,6 +27,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
       ? truncateText(title, POST_TITLE_MAX_LENGTH)
       : title;
   };
+
   this.render = () => {
     this.$introductionArea.innerHTML = `
     <span>안녕하세요,</span>
@@ -40,38 +44,23 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     </button>
     `;
 
-    // TODO: Apply API
-    this.$postList.innerHTML = DUMMY_POSTS.map(post => {
-      const title = this.shortenTitle(post.title);
+    // NOTE: check this logic after applying infinite scroll
+    this.$postList.innerHTML = "";
+    this.state.posts?.forEach(post => {
+      const shortenedPost = { ...post, title: this.shortenTitle(post.title) };
 
-      return `
-        <li class="post" data-post-id="${post.id}">
-          <div class="post-top">
-            <div class="post-title bold">${title}</div>
-            <div class="post-info">
-              <div class="post-info left">
-                <div class="post-info-item"><span>좋아요 ${post.likes}</span></div>
-                <div class="post-info-item"><span>댓글 ${post.comments}</span></div>
-                <div class="post-info-item"><span>조회수 ${post.views}</span></div>
-              </div>
-              <div class="post-info right">
-                <div class="post-info-item"><span>${post.createdAt}</span></div>
-              </div>
-            </div>
-          </div>
-          <div class="post-bottom">
-            <div class="post-author-container">
-              <div class="post-avatar avatar"></div>
-              <span class="post-author bold">${post.author}</span>
-            </div>
-          </div>
-        </li>
-      `;
-    }).join("");
+      new PostListItem({
+        $target: this.$postList,
+        post: shortenedPost,
+        onClick: this.handleClickPost,
+      });
+    });
 
-    this.$postListPage.appendChild(this.$introductionArea);
-    this.$postListPage.appendChild(this.$addPostButtonContainer);
-    this.$postListPage.appendChild(this.$postList);
+    this.$postListPage.append(
+      this.$introductionArea,
+      this.$addPostButtonContainer,
+      this.$postList
+    );
 
     this.target.appendChild(this.$postListPage);
   };
@@ -92,11 +81,30 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.moveTo("post-detail", { postId });
   };
 
-  this.bindEvents = () => {
-    this.$postList.addEventListener("click", this.onClickPost);
+  this.onClickAddPost = () => {
+    this.moveTo("post-create");
   };
 
-  this.init = () => {
+  this.bindEvents = () => {
+    this.$postList.addEventListener("click", this.onClickPost);
+    this.$addPostButtonContainer.addEventListener("click", this.onClickAddPost);
+  };
+
+  this.getPosts = async () => {
+    try {
+      const { data } = await apiManager.getPosts();
+      const { posts } = data;
+
+      this.setState({ posts: [...posts] });
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.init = async () => {
+    await this.getPosts();
+
     this.render();
     this.bindEvents();
   };

@@ -1,15 +1,18 @@
-import { DUMMY_POSTS } from "../lib/constants.js";
 import { getState } from "../lib/store.js";
+import { showToast } from "../lib/utils.js";
+import { apiManager } from "../lib/api/apiManager.js";
+import { StatusCode } from "../lib/api/statusCode.js";
+import { $ } from "../lib/dom.js";
 
-function PostEdit({ $target, initialState = {} }) {
+function PostEdit({ $target, initialState = {}, moveTo }) {
   this.$target = $target;
   this.state = {
     ...initialState,
-    id: null,
     title: "",
     content: "",
-    imageUrl: null,
   };
+  this.moveTo = moveTo;
+
   this.element = document.createElement("div");
   this.element.className = "post-add-page";
 
@@ -23,7 +26,7 @@ function PostEdit({ $target, initialState = {} }) {
         <h1 class="page-title bold">게시글 수정</h1>
         <form>
           <div class="form-item">
-            <label>제목 *</label>
+            <label for="title">제목 *</label>
             <input
               class="form-item-post-title bold"
               name="title"
@@ -33,9 +36,9 @@ function PostEdit({ $target, initialState = {} }) {
             />
           </div>
           <div class="form-item">
-            <label>내용 *</label>
+            <label for="content">내용 *</label>
             <div class="form-item-content-area">
-              <textarea placeholder="내용을 입력해주세요.">${this.state.content}</textarea>
+              <textarea name="content" placeholder="내용을 입력해주세요.">${this.state.content}</textarea>
               <span class="error-message"></span>
             </div>
           </div>
@@ -54,16 +57,73 @@ function PostEdit({ $target, initialState = {} }) {
     this.$target.appendChild(this.element);
   };
 
-  this.bindEvents = () => {
-    // event 연결해주기
+  this.getPost = async postId => {
+    try {
+      const response = await apiManager.getPost(postId);
+
+      if (response.status === StatusCode.OK) {
+        this.setState({
+          title: response.data.title,
+          content: response.data.content,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
   };
 
-  this.init = () => {
-    const postId =
-      getState().history[getState().history.length - 1].query.postId;
-    const post = DUMMY_POSTS.find(post => post.id === postId);
+  this.handleInput = event => {
+    const { name, value } = event.target;
 
-    this.setState({ id: post.id, title: post.title, content: post.content });
+    if (this.state[name] !== undefined) {
+      this.setState({ [name]: value });
+    }
+  };
+
+  this.modifyPost = async () => {
+    try {
+      const { title, content } = this.state;
+      const { history } = getState();
+      const { postId } = history[history.length - 1].query;
+
+      const response = await apiManager.updatePost({
+        postId,
+        title,
+        content,
+      });
+
+      if (response.status === StatusCode.OK) {
+        showToast("수정 완료");
+        setTimeout(() => {
+          this.moveTo("post-detail", { postId });
+        }, 500);
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.handleSubmit = event => {
+    event.preventDefault();
+
+    this.modifyPost();
+  };
+
+  this.bindEvents = () => {
+    const $form = $("form");
+
+    $form.addEventListener("submit", this.handleSubmit);
+    $form.addEventListener("input", this.handleInput);
+  };
+
+  this.init = async () => {
+    const { history } = getState();
+    const { postId } = history[history.length - 1].query;
+
+    await this.getPost(postId);
+
     this.render();
     this.bindEvents();
   };

@@ -40,4 +40,40 @@ export const apiManager = {
 
     return restClient.get(`/posts/${postId}`, params);
   },
+  getPosts: () => {
+    const params = {};
+
+    return restClient.get("/posts", params);
+  },
+  addPost: ({ title, content }) => {
+    const params = { title, content };
+    return restClient.post("/posts", params);
+  },
+  updatePost: ({ postId, title, content }) => {
+    const params = { title, content };
+    return restClient.put(`/posts/${postId}`, params);
+  },
+  deletePost: postId => {
+    const params = {};
+    return restClient.delete(`/posts/${postId}`, params);
+  },
+
+  // Comments
+  getComments: postId => {
+    const params = {};
+
+    return restClient.get(`/post/${postId}/comments`, params);
+  },
+  postComment: ({ postId, content }) => {
+    const params = { content };
+    return restClient.post(`/post/${postId}/comments`, params);
+  },
+  deleteComment: ({ postId, commentId }) => {
+    const params = {};
+    return restClient.delete(`/post/${postId}/comments/${commentId}`, params);
+  },
+  updateComment: ({ postId, commentId, content }) => {
+    const params = { content };
+    return restClient.put(`/post/${postId}/comments/${commentId}`, params);
+  },
 };

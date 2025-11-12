@@ -25,6 +25,9 @@ const setState = (newState, type) => {
 
 export const getState = () => ({ ...state });
 
+export const getCurrentPageInfo = () =>
+  getState().history[getState().history.length - 1];
+
 export const subscribe = listener => {
   listeners.add(listener);
   listener({ ...state });
@@ -43,6 +46,7 @@ export const dispatch = (type, payload = {}) => {
         {
           isLoggedIn: true,
           userToken: payload.userToken,
+          userId: payload.userId,
         },
         type
       );
