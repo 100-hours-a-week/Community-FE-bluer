@@ -31,7 +31,7 @@ function PostStats({ $target, post, handleClick }) {
     const { likeCount, viewCount, commentCount } = this.state;
     this.$element.innerHTML = `
       <li>
-        <button class="post-stats-item bold">
+        <button class="post-stats-item bold ${this.state.likedByMe ? "active" : ""} "}>
           <span class="item-content">${formatToK(likeCount) ?? 0}</span>
           <span class="item-title">좋아요수</span>
         </button>
