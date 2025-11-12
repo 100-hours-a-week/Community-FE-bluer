@@ -50,4 +50,8 @@ export const apiManager = {
 
     return restClient.get(`/post/${postId}/comments`, params);
   },
+  postComment: ({ postId, content }) => {
+    const params = { content };
+    return restClient.post(`/post/${postId}/comments`, params);
+  },
 };

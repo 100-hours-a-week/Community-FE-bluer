@@ -26,6 +26,8 @@ function PostComment({ $target, onSubmit }) {
 
   this.handleSubmit = () => {
     onSubmit(this.state.content);
+
+    this.init();
   };
 
   this.bindEvents = () => {

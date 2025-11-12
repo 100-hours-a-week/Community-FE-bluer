@@ -66,7 +66,19 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
 
   this.onSubmitComment = async content => {
-    await console.log(content);
+    try {
+      const response = await apiManager.postComment({
+        postId: this.state.post.postId,
+        content,
+      });
+
+      if (response.status === StatusCode.OK) {
+        // todo: 최신 상태 가져오기 및 요청 분리
+        await this.init();
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   this.render = () => {};
@@ -116,7 +128,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     $postModifyButton.addEventListener("click", this.onClickPostModify);
     $postDeleteButton.addEventListener("click", this.onClickPostDelete);
     /*
-      1) 댓글 입력 글자수에 따른 버튼 상태 관리 핸들링
       2) 댓글 수정
       3) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
       4) 포스트 삭제 버튼 누르면 삭제 모달 => author에게만 허용

@@ -1,5 +1,3 @@
-import Divider from "../Divider.js";
-
 export default function PostContent({ $target, post }) {
   this.$element = document.createElement("div");
   this.$element.classList.add("post-basic-info");
@@ -7,12 +5,7 @@ export default function PostContent({ $target, post }) {
 
   this.$target.appendChild(this.$element);
 
-  // new Divider({ $target: this.$target }
-
-  // console.log(`PostContent's initialState`);
-  // console.log(initialState);
   this.state = {
-    // content: "",
     ...post,
   };
 
@@ -23,8 +16,6 @@ export default function PostContent({ $target, post }) {
   };
 
   this.render = () => {
-    console.log("Post Content Render");
-
     const { content } = this.state;
 
     this.$element.innerHTML = `
@@ -33,8 +24,6 @@ export default function PostContent({ $target, post }) {
         <p>${content ?? ""}</p>
       </div>
     `;
-
-    // this.$target.appendChild(this.$element);
   };
 
   this.render();
