@@ -11,6 +11,8 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
   this.state = {
     ...initialState,
     posts: [],
+    currentCursor: null,
+    hasNext: false,
   };
 
   this.$postListPage = document.createElement("div");
@@ -21,6 +23,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
   this.$addPostButtonContainer.classList.add("add-post-button-container");
   this.$postList = document.createElement("ul");
   this.$postList.classList.add("post-list");
+  this.$loadMore = document.createElement("div");
 
   this.shortenTitle = title => {
     return title.length > POST_TITLE_MAX_LENGTH
@@ -44,7 +47,6 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     </button>
     `;
 
-    // NOTE: check this logic after applying infinite scroll
     this.$postList.innerHTML = "";
     this.state.posts?.forEach(post => {
       const shortenedPost = { ...post, title: this.shortenTitle(post.title) };
@@ -59,7 +61,8 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.$postListPage.append(
       this.$introductionArea,
       this.$addPostButtonContainer,
-      this.$postList
+      this.$postList,
+      this.$loadMore
     );
 
     this.target.appendChild(this.$postListPage);
@@ -85,6 +88,53 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.moveTo("post-create");
   };
 
+  this.appendPosts = async (cursor = null, size = null) => {
+    try {
+      if (this.state.currentCursor === null && this.hasNext === false) {
+        this.observer.unobserve(this.$loadMore);
+        return;
+      }
+      const { data } = await apiManager.getPosts(cursor, size);
+      const { posts, nextCursor, hasNext } = data;
+
+      this.setState({
+        posts: [...this.state.posts, ...posts],
+        currentCursor: nextCursor,
+        hasNext,
+      });
+
+      posts?.forEach(post => {
+        const shortenedPost = { ...post, title: this.shortenTitle(post.title) };
+
+        new PostListItem({
+          $target: this.$postList,
+          post: shortenedPost,
+          onClick: this.handleClickPost,
+        });
+      });
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.handleIntersect = () => {
+    if (!this.observer) {
+      this.observer = new IntersectionObserver(
+        async entries => {
+          const entry = entries[0];
+          if (!entry.isIntersecting || !this.state.hasNext) return;
+
+          this.observer.unobserve(this.$loadMore);
+          await this.appendPosts(this.state.currentCursor, 5);
+          this.observer.observe(this.$loadMore);
+        },
+        { root: null, rootMargin: "0px 0px 200px 0px", threshold: 0 }
+      );
+    }
+    this.observer.observe(this.$loadMore);
+  };
+
   this.bindEvents = () => {
     this.$postList.addEventListener("click", this.onClickPost);
     this.$addPostButtonContainer.addEventListener("click", this.onClickAddPost);
@@ -95,7 +145,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
       const { data } = await apiManager.getPosts();
       const { posts } = data;
 
-      this.setState({ posts: [...posts] });
+      this.setState({ posts: [...posts], hasNext: data.hasNext });
     } catch (error) {
       console.error(error);
       showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
@@ -107,6 +157,7 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
 
     this.render();
     this.bindEvents();
+    this.handleIntersect();
   };
 }
 

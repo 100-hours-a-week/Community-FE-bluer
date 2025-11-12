@@ -5,6 +5,7 @@
   max-width: var(--layout-max-width);
   justify-self: center;
   margin-top: 40px;
+  padding-bottom: 40px;
 }
 
 .post-list-page .introduction {
