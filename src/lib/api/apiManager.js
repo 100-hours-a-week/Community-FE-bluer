@@ -40,8 +40,14 @@ export const apiManager = {
 
     return restClient.get(`/posts/${postId}`, params);
   },
-  getPosts: () => {
-    const params = {};
+  getPosts: (cursor = null, size = null) => {
+    const params = { cursor, size };
+    if (!cursor) {
+      delete params.cursor;
+    }
+    if (!size) {
+      delete params.size;
+    }
 
     return restClient.get("/posts", params);
   },
