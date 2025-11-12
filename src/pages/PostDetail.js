@@ -47,6 +47,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
   this.postComment = new PostComment({
     $target: this.element,
+    onSubmit: event => this.onSubmitComment(event),
   });
 
   this.commentList = new CommentList({
@@ -62,6 +63,10 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     this.postStats.setState(this.state.post);
 
     this.commentList.setState({ comments: this.state.comments });
+  };
+
+  this.onSubmitComment = async content => {
+    await console.log(content);
   };
 
   this.render = () => {};
@@ -111,7 +116,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     $postModifyButton.addEventListener("click", this.onClickPostModify);
     $postDeleteButton.addEventListener("click", this.onClickPostDelete);
     /*
-      0) 댓글 fetch
       1) 댓글 입력 글자수에 따른 버튼 상태 관리 핸들링
       2) 댓글 수정
       3) 포스트 수정 버튼 누르면 페이지 이동 => author에게만 허용
