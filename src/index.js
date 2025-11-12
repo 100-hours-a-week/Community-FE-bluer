@@ -23,10 +23,19 @@ function App() {
     this.render();
   };
 
+  this.toBack = () => {
+    dispatch("POP_STATE");
+
+    this.render();
+  };
+
   this.header = new Header({
     $target: $("#app"),
     moveTo: page => {
       this.moveTo(page);
+    },
+    toBack: () => {
+      this.toBack();
     },
   });
 
