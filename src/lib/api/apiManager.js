@@ -45,6 +45,12 @@ export const apiManager = {
 
     return restClient.get("/posts", params);
   },
+  updatePost: ({ postId, title, content }) => {
+    const params = { title, content };
+    return restClient.put(`/posts/${postId}`, params);
+  },
+
+  // Comments
   getComments: postId => {
     const params = {};
 

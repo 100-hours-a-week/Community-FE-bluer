@@ -4,13 +4,15 @@ import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
 import { $ } from "../lib/dom.js";
 
-function PostEdit({ $target, initialState = {} }) {
+function PostEdit({ $target, initialState = {}, moveTo }) {
   this.$target = $target;
   this.state = {
     ...initialState,
     title: "",
     content: "",
   };
+  this.moveTo = moveTo;
+
   this.element = document.createElement("div");
   this.element.className = "post-add-page";
 
@@ -79,10 +81,34 @@ function PostEdit({ $target, initialState = {} }) {
     }
   };
 
+  this.modifyPost = async () => {
+    try {
+      const { title, content } = this.state;
+      const { history } = getState();
+      const { postId } = history[history.length - 1].query;
+
+      const response = await apiManager.updatePost({
+        postId,
+        title,
+        content,
+      });
+
+      if (response.status === StatusCode.OK) {
+        showToast("수정 완료");
+        setTimeout(() => {
+          this.moveTo("post-detail", { postId });
+        }, 500);
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
   this.handleSubmit = event => {
     event.preventDefault();
-    console.log("submit");
-    console.log(this.state);
+
+    this.modifyPost();
   };
 
   this.bindEvents = () => {
@@ -94,7 +120,7 @@ function PostEdit({ $target, initialState = {} }) {
 
   this.init = async () => {
     const { history } = getState();
-    const postId = history[history.length - 1].query.postId;
+    const { postId } = history[history.length - 1].query;
 
     await this.getPost(postId);
 
