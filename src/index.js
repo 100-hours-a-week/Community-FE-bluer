@@ -47,7 +47,9 @@ function App() {
   this.renderPage = () => {
     const { history } = getState();
     const currentRoute = history[history.length - 1];
-    const page = this.pages[currentRoute.page];
+    const page = currentRoute?.page
+      ? this.pages[currentRoute.page]
+      : this.pages.login;
 
     if (page?.init) {
       // this.header.init();

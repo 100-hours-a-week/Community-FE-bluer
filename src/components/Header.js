@@ -40,7 +40,7 @@ function Header({ $target, moveTo, initialState }) {
 
   this.render = () => {
     const { isLoggedIn, history } = getState();
-    const currentPage = history[history.length - 1].page;
+    const currentPage = history[history.length - 1]?.page ?? "login";
 
     this.$header.classList.add("header");
     this.$header.innerHTML = `

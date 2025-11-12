@@ -1,4 +1,4 @@
-function CommentList({ $target, comments }) {
+function CommentList({ $target, comments, onModify, onDelete }) {
   this.$target = $target;
   this.$element = document.createElement("ul");
   this.$element.classList.add("post-comment-list");
@@ -12,13 +12,32 @@ function CommentList({ $target, comments }) {
     this.render();
   };
 
+  this.handleClick = (target, mode) => {
+    if (target?.tagName !== "BUTTON") {
+      return;
+    }
+    const { commentId, authorId } = target.closest("li").dataset;
+
+    if (mode === "modify") {
+      onModify(commentId);
+    } else if (mode === "delete") {
+      onDelete(commentId, authorId);
+    }
+  };
+
+  this.bindEvents = () => {
+    this.$element.addEventListener("click", event => {
+      this.handleClick(event.target, event.target?.dataset?.mode);
+    });
+  };
+
   this.render = () => {
     const { comments } = this.state;
 
     const value = comments
       .map(comment => {
         return `
-        <li class="post-comment">
+        <li class="post-comment" data-comment-id=${comment.commentId} data-author-id=${comment.author.id}>
           <div class="post-author-info">
             <div class="post-author-container left">
               <div class="post-author-container">
@@ -28,8 +47,8 @@ function CommentList({ $target, comments }) {
               <span class="post-info-item">${comment.createdAt ?? "-"}</span>
             </div>
             <div class="post-author-container right post-comment">
-              <button class="post-author-container-button comment-modify">수정</button>
-              <button class="post-author-container-button comment-delete">삭제</button>
+              <button class="post-author-container-button comment-modify" data-mode="modify">수정</button>
+              <button class="post-author-container-button comment-delete" data-mode="delete"">삭제</button>
             </div>
           </div>
           <p class="post-comment-content">${comment.content ?? ""}</p>
@@ -39,6 +58,9 @@ function CommentList({ $target, comments }) {
 
     this.$element.innerHTML = value;
   };
+
+  this.render();
+  this.bindEvents();
 }
 
 export default CommentList;

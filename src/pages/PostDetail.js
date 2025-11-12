@@ -1,8 +1,8 @@
 import { $ } from "../lib/dom.js";
-import { getCurrentPageInfo } from "../lib/store.js";
+import { getCurrentPageInfo, getState } from "../lib/store.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
-import { showToast } from "../lib/utils.js";
+import { showModal, showToast } from "../lib/utils.js";
 import PostBasicInfo from "../components/PostDetail/PostBasicInfo.js";
 import PostContent from "../components/PostDetail/PostContent.js";
 import Divider from "../components/Divider.js";
@@ -19,7 +19,9 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       postId: null,
       title: "",
       content: "",
-      author: "",
+      authorId: "",
+      authorNamae: "",
+      authorProfileImageUrl: "",
       createdAt: "",
       likeCount: 0,
       commentsCount: 0,
@@ -29,6 +31,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
+  this.getCurrentUserId = () => getState().userId;
 
   this.postBasicInfo = new PostBasicInfo({ $target: this.element });
 
@@ -53,6 +56,11 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.commentList = new CommentList({
     $target: this.element,
     comments: this.state.comments,
+    onModify: (commentId, authorId) => {
+      this.onClickCommentModify(commentId, authorId);
+    },
+    onDelete: (commentId, authorId) =>
+      this.onClickCommentDelete(commentId, authorId),
   });
 
   this.setState = newState => {
@@ -91,9 +99,51 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     console.log("click");
   };
 
-  this.onClickCommentModify = async () => {};
+  this.onClickCommentModify = async (commentId, authorId) => {
+    const currentUserId = this.getCurrentUserId();
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
 
-  this.onClickCommentDelete = () => {};
+    // console.log(`modify: ${commentId}`);
+  };
+
+  this.deleteComment = async commentId => {
+    try {
+      const postId = this.state.post.postId;
+      const response = await apiManager.deleteComment({
+        postId,
+        commentId,
+      });
+
+      if (response.status === StatusCode.OK) {
+        await this.init();
+        showToast("삭제 완료");
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
+
+  this.onClickCommentDelete = async (commentId, authorId) => {
+    const currentUserId = this.getCurrentUserId();
+    if (authorId !== currentUserId) {
+      showToast("권한이 없습니다.");
+      return;
+    }
+
+    showModal({
+      modalTitle: "댓글을 삭제하시겠습니까?",
+      modalDescription: "삭제한 내용은 복구할 수 없습니다.",
+      positiveText: "확인",
+      negativeText: "취소",
+      onPositive: () => {
+        this.deleteComment(commentId);
+      },
+    });
+  };
 
   this.getPost = async postId => {
     try {

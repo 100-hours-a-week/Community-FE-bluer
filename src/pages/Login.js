@@ -55,7 +55,10 @@ function Login({ $target, initialState, moveTo, currentPage }) {
 
       $(".submit-button", this.$loginPage).classList.add("isLoading");
       setTimeout(() => {
-        dispatch("LOGIN", { userToken: result.data.token });
+        dispatch("LOGIN", {
+          userToken: result.data.token,
+          userId: result.data.userId,
+        });
       }, LOGIN_DELAY_MILLISECONDS);
     } catch (error) {
       console.error("로그인 중 오류 발생:", error);

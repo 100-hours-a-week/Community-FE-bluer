@@ -46,6 +46,7 @@ export const dispatch = (type, payload = {}) => {
         {
           isLoggedIn: true,
           userToken: payload.userToken,
+          userId: payload.userId,
         },
         type
       );
