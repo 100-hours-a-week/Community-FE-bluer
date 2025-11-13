@@ -5,6 +5,7 @@ import {
   getPasswordError,
   getPasswordCheckError,
   getNicknameError,
+  requestFieldAvailability,
 } from "../lib/validation.js";
 import { ERROR_TYPE, ERROR_MESSAGES } from "../lib/constants.js";
 
@@ -53,6 +54,26 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       $signupButton.disabled = !allValid;
       $signupButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
     }
+  };
+
+  this.checkDuplicated = async field => {
+    const fieldValue = this.state[field];
+
+    if (!fieldValue) {
+      return;
+    }
+
+    const errorType = await requestFieldAvailability(field, fieldValue);
+
+    if (errorType) {
+      this.renderTextFieldError(field, errorType);
+      this.state.isValid[field] = false;
+    } else {
+      this.initTextFieldError(field);
+      this.state.isValid[field] = true;
+    }
+
+    this.updateSubmitButtonState();
   };
 
   // TODO: 외부 파일로
@@ -140,6 +161,10 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
 
     if (!this.state.profileImgUrl) {
       this.renderImageFieldError();
+    }
+
+    if ((name === "nickname" || name === "email") && !errorType) {
+      this.checkDuplicated(name);
     }
   };
 

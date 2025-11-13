@@ -139,7 +139,7 @@ function UserInfo({ $target }) {
   this.handleInput = event => {
     const { name, value } = event.target;
 
-    this.setState({ ...this.state, [name]: value });
+    this.setState({ ...this.state, [name]: value.trim() });
 
     $(".submit-button").disabled =
       this.state.nickname === this.state.initialNickname;
