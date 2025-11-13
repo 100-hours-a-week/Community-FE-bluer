@@ -8,8 +8,15 @@ function PostListItem({ $target, post, onClick }) {
   this.$post.dataset.postId = this.post.postId;
 
   this.render = () => {
-    const { title, likeCount, commentCount, viewCount, createdAt, authorName } =
-      this.post;
+    const {
+      title,
+      likeCount,
+      commentCount,
+      viewCount,
+      createdAt,
+      authorName,
+      authorProfileImageUrl,
+    } = this.post;
 
     const htmlString = `
           <div class="post-top">
@@ -27,7 +34,9 @@ function PostListItem({ $target, post, onClick }) {
           </div>
           <div class="post-bottom">
             <div class="post-author-container">
-              <div class="post-avatar avatar"></div>
+              <div class="post-avatar avatar">
+                <img src="${authorProfileImageUrl}" />
+              </div>
               <span class="post-author bold">${authorName}</span>
             </div>
           </div>

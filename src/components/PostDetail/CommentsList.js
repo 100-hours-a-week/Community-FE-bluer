@@ -43,7 +43,9 @@ function CommentList({ $target, comments, onModify, onDelete }) {
           <div class="post-author-info">
             <div class="post-author-container left">
               <div class="post-author-container">
-                <div class="post-avatar avatar"></div>
+                <div class="post-avatar avatar">
+                  <img src="${comment.author.profileImageUrl}" />
+                </div>
                 <span class="post-author bold">${comment.author.nickname ?? "익명"}</span>
               </div>
               <span class="post-info-item">${comment.updatedAt ? formatToLocalDateTime(comment.updatedAt) : "-"}</span>
