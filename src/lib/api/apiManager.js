@@ -58,8 +58,8 @@ export const apiManager = {
 
     return restClient.get("/posts", params);
   },
-  addPost: ({ title, content }) => {
-    const params = { title, content };
+  addPost: ({ title, content, imageUrl }) => {
+    const params = { title, content, imageUrl };
     return restClient.post("/posts", params);
   },
   updatePost: ({ postId, title, content }) => {

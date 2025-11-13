@@ -272,3 +272,7 @@ button:hover {
     background-color: var(--grey-hover);
   }
 }
+
+.block {
+  display: block;
+}
