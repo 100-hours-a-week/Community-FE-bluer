@@ -23,70 +23,6 @@ function UserInfo({ $target }) {
   this.$userInfoPage = document.createElement("div");
   this.$userInfoPage.classList.add("user-info-page", "page-layout");
 
-  this.render = () => {
-    this.$userInfoPage.innerHTML = `
-    <h2 class="page-title big bold">회원정보수정</h2>
-      <div class="signup-form-container">
-        <form>
-          <div>
-            <div>
-              <strong class="bold">프로필 사진*</strong>
-            </div>
-            <span class="error-message profile"></span>
-            <div class="add-photo-container user-info">
-              <input class="add-photo-file-input none" type="file" />
-              <button type="button" class="add-profile-photo-button">
-                <div class="profile-image-container">
-                  <img
-                    class="profile-image"
-                    src=${this.state.profileImgUrl}
-                  />
-                  <div class="profile-overlay">
-                    <div class="profile-overlay-text"><span> 변경 </span></div>
-                  </div>
-                </div>
-              </button>
-            </div>
-          </div>
-          <ul class="form-input-list">
-            <li class="input-container">
-              <label for="email">이메일</label>
-              <input
-                class="input-email input-readonly"
-                type="email"
-                name="email"
-                placeholder="이메일을 입력하세요"
-                readonly
-                value=${this.state.email}             
-              />
-            </li>
-            <li class="input-container">
-              <label for="nickname">닉네임</label>
-              <input
-                type="text"
-                id="nickname"
-                name="nickname"
-                value=${this.state.nickname}
-              />
-              <span class="error-message nickname"></span>
-            </li>
-          </ul>
-          <button class="submit-button signup-button" disabled type="submit">
-            수정하기
-          </button>
-        </form>
-        <div class="withdrawal-button-container">
-          <button type="button" class="withdrawal-button">
-            회원 탈퇴
-          </button>
-        </div>
-        <input name="profileImgUrl" type="file" accept="image/*" class="add-photo-file-input" />
-      </div>
-    `;
-
-    this.target.appendChild(this.$userInfoPage);
-  };
-
   this.initErrorMessage = () => {
     const errorElement = $(`.error-message.profile`, this.$signupPage);
 
@@ -205,20 +141,6 @@ function UserInfo({ $target }) {
     $(".add-photo-file-input", this.$signupPage).click();
   };
 
-  this.bindEvents = () => {
-    const $form = $("form", this.$userInfoPage);
-    const $withdrawalButton = $(".withdrawal-button", this.$userInfoPage);
-
-    const $fileInput = $(".add-photo-file-input", this.$userInfoPage);
-    const $addPhotoContainer = $(".add-photo-container", this.$userInfoPage);
-
-    $form.addEventListener("input", this.handleInput);
-    $form.addEventListener("submit", this.handleSubmit);
-    $withdrawalButton.addEventListener("click", this.handleWithdrawalClick);
-    $fileInput.addEventListener("change", this.handleChangeFileInput);
-    $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
-  };
-
   this.getUserProfile = async () => {
     try {
       const { data } = await apiManager.getUserProfile();
@@ -233,6 +155,84 @@ function UserInfo({ $target }) {
       showToast(`Error: 유저 정보 조회 중 에러 발생`);
       console.error(error);
     }
+  };
+
+  this.bindEvents = () => {
+    const $form = $("form", this.$userInfoPage);
+    const $withdrawalButton = $(".withdrawal-button", this.$userInfoPage);
+
+    const $fileInput = $(".add-photo-file-input", this.$userInfoPage);
+    const $addPhotoContainer = $(".add-photo-container", this.$userInfoPage);
+
+    $form.addEventListener("input", this.handleInput);
+    $form.addEventListener("submit", this.handleSubmit);
+    $withdrawalButton.addEventListener("click", this.handleWithdrawalClick);
+    $fileInput.addEventListener("change", this.handleChangeFileInput);
+    $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
+  };
+
+  this.render = () => {
+    this.$userInfoPage.innerHTML = `
+    <h2 class="page-title big bold">회원정보수정</h2>
+      <div class="signup-form-container">
+        <form>
+          <div>
+            <div>
+              <strong class="bold">프로필 사진*</strong>
+            </div>
+            <span class="error-message profile"></span>
+            <div class="add-photo-container user-info">
+              <input class="add-photo-file-input none" type="file" />
+              <button type="button" class="add-profile-photo-button">
+                <div class="profile-image-container">
+                  <img
+                    class="profile-image"
+                    src=${this.state.profileImgUrl}
+                  />
+                  <div class="profile-overlay">
+                    <div class="profile-overlay-text"><span> 변경 </span></div>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+          <ul class="form-input-list">
+            <li class="input-container">
+              <label for="email">이메일</label>
+              <input
+                class="input-email input-readonly"
+                type="email"
+                name="email"
+                placeholder="이메일을 입력하세요"
+                readonly
+                value=${this.state.email}             
+              />
+            </li>
+            <li class="input-container">
+              <label for="nickname">닉네임</label>
+              <input
+                type="text"
+                id="nickname"
+                name="nickname"
+                value=${this.state.nickname}
+              />
+              <span class="error-message nickname"></span>
+            </li>
+          </ul>
+          <button class="submit-button signup-button" disabled type="submit">
+            수정하기
+          </button>
+        </form>
+        <div class="withdrawal-button-container">
+          <button type="button" class="withdrawal-button">
+            회원 탈퇴
+          </button>
+        </div>
+        <input name="profileImgUrl" type="file" accept="image/*" class="add-photo-file-input" />
+      </div>
+    `;
+
+    this.target.appendChild(this.$userInfoPage);
   };
 
   this.init = async () => {

@@ -18,7 +18,6 @@ export default function PostBasicInfo({ $target, post }) {
   };
 
   this.render = () => {
-    // console.log("postbasicinfo render");
     const { title, authorName, authorProfileImageUrl, createdAt } = this.state;
     this.$element.innerHTML = `
       <div class="post-basic-info">

@@ -1,10 +1,5 @@
 import { apiManager } from "./api/apiManager.js";
-import {
-  ERROR_TYPE,
-  ERROR_MESSAGES,
-  DUPLICATE_EMAILS,
-  DUPLICATE_NICKNAMES,
-} from "./constants.js";
+import { ERROR_TYPE, ERROR_MESSAGES } from "./constants.js";
 
 const isValidEmail = email => {
   // ex. user@localhost => wrong
@@ -43,11 +38,6 @@ export const getEmailError = email => {
   if (!isValidEmail(email)) {
     return { errorType: ERROR_TYPE.WRONG_FORMAT_EMAIL };
   }
-
-  // // TODO 2: email 중복 검사
-  // if (DUPLICATE_EMAILS.includes(email)) {
-  //   return { errorType: ERROR_TYPE.DUPLICATE_EMAIL };
-  // }
 
   return { errorType: null };
 };

@@ -10,7 +10,6 @@ export const apiManager = {
 
     return restClient.post("/users/signin", params);
   },
-  // TODO: add image upload
   signUp: ({ email, password, nickname, profileImageUrl = TEMPORARY_URL }) => {
     const params = { email, password, nickname, profileImageUrl };
 
@@ -41,6 +40,7 @@ export const apiManager = {
   withdrawProfile: () => {
     return restClient.delete("/users/profile");
   },
+
   // Post
   getPost: postId => {
     const params = {};

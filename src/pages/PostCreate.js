@@ -103,7 +103,6 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
   };
 
   this.bindEvents = () => {
-    // event 연결해주기
     const $form = $("form");
     const $fileInput = $(".add-photo-file-input", this.$userInfoPage);
 

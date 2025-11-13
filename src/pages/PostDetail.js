@@ -292,9 +292,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
     $postModifyButton.addEventListener("click", this.onClickPostModify);
     $postDeleteButton.addEventListener("click", this.onClickPostDelete);
-    /*
-      5) 좋아요 버튼 active / inactive => login한 유저에게만 허용
-    */
   };
 
   this.init = async () => {

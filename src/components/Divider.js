@@ -4,7 +4,5 @@ export default function Divider({ $target }) {
   $divider.classList.add("divider");
 
   $target.appendChild($divider);
-  this.render = () => {
-    // console.log("divider");
-  };
+  this.render = () => {};
 }
