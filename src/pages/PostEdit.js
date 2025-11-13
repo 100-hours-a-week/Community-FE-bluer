@@ -13,6 +13,7 @@ function PostEdit({ $target, initialState = {}, moveTo }) {
     content: null,
     postImageUrl: null,
     selectedFileName: "",
+    file: null,
   };
   this.moveTo = moveTo;
 
@@ -40,7 +41,7 @@ function PostEdit({ $target, initialState = {}, moveTo }) {
               name="title"
               placeholder="제목을 입력해 주세요. (최대 26글자)"
               maxlength="26"
-              value=${this.state.title}
+              value="${this.state.title ?? ""}"
             />
           </div>
           <div class="form-item">
@@ -103,7 +104,7 @@ function PostEdit({ $target, initialState = {}, moveTo }) {
   };
 
   this.handleFileChange = event => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0] ?? null;
     const nextSelectedName = file?.name ?? "";
 
     this.setState({ selectedFileName: nextSelectedName, file });
@@ -116,16 +117,21 @@ function PostEdit({ $target, initialState = {}, moveTo }) {
 
   this.modifyPost = async () => {
     try {
-      const imageUrl = await uploadToImageBucket(this.state.file);
-      const { title, content } = this.state;
+      const { title, content, file, postImageUrl } = this.state;
       const { history } = getState();
       const { postId } = history[history.length - 1].query;
+
+      let nextImageUrl = postImageUrl;
+
+      if (file) {
+        nextImageUrl = await uploadToImageBucket(file);
+      }
 
       const response = await apiManager.updatePost({
         postId,
         title,
         content,
-        imageUrl,
+        imageUrl: nextImageUrl,
       });
 
       if (response.status === StatusCode.OK) {
@@ -148,7 +154,7 @@ function PostEdit({ $target, initialState = {}, moveTo }) {
 
   this.bindEvents = () => {
     const $form = $("form", this.element);
-    const $fileInputButton = $(".file-input-button");
+    const $fileInputButton = $(".file-input-button", this.element);
 
     if (!$form) {
       return;
@@ -156,8 +162,8 @@ function PostEdit({ $target, initialState = {}, moveTo }) {
 
     $form.addEventListener("submit", this.handleSubmit);
     $form.addEventListener("input", this.handleInput);
-    $fileInputButton.addEventListener("click", () => {
-      $(".post-image-input").click();
+    $fileInputButton?.addEventListener("click", () => {
+      this.$fileInput?.click();
     });
     this.$fileInput?.addEventListener("change", this.handleFileChange);
   };
