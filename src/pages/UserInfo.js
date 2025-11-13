@@ -14,6 +14,7 @@ function UserInfo({ $target }) {
     nickname: "",
     profileImgUrl: null,
     initialNickname: "",
+    file: null,
   };
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
@@ -131,10 +132,15 @@ function UserInfo({ $target }) {
           return;
         }
       }
-      const url = await uploadToImageBucket(this.state.file);
+      let nextProfileUrl = this.state.profileImgUrl;
+
+      if (this.state.file) {
+        nextProfileUrl = await uploadToImageBucket(this.state.file);
+      }
+
       const { data: updateData } = await apiManager.updateProfile({
         nickname,
-        profileImageUrl: url,
+        profileImageUrl: nextProfileUrl,
       });
       showToast("수정 완료");
     } catch (error) {
