@@ -16,11 +16,15 @@ export default function PostContent({ $target, post }) {
   };
 
   this.render = () => {
-    const { content } = this.state;
+    const { content, postImageUrl } = this.state;
 
     this.$element.innerHTML = `
       <div class="post-content">
-        <div class="post-content-image"></div>
+        ${
+          postImageUrl
+            ? `<div class="post-content-image"><img src="${postImageUrl}" /></div>`
+            : ""
+        }
         <p>${content ?? ""}</p>
       </div>
     `;

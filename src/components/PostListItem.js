@@ -16,6 +16,7 @@ function PostListItem({ $target, post, onClick }) {
       createdAt,
       authorName,
       authorProfileImageUrl,
+      postImageUrl,
     } = this.post;
 
     const htmlString = `

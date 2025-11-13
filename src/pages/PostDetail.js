@@ -23,6 +23,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       authorNamae: "",
       authorProfileImageUrl: "",
       createdAt: "",
+      postImageUrl: null,
       likeCount: 0,
       commentsCount: 0,
       viewsCount: 0,

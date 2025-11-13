@@ -46,7 +46,12 @@
 .post-content-image {
   width: 100%;
   height: 306px;
-  background-color: var(--fallback-color);
+  /* background-color: var(--fallback-color); */
+}
+.post-content-image > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .post-info-item {
