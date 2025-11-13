@@ -5,6 +5,7 @@ import { getNicknameError } from "../lib/validation.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { ERROR_TYPE } from "../lib/constants.js";
 import { dispatch } from "../lib/store.js";
+import { uploadToImageBucket } from "../lib/external/imageBucket.js";
 
 function UserInfo({ $target }) {
   this.target = $target;
@@ -33,7 +34,7 @@ function UserInfo({ $target }) {
             <span class="error-message profile"></span>
             <div class="add-photo-container user-info">
               <input class="add-photo-file-input none" type="file" />
-              <button class="add-profile-photo-button">
+              <button type="button" class="add-profile-photo-button">
                 <div class="profile-image-container">
                   <img
                     class="profile-image"
@@ -78,6 +79,7 @@ function UserInfo({ $target }) {
             회원 탈퇴
           </button>
         </div>
+        <input name="profileImgUrl" type="file" accept="image/*" class="add-photo-file-input" />
       </div>
     `;
 
@@ -118,16 +120,21 @@ function UserInfo({ $target }) {
     }
 
     try {
-      const { data } = await apiManager.checkAvailability({ nickname });
+      if (this.state.initialNickname !== nickname) {
+        const { data } = await apiManager.checkAvailability({ nickname });
 
-      if (!data.available) {
-        this.renderErrorMessage(getErrorMessage(ERROR_TYPE.DUPLICATE_NICKNAME));
+        if (!data.available) {
+          this.renderErrorMessage(
+            getErrorMessage(ERROR_TYPE.DUPLICATE_NICKNAME)
+          );
 
-        return;
+          return;
+        }
       }
-
+      const url = await uploadToImageBucket(this.state.file);
       const { data: updateData } = await apiManager.updateProfile({
         nickname,
+        profileImageUrl: url,
       });
       showToast("수정 완료");
     } catch (error) {
@@ -169,13 +176,41 @@ function UserInfo({ $target }) {
     });
   };
 
+  this.renderProfileImage = () => {
+    const $img = $("img", $(".add-photo-container.user-info"));
+
+    $img.src = this.state.profileImgUrl;
+    $(".error-message.profile", this.$userInfoPage).innerText = "";
+    $(".submit-button").disabled = false;
+  };
+
+  this.handleChangeFileInput = event => {
+    const file = event.target.files[0];
+
+    if (file) {
+      const blobUrl = URL.createObjectURL(file);
+
+      this.setState({ profileImgUrl: blobUrl, file });
+      this.renderProfileImage(file);
+    }
+  };
+
+  this.onHiddenFileInputClick = () => {
+    $(".add-photo-file-input", this.$signupPage).click();
+  };
+
   this.bindEvents = () => {
     const $form = $("form", this.$userInfoPage);
     const $withdrawalButton = $(".withdrawal-button", this.$userInfoPage);
 
+    const $fileInput = $(".add-photo-file-input", this.$userInfoPage);
+    const $addPhotoContainer = $(".add-photo-container", this.$userInfoPage);
+
     $form.addEventListener("input", this.handleInput);
     $form.addEventListener("submit", this.handleSubmit);
     $withdrawalButton.addEventListener("click", this.handleWithdrawalClick);
+    $fileInput.addEventListener("change", this.handleChangeFileInput);
+    $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
   };
 
   this.getUserProfile = async () => {

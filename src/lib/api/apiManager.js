@@ -34,8 +34,8 @@ export const apiManager = {
     const params = { password };
     return restClient.put("/users/password", params);
   },
-  updateProfile: ({ nickname }) => {
-    const params = { nickname };
+  updateProfile: ({ nickname, profileImageUrl }) => {
+    const params = { nickname, profileImageUrl };
     return restClient.put("/users/profile", params);
   },
   withdrawProfile: () => {
