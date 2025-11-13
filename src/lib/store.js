@@ -3,9 +3,10 @@ const listeners = new Set();
 const state = {
   isLoggedIn: false,
   userToken: null,
-  // ex) PAGE_PATH: login, signup, user-info, change-password, post-list, post-detail, post-create
-  // {page: 'post-detail', query: {id: 1}}
-  history: [{ page: "post-list", query: null }],
+  userId: null,
+  // example: {page: 'post-detail', query: {id: 1}}
+  // history: [{ page: "signup", query: null }],
+  history: [],
 };
 
 const VALID_ACTIONS = ["LOGIN", "LOGOUT", "PUSH_STATE", "POP_STATE"];
