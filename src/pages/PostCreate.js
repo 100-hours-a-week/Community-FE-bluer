@@ -57,7 +57,11 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
 
   this.addPost = async () => {
     try {
-      const imageUrl = await uploadToImageBucket(this.state.file);
+      let imageUrl = null;
+
+      if (this.state.file) {
+        imageUrl = await uploadToImageBucket(this.state.file);
+      }
       const { title, content } = this.state;
 
       const response = await apiManager.addPost({
