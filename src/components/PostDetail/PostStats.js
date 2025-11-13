@@ -32,16 +32,16 @@ function PostStats({ $target, post, handleClick }) {
     this.$element.innerHTML = `
       <li>
         <button class="post-stats-item bold ${this.state.likedByMe ? "active" : ""} "}>
-          <span class="item-content">${formatToK(likeCount) ?? 0}</span>
+          <span class="item-content">${likeCount ? formatToK(likeCount) : 0}</span>
           <span class="item-title">좋아요수</span>
         </button>
       </li>
       <li class="post-stats-item bold">
-        <span class="item-content">${formatToK(viewCount) ?? 0}</span>
+        <span class="item-content">${viewCount ? formatToK(viewCount) : 0}</span>
         <span class="item-title">조회수</span>
       </li>
       <li class="post-stats-item bold">
-        <span class="item-content">${formatToK(commentCount) ?? 0}</span>
+        <span class="item-content">${commentCount ? formatToK(commentCount) : 0}</span>
         <span class="item-title">댓글</span>
       </li>
     `;
