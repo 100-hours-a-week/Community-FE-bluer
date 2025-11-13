@@ -1,3 +1,5 @@
+import { formatToK, formatToLocalDateTime } from "../lib/utils.js";
+
 function PostListItem({ $target, post, onClick }) {
   this.$target = $target;
   this.post = post;
@@ -14,12 +16,12 @@ function PostListItem({ $target, post, onClick }) {
             <div class="post-title bold">${title}</div>
             <div class="post-info">
               <div class="post-info left">
-                <div class="post-info-item"><span>좋아요 ${likeCount}</span></div>
-                <div class="post-info-item"><span>댓글 ${commentCount}</span></div>
-                <div class="post-info-item"><span>조회수 ${viewCount}</span></div>
+                <div class="post-info-item"><span>좋아요 ${likeCount ? formatToK(likeCount) : 0}</span></div>
+                <div class="post-info-item"><span>댓글 ${commentCount ? formatToK(commentCount) : 0}</span></div>
+                <div class="post-info-item"><span>조회수 ${viewCount ? formatToK(viewCount) : 0}</span></div>
               </div>
               <div class="post-info right">
-                <div class="post-info-item"><span>${createdAt}</span></div>
+                <div class="post-info-item"><span>${createdAt ? formatToLocalDateTime(createdAt) : "-"}</span></div>
               </div>
             </div>
           </div>

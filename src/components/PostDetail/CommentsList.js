@@ -1,3 +1,5 @@
+import { formatToLocalDateTime } from "../../lib/utils.js";
+
 function CommentList({ $target, comments, onModify, onDelete }) {
   this.$target = $target;
   this.$element = document.createElement("ul");
@@ -44,7 +46,7 @@ function CommentList({ $target, comments, onModify, onDelete }) {
                 <div class="post-avatar avatar"></div>
                 <span class="post-author bold">${comment.author.nickname ?? "익명"}</span>
               </div>
-              <span class="post-info-item">${comment.createdAt ?? "-"}</span>
+              <span class="post-info-item">${comment.updatedAt ? formatToLocalDateTime(comment.updatedAt) : "-"}</span>
             </div>
             <div class="post-author-container right post-comment">
               <button class="post-author-container-button comment-modify" data-mode="modify">수정</button>
