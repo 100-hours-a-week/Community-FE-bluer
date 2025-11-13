@@ -13,6 +13,7 @@ import { signupTemplate } from "../template/SignupTemplate.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
 import { showToast } from "../lib/utils.js";
+import { uploadToImageBucket } from "../lib/external/imageBucket.js";
 
 function Signup({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
@@ -26,6 +27,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     passwordcheck: "",
     nickname: "",
     profileImgUrl: null,
+    file: null,
     isValid: {
       email: false,
       password: false,
@@ -169,11 +171,14 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
   };
 
   this.signup = async () => {
+    const url = await uploadToImageBucket(this.state.file);
+
     try {
       const response = await apiManager.signUp({
         email: this.state.email,
         password: this.state.password,
         nickname: this.state.nickname,
+        profileImageUrl: url,
       });
       if (response.status === StatusCode.CREATED) {
         showToast("가입 완료");
@@ -202,7 +207,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     } else {
       const blobUrl = URL.createObjectURL(file);
 
-      this.setState({ profileImgUrl: blobUrl });
+      this.setState({ profileImgUrl: blobUrl, file });
       this.renderProfileImage(file);
     }
     this.updateSubmitButtonState();
