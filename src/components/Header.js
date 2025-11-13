@@ -11,6 +11,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
 
   this.$header = document.createElement("header");
   this.$header.classList.add("header");
+  this.isBound = false;
 
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
@@ -80,7 +81,10 @@ function Header({ $target, moveTo, toBack, initialState }) {
   };
 
   this.onDropdownToggle = () => {
-    const $dropdownList = $(".dropdown-list");
+    const $dropdownList = $(".dropdown-list", this.$header);
+    if (!$dropdownList) {
+      return;
+    }
 
     this.setState({ isOpen: !this.state.isOpen });
 
@@ -122,9 +126,15 @@ function Header({ $target, moveTo, toBack, initialState }) {
   };
 
   this.bindEvents = () => {
-    this.$header.addEventListener("click", event => {
+    if (this.isBound) {
+      return;
+    }
+
+    this.boundHeaderClick = event => {
       this.handleClick(event);
-    });
+    };
+    this.$header.addEventListener("click", this.boundHeaderClick);
+    this.isBound = true;
   };
 
   this.getUserProfile = async () => {
@@ -151,8 +161,6 @@ function Header({ $target, moveTo, toBack, initialState }) {
     this.render();
     this.bindEvents();
   };
-
-  this.init();
 }
 
 export default Header;

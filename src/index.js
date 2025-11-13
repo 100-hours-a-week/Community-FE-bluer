@@ -17,16 +17,16 @@ function App() {
   const $app = $("#app");
 
   // TODO: modulation as routing module
-  this.moveTo = (page, query = null) => {
+  this.moveTo = async (page, query = null) => {
     dispatch("PUSH_STATE", { page, query });
 
-    this.render();
+    await this.render();
   };
 
-  this.toBack = () => {
+  this.toBack = async () => {
     dispatch("POP_STATE");
 
-    this.render();
+    await this.render();
   };
 
   this.header = new Header({
@@ -53,7 +53,7 @@ function App() {
     "change-password": new ChangePasswordPage({ $target: $app }),
   };
 
-  this.renderPage = () => {
+  this.renderPage = async () => {
     const { history } = getState();
     const currentRoute = history[history.length - 1];
     const page = currentRoute?.page
@@ -61,15 +61,14 @@ function App() {
       : this.pages.login;
 
     if (page?.init) {
-      this.header.init();
-      page.init();
+      await page.init();
     }
   };
 
-  this.render = () => {
+  this.render = async () => {
     $("#app").innerHTML = "";
-    this.header.render();
-    this.renderPage();
+    await this.header.init();
+    await this.renderPage();
   };
 
   this.init = () => {
@@ -85,6 +84,8 @@ function App() {
   };
 }
 
-const app = new App();
+document.addEventListener("DOMContentLoaded", () => {
+  const app = new App();
 
-app.init();
+  app.init();
+});
