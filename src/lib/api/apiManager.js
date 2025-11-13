@@ -1,5 +1,7 @@
 import { restClient } from "./restClient.js";
 
+const TEMPORARY_URL = "https://avatars.githubusercontent.com/u/51820587?v=4";
+
 export const apiManager = {
   // Customer
 
@@ -8,7 +10,12 @@ export const apiManager = {
 
     return restClient.post("/users/signin", params);
   },
+  // TODO: add image upload
+  signUp: ({ email, password, nickname, profileImageUrl = TEMPORARY_URL }) => {
+    const params = { email, password, nickname, profileImageUrl };
 
+    return restClient.post("/users/signup", params);
+  },
   getUserProfile: () => {
     return restClient.get("/users/profile");
   },
@@ -27,8 +34,8 @@ export const apiManager = {
     const params = { password };
     return restClient.put("/users/password", params);
   },
-  updateProfile: ({ nickname }) => {
-    const params = { nickname };
+  updateProfile: ({ nickname, profileImageUrl }) => {
+    const params = { nickname, profileImageUrl };
     return restClient.put("/users/profile", params);
   },
   withdrawProfile: () => {

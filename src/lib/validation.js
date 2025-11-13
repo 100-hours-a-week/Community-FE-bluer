@@ -1,3 +1,4 @@
+import { apiManager } from "./api/apiManager.js";
 import {
   ERROR_TYPE,
   ERROR_MESSAGES,
@@ -43,9 +44,10 @@ export const getEmailError = email => {
     return { errorType: ERROR_TYPE.WRONG_FORMAT_EMAIL };
   }
 
-  if (DUPLICATE_EMAILS.includes(email)) {
-    return { errorType: ERROR_TYPE.DUPLICATE_EMAIL };
-  }
+  // // TODO 2: email 중복 검사
+  // if (DUPLICATE_EMAILS.includes(email)) {
+  //   return { errorType: ERROR_TYPE.DUPLICATE_EMAIL };
+  // }
 
   return { errorType: null };
 };
@@ -89,10 +91,6 @@ export const getNicknameError = nickname => {
     }
   }
 
-  if (DUPLICATE_NICKNAMES.includes(nickname)) {
-    return { errorType: ERROR_TYPE.DUPLICATE_NICKNAME };
-  }
-
   return { errorType: null };
 };
 
@@ -132,3 +130,15 @@ export const getSignupInputError = ({
 };
 
 export const getErrorMessage = errorType => ERROR_MESSAGES[errorType] || "";
+
+export const requestFieldAvailability = async (fieldName, value) => {
+  const response = await apiManager.checkAvailability({ [fieldName]: value });
+  const available = Boolean(response?.data?.available);
+
+  if (available) {
+    return null;
+  }
+  return fieldName === "email"
+    ? ERROR_TYPE.DUPLICATE_EMAIL
+    : ERROR_TYPE.DUPLICATE_NICKNAME;
+};

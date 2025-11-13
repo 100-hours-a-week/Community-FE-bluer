@@ -1,11 +1,13 @@
 import { getState, dispatch } from "../lib/store.js";
 import { $ } from "../lib/dom.js";
+import { showToast } from "../lib/utils.js";
+import { apiManager } from "../lib/api/apiManager.js";
 
 function Header({ $target, moveTo, toBack, initialState }) {
   this.target = $target;
   this.moveTo = moveTo;
   this.toBack = toBack;
-  this.state = { isOpen: false, ...initialState };
+  this.state = { isOpen: false, profileImageUrl: null, ...initialState };
 
   this.$header = document.createElement("header");
   this.$header.classList.add("header");
@@ -13,10 +15,6 @@ function Header({ $target, moveTo, toBack, initialState }) {
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
   };
-
-  /*
-    2. 게시글 상세조회, 게시글 수정, 게시글 추가 페이지, 회원가입 -> 뒤로가기
-  */
 
   this.haveBackButtonOnPage = page => {
     const haveBackButtonPages = [
@@ -57,7 +55,9 @@ function Header({ $target, moveTo, toBack, initialState }) {
               ? `
                   <div class="dropdown-button-container">
                     <button class="dropdown-button" data-role="menu">
-                      <div class="avatar"><img src="./public/profile-sample.jpeg" /></div> 
+                      <div class="avatar">
+                       ${this.state.profileImageUrl ? `<img src=${this.state.profileImageUrl} />` : ""}
+                      </div> 
                     </button>
                     <ul class="dropdown-list none">
                       <li class="dropdown-item" data-action="user-info">회원정보수정</li>
@@ -127,9 +127,26 @@ function Header({ $target, moveTo, toBack, initialState }) {
     });
   };
 
-  this.init = () => {
+  this.getUserProfile = async () => {
+    try {
+      const { data } = await apiManager.getUserProfile();
+
+      this.setState({
+        profileImageUrl: data.profileImageUrl,
+      });
+    } catch (error) {
+      showToast(`Error: 유저 정보 조회 중 에러 발생`);
+      console.error(error);
+    }
+  };
+
+  this.init = async () => {
     const { isLoggedIn, history } = getState();
     this.setState({ isLoggedIn, history });
+
+    if (this.state.isLoggedIn) {
+      await this.getUserProfile();
+    }
 
     this.render();
     this.bindEvents();

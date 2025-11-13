@@ -5,10 +5,15 @@ import {
   getPasswordError,
   getPasswordCheckError,
   getNicknameError,
+  requestFieldAvailability,
 } from "../lib/validation.js";
 import { ERROR_TYPE, ERROR_MESSAGES } from "../lib/constants.js";
 
 import { signupTemplate } from "../template/SignupTemplate.js";
+import { apiManager } from "../lib/api/apiManager.js";
+import { StatusCode } from "../lib/api/statusCode.js";
+import { showToast } from "../lib/utils.js";
+import { uploadToImageBucket } from "../lib/external/imageBucket.js";
 
 function Signup({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
@@ -22,6 +27,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     passwordcheck: "",
     nickname: "",
     profileImgUrl: null,
+    file: null,
     isValid: {
       email: false,
       password: false,
@@ -50,6 +56,26 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       $signupButton.disabled = !allValid;
       $signupButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
     }
+  };
+
+  this.checkDuplicated = async field => {
+    const fieldValue = this.state[field];
+
+    if (!fieldValue) {
+      return;
+    }
+
+    const errorType = await requestFieldAvailability(field, fieldValue);
+
+    if (errorType) {
+      this.renderTextFieldError(field, errorType);
+      this.state.isValid[field] = false;
+    } else {
+      this.initTextFieldError(field);
+      this.state.isValid[field] = true;
+    }
+
+    this.updateSubmitButtonState();
   };
 
   // TODO: 외부 파일로
@@ -122,12 +148,12 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     if (target.tagName !== "INPUT") {
       return;
     }
+    // TODO: validation check using api
 
     const errorType = this.getFormFieldErrorType(name);
 
     if (errorType) {
-      this.renderTextFieldError(name);
-      // TODO: setState
+      this.renderTextFieldError(name, errorType);
       this.state.isValid[name] = false;
     } else {
       this.initTextFieldError(name);
@@ -138,14 +164,38 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     if (!this.state.profileImgUrl) {
       this.renderImageFieldError();
     }
+
+    if ((name === "nickname" || name === "email") && !errorType) {
+      this.checkDuplicated(name);
+    }
+  };
+
+  this.signup = async () => {
+    const url = await uploadToImageBucket(this.state.file);
+
+    try {
+      const response = await apiManager.signUp({
+        email: this.state.email,
+        password: this.state.password,
+        nickname: this.state.nickname,
+        profileImageUrl: url,
+      });
+      if (response.status === StatusCode.CREATED) {
+        showToast("가입 완료");
+        setTimeout(() => {
+          this.moveTo("login");
+        }, 500);
+      }
+    } catch (error) {
+      console.error(error);
+      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
   };
 
   this.handleSubmit = event => {
     event.preventDefault();
 
-    // TODO: api handling for signing event
-    this.moveTo("login");
-    // alert("TODO: 가입 성공 및 로그인 페이지로 이동");
+    this.signup();
   };
 
   this.handleChangeFileInput = event => {
@@ -157,7 +207,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     } else {
       const blobUrl = URL.createObjectURL(file);
 
-      this.setState({ profileImgUrl: blobUrl });
+      this.setState({ profileImgUrl: blobUrl, file });
       this.renderProfileImage(file);
     }
     this.updateSubmitButtonState();
@@ -167,16 +217,24 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     $(".add-photo-file-input", this.$signupPage).click();
   };
 
+  this.onClickSignInLink = event => {
+    event.preventDefault();
+
+    this.moveTo("login");
+  };
+
   this.bindEvents = () => {
     const $form = $("form", this.$signupPage);
     const $fileInput = $(".add-photo-file-input", this.$signupPage);
     const $addPhotoContainer = $(".add-photo-container", this.$signupPage);
+    const $signInLink = $(".link-container.login a", this.$signupPage);
 
     $form.addEventListener("input", this.handleInput);
     $form.addEventListener("blur", this.handleBlur, true);
     $form.addEventListener("submit", this.handleSubmit);
     $fileInput.addEventListener("change", this.handleChangeFileInput);
     $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
+    $signInLink.addEventListener("click", this.onClickSignInLink);
   };
 
   this.render = () => {

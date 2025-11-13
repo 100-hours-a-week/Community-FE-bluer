@@ -61,7 +61,7 @@ function App() {
       : this.pages.login;
 
     if (page?.init) {
-      // this.header.init();
+      this.header.init();
       page.init();
     }
   };
