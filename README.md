@@ -3,7 +3,7 @@
 ## Config
 
 - Local Development Proxy Setup (for CORS)
-- 이 프로젝트는 Vanilla JS 프론트엔드와 Kotlin Spring 백엔드를 로컬에서 분리 실행하는 구조입니다.
+- 이 프로젝트는 Vanilla JS 프론트엔드와 Java Spring 백엔드를 로컬에서 분리 실행하는 구조입니다.
   - CORS 문제를 해결하기 위해 local-cors-proxy를 이용해 프록시 서버(localhost:5501)를 띄워야 합니다.
 
 ### 구조 요약
@@ -11,7 +11,7 @@
 | 역할                  | 포트                              | 설명                           |
 | --------------------- | --------------------------------- | ------------------------------ |
 | Frontend              | `http://localhost:5500`           | live-server로 정적 페이지 실행 |
-| Backend (Spring Boot) | `http://localhost:8080`           | Kotlin Spring REST API 서버    |
+| Backend (Spring Boot) | `http://localhost:8080`           | Java Spring REST API 서버      |
 | Proxy                 | `http://localhost:5501/proxy/...` | CORS 우회용 프록시 서버        |
 
 ## 실행 방법
