@@ -1,7 +1,9 @@
-export default function PostBasicInfo({ $target, post }) {
+export default function PostBasicInfo({ $target, post, onModify, onDelete }) {
   this.$element = document.createElement("div");
   this.$element.classList.add("post-basic-info");
   this.$target = $target;
+  this.onModify = onModify;
+  this.onDelete = onDelete;
 
   this.$target.appendChild(this.$element);
 
@@ -15,6 +17,29 @@ export default function PostBasicInfo({ $target, post }) {
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
     this.render();
+  };
+
+  this.handleClick = event => {
+    const $button = event.target.closest("button");
+
+    if (!$button) {
+      return;
+    }
+
+    if ($button.classList.contains("post-modify")) {
+      this.onModify?.();
+    } else if ($button.classList.contains("post-delete")) {
+      this.onDelete?.();
+    }
+  };
+
+  this.bindEvents = () => {
+    if (this.isBound) {
+      return;
+    }
+
+    this.$element.addEventListener("click", this.handleClick);
+    this.isBound = true;
   };
 
   this.render = () => {
@@ -41,5 +66,9 @@ export default function PostBasicInfo({ $target, post }) {
     `;
   };
 
-  this.render();
+  this.init = () => {
+    this.render();
+    this.bindEvents();
+  };
+  this.init();
 }

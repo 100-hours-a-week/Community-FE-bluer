@@ -1,4 +1,3 @@
-import { $ } from "../lib/dom.js";
 import { getCurrentPageInfo, getState } from "../lib/store.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
@@ -36,7 +35,15 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   this.element.className = "post-detail-page";
   this.getCurrentUserId = () => getState().userId;
 
-  this.postBasicInfo = new PostBasicInfo({ $target: this.element });
+  this.postBasicInfo = new PostBasicInfo({
+    $target: this.element,
+    onDelete: () => {
+      this.onClickPostDelete();
+    },
+    onModify: () => {
+      this.onClickPostModify();
+    },
+  });
 
   new Divider({ $target: this.element });
 
@@ -286,14 +293,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     }
   };
 
-  this.bindEvents = () => {
-    const $postModifyButton = $(".post-modify", this.element);
-    const $postDeleteButton = $(".post-delete", this.element);
-
-    $postModifyButton.addEventListener("click", this.onClickPostModify);
-    $postDeleteButton.addEventListener("click", this.onClickPostDelete);
-  };
-
   this.init = async () => {
     const { query } = getCurrentPageInfo();
     const { postId } = query;
@@ -302,7 +301,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
 
     this.$target.appendChild(this.element);
     this.render();
-    this.bindEvents();
   };
 }
 
