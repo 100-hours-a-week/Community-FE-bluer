@@ -1,38 +1,58 @@
 /* Common Style */
 
 :root {
-  --body-bg-color: #f4f5f7;
+  --body-bg-color: #ffffff;
   --default-color-black: #000000;
   --default-color-white: #ffffff;
   --default-color-grey: #cccccc;
-  --border-color-black: #000000;
+  --border-color-black: #00000033;
   --button-bg-color: #aca0eb;
   --button-bg-color-hover: #7f6aee;
   --post-box-shadow: #cccccc40;
   --fallback-color: #d9d9d9;
   --grey-hover: #e9e9e9;
   --header-height: 104px;
-  --layout-max-width: 570px;
+  --layout-max-width: 960px;
   --avatar-size: 36px;
+
+  /* new */
+  /* strong color, content color */
+  --content: #323542;
+  --disabled: #cfd1da;
+  --content-strong: #13141b;
 }
 
 .header {
-  padding: 36px 0px;
+  height: 56px;
+  /* padding: 36px 0px; */
   text-align: center;
   font-size: 32px;
   border-bottom: 1px solid var(--border-color-black);
   /* position: fixed; */
   width: 100%;
-  min-width: 375px;
+  /* min-width: 375px; */
 }
 
 .header-content {
+  height: 100%;
   width: 100%;
   max-width: var(--layout-max-width);
   justify-self: center;
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  .header-logo-image-container {
+    img {
+      height: 100%;
+    }
+  }
+  nav {
+    height: 40px;
+    display: flex;
+    flex: 1;
+    justify-content: space-between;
+  }
 }
 
 .header-back-button-container {
@@ -55,6 +75,11 @@
 .page-layout {
   width: 100%;
   min-width: 375px;
+  max-width: var(--layout-max-width);
+  display: flex;
+  justify-self: center;
+  justify-content: center;
+  border: 1px solid lime;
 }
 
 .page-title {

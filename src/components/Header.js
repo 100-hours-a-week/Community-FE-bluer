@@ -45,15 +45,20 @@ function Header({ $target, moveTo, toBack, initialState }) {
     this.$header.classList.add("header");
     this.$header.innerHTML = `
       <div class="header-content">
+        <nav>
             ${
               this.haveBackButtonOnPage(currentPage)
                 ? this.renderBackButton()
-                : `<div style="width: 19px"></div>`
+                : `<div></div>
+                    <div class="header-logo-image-container">
+                      <img src="/public/logo.png" />
+                    </div>
+                   `
             }
-          <span class="header-title bold">아무 말 대잔치</span>
-          ${
-            isLoggedIn
-              ? `
+            ${
+              !isLoggedIn
+                ? `<button class="header-button" data-role="login">로그인</button>`
+                : `
                   <div class="dropdown-button-container">
                     <button class="dropdown-button" data-role="menu">
                       <div class="avatar">
@@ -66,10 +71,10 @@ function Header({ $target, moveTo, toBack, initialState }) {
                       <li class="dropdown-item" data-action="logout">로그아웃</li>
                     </ul>
                   </div>
-            `
-              : '<div class="avatar bg-none"></div>'
-          }
-        </div>
+                  `
+            }
+            </div>
+          </nav>
       </div>
       
       `;
