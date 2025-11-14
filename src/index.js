@@ -18,6 +18,11 @@ function App() {
 
   // TODO: modulation as routing module
   this.moveTo = async (page, query = null) => {
+    const currentPage = getState().history.at(-1);
+
+    if (currentPage?.page === page) {
+      return;
+    }
     dispatch("PUSH_STATE", { page, query });
 
     await this.render();

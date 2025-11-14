@@ -43,6 +43,7 @@
   align-items: center;
 
   .header-logo-image-container {
+    height: 40px;
     img {
       height: 100%;
     }
@@ -53,10 +54,15 @@
     flex: 1;
     justify-content: space-between;
   }
+
+  .header-button {
+    width: 36px;
+  }
 }
 
 .header-back-button-container {
-  height: 19px;
+  height: 36px;
+  padding: 5px;
   display: flex;
   align-items: center;
 
