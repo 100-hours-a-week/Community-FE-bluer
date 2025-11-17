@@ -28,9 +28,14 @@
 }
 
 .header {
+  position: fixed;
+  width: 100%;
   display: flex;
   border-bottom: 1px solid var(--border-color-black);
   justify-content: center;
+  z-index: 2;
+  top: 0;
+  background-color: var(--default-color-white);
 
   .header-contents-container {
     height: 56px;
@@ -90,9 +95,12 @@
   width: 100%;
   min-width: 375px;
   max-width: var(--layout-max-width);
+  min-height: calc(100vh - var(--header-height));
+  top: var(--header-height);
   display: flex;
   justify-self: center;
   justify-content: center;
+  position: relative;
   /* border: 1px solid lime; */
 }
 
