@@ -88,7 +88,7 @@ body {
     align-items: center;
   }
   .header-login-button {
-    height: 34px;
+    height: 36px;
     padding: 0 16px;
     background-color: var(--primary-button-background);
     color: var(--primary-button-text);

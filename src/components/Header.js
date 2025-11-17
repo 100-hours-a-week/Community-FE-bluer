@@ -36,13 +36,12 @@ function Header({ $target, moveTo, toBack, initialState }) {
       "signup",
     ];
 
-    // <img style="height:100%" src="./public/left-arrow.png" />
     return `
       <div class="header-back-button-container"> 
         ${
           haveBackButtonPages.includes(page)
             ? `<div class="back-button-container" data-action="router-back">
-            <svg xmlns="http://www.w3.org/2000/svg" data-v-51b44e19="" data-v-2e62d275="" fill="none" viewBox="0 0 24 24" class="svg-icon icon ico-header-back ico-header-back"><g clip-path="url(#i2116452560__a)"><path fill="#fff" d="M0 0h24v24H0z"/><path stroke="#000" stroke-width="1.5" d="m10.75 3.5-8.485 8.485 8.485 8.486"/><path stroke="#000" stroke-linejoin="round" stroke-width="1.5" d="M3 12h19"/></g><defs><clipPath id="i2116452560__a"><path fill="#fff" d="M0 0h24v24H0z"/></clipPath></defs></svg>
+              <i class="fa-solid fa-arrow-left fa-xl"></i>
             </div>`
             : `<div data-action="back-button-container"></div>`
         }
@@ -110,7 +109,6 @@ function Header({ $target, moveTo, toBack, initialState }) {
               ${this.renderUserMenu(isLoggedIn)}
             </div>
           </div>
-      
       `;
     if (!this.$header.isConnected) {
       this.target.appendChild(this.$header);

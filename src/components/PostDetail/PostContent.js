@@ -1,6 +1,6 @@
 export default function PostContent({ $target, post }) {
   this.$element = document.createElement("div");
-  this.$element.classList.add("post-basic-info");
+  this.$element.classList.add("post-content");
   this.$target = $target;
 
   this.$target.appendChild(this.$element);
@@ -19,14 +19,12 @@ export default function PostContent({ $target, post }) {
     const { content, postImageUrl } = this.state;
 
     this.$element.innerHTML = `
-      <div class="post-content">
         ${
           postImageUrl
             ? `<div class="post-content-image"><img src="${postImageUrl}" /></div>`
             : ""
         }
         <p>${content ?? ""}</p>
-      </div>
     `;
   };
 
