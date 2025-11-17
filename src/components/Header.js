@@ -40,8 +40,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
     return `
       <div class="header-back-button-container"> 
         ${
-          // haveBackButtonPages.includes(page)
-          true
+          haveBackButtonPages.includes(page)
             ? `<div class="back-button-container" data-action="router-back">
             <svg xmlns="http://www.w3.org/2000/svg" data-v-51b44e19="" data-v-2e62d275="" fill="none" viewBox="0 0 24 24" class="svg-icon icon ico-header-back ico-header-back"><g clip-path="url(#i2116452560__a)"><path fill="#fff" d="M0 0h24v24H0z"/><path stroke="#000" stroke-width="1.5" d="m10.75 3.5-8.485 8.485 8.485 8.486"/><path stroke="#000" stroke-linejoin="round" stroke-width="1.5" d="M3 12h19"/></g><defs><clipPath id="i2116452560__a"><path fill="#fff" d="M0 0h24v24H0z"/></clipPath></defs></svg>
             </div>`
@@ -52,7 +51,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
   };
 
   this.renderUserMenu = isLoggedIn => {
-    if (isLoggedIn) {
+    if (!isLoggedIn) {
       return `<button class="header-login-button" data-action="login">로그인</button>`;
     }
     return `
@@ -68,13 +67,25 @@ function Header({ $target, moveTo, toBack, initialState }) {
         </button>
         <ul class="dropdown-list ${this.state.isOpen ? "" : "none"} ">
           <li class="dropdown-item">
-            <button data-action="user-info">회원정보수정</button>
+            <div>
+              <button data-action="user-info">
+                <span>회원정보수정</span>
+              </button>
+            </div>
           </li>
           <li class="dropdown-item">
-            <button data-action="change-password">비밀번호수정</button>
+            <div>
+              <button data-action="change-password">
+                <span>비밀번호수정</span>
+              </button>
+            </div>
           </li>
           <li class="dropdown-item">
-            <button data-action="logout">로그아웃</button>
+            <div>
+              <button data-action="logout">
+                <span>로그아웃</span>
+              </button>
+            </div>
           </li>
         </ul>
       </div>

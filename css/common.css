@@ -152,20 +152,21 @@
 }
 
 .submit-button {
-  width: 360px;
-  height: 40px;
+  /* width: 360px; */
+  height: 56px;
 
-  background-color: #aca0eb;
+  background-color: var(--default-color-black);
 
-  border: none;
   border-radius: 8px;
-  color: white;
+  color: var(--default-color-white);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
 }
+
 .submit-button:disabled {
   cursor: not-allowed;
+  color: var(--default-color-grey);
 }
 
 .submit-button.isLoading {
