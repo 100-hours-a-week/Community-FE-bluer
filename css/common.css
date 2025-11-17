@@ -5,6 +5,7 @@
   --default-color-black: #000000;
   --default-color-white: #ffffff;
   --default-color-grey: #cccccc;
+  --default-color-lightgrey: #cccccc40;
   --default-color-grey-hover: #cccccc55;
   --border-color-black: #00000033;
   --button-bg-color: #aca0eb;
@@ -20,6 +21,7 @@
   /* new */
   /* strong color, content color */
   --content: #323542;
+  --secondary-text-color: #999999;
   --disabled: #cfd1da;
   --content-strong: #13141b;
   --primary-button-background: #000;
@@ -47,7 +49,9 @@ body {
 
 .header {
   position: fixed;
-  width: var(--layout-max-width);
+  width: 100%;
+  max-width: var(--layout-max-width);
+
   display: flex;
   border-bottom: 1px solid var(--border-color-black);
   justify-content: center;
@@ -56,10 +60,11 @@ body {
   background-color: var(--default-color-white);
 
   .header-contents-container {
+    width: 100%;
+    max-width: var(--layout-max-width);
     height: 56px;
     display: flex;
     flex: 1;
-    max-width: var(--layout-max-width);
     justify-content: space-between;
     align-items: center;
 
@@ -111,7 +116,6 @@ body {
 
 .page-layout {
   width: 100%;
-  min-width: 375px;
   max-width: var(--layout-max-width);
   min-height: calc(100vh - var(--header-height));
   top: var(--header-height);
