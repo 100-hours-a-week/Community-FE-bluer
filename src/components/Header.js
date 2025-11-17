@@ -36,22 +36,24 @@ function Header({ $target, moveTo, toBack, initialState }) {
       "signup",
     ];
 
-    if (!haveBackButtonPages.includes(page)) {
-      return `<div style="width: 36px"></div>`;
-    }
-
+    // <img style="height:100%" src="./public/left-arrow.png" />
     return `
       <div class="header-back-button-container"> 
-        <button data-action="router-back">
-          <img style="height:100%" src="./public/left-arrow.png" />
-        </button>
+        ${
+          // haveBackButtonPages.includes(page)
+          true
+            ? `<div class="back-button-container" data-action="router-back">
+            <svg xmlns="http://www.w3.org/2000/svg" data-v-51b44e19="" data-v-2e62d275="" fill="none" viewBox="0 0 24 24" class="svg-icon icon ico-header-back ico-header-back"><g clip-path="url(#i2116452560__a)"><path fill="#fff" d="M0 0h24v24H0z"/><path stroke="#000" stroke-width="1.5" d="m10.75 3.5-8.485 8.485 8.485 8.486"/><path stroke="#000" stroke-linejoin="round" stroke-width="1.5" d="M3 12h19"/></g><defs><clipPath id="i2116452560__a"><path fill="#fff" d="M0 0h24v24H0z"/></clipPath></defs></svg>
+            </div>`
+            : `<div data-action="back-button-container"></div>`
+        }
       </div>
     `;
   };
 
   this.renderUserMenu = isLoggedIn => {
-    if (!isLoggedIn) {
-      return `<button class="header-button" data-action="login">로그인</button>`;
+    if (isLoggedIn) {
+      return `<button class="header-login-button" data-action="login">로그인</button>`;
     }
     return `
       <div class="dropdown-button-container">
@@ -84,8 +86,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
     const currentPage = history.at(-1)?.page || "login";
 
     this.$header.innerHTML = `
-      <div class="header-content">
-        <nav>
+          <div class="header-contents-container">
             ${this.renderBackButton(currentPage)}
             <div class="header-logo-container">
                 <button data-action="router-post-list">
@@ -94,9 +95,10 @@ function Header({ $target, moveTo, toBack, initialState }) {
                   </div>
                 </button>
             </div>
-            ${this.renderUserMenu(isLoggedIn)}
-          </nav>
-      </div>
+            <div class="header-container-right">
+              ${this.renderUserMenu(isLoggedIn)}
+            </div>
+          </div>
       
       `;
     if (!this.$header.isConnected) {

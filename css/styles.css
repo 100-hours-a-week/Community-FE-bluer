@@ -29,8 +29,9 @@
 body {
   height: 100%;
   background-color: var(--body-bg-color);
+  line-height: 1.6;
 }
 
 #app {
-  height: calc(100vh - var(--header-height));
+  /* height: calc(100vh - var(--header-height)); */
 }
