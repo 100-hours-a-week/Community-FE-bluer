@@ -33,6 +33,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
+  this.element.classList.add("page-layout");
   this.getCurrentUserId = () => getState().userId;
 
   this.postBasicInfo = new PostBasicInfo({
@@ -45,12 +46,11 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     },
   });
 
-  new Divider({ $target: this.element });
-
   this.postContent = new PostContent({
     $target: this.element,
     post: this.state.post,
   });
+
   this.postStats = new PostStats({
     $target: this.element,
     post: this.state.post,

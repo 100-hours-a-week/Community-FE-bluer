@@ -41,10 +41,10 @@ body {
 
 #app {
   max-width: var(--layout-max-width);
-  background-color: var(--body-bg-color);
-  height: 100dvh;
+  min-height: 100dvh;
   position: relative;
   margin: 0 auto;
+  background-color: var(--body-bg-color);
 }
 
 .header {

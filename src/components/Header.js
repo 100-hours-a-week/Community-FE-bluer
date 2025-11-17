@@ -100,7 +100,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
           <div class="header-contents-container">
             ${this.renderBackButton(currentPage)}
             <div class="header-logo-container">
-                <button data-action="router-post-list">
+                <button class="toggle-menu" data-action="router-post-list">
                   <div class="header-logo-image-container">
                     <img src="/public/logo.png" />
                   </div>
