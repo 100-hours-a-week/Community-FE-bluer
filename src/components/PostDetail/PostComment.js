@@ -1,4 +1,5 @@
 import { $ } from "../../lib/dom.js";
+import Divider from "../../components/Divider.js";
 
 function PostComment({ $target, onSubmit }) {
   this.$target = $target;
@@ -18,7 +19,7 @@ function PostComment({ $target, onSubmit }) {
     const enabled = this.state.content.length > 0;
 
     $button.disabled = !enabled;
-    $button.style.backgroundColor = enabled ? "#7F6AEE" : "#ACA0EB";
+    $button.classList.toggle("active", enabled);
   };
 
   this.setEditMode = content => {
@@ -44,7 +45,16 @@ function PostComment({ $target, onSubmit }) {
     const $textarea = $("textarea", this.$element);
     const $button = $("button", this.$element);
 
-    $textarea.addEventListener("input", this.handleInput);
+    const autoResize = target => {
+      target.style.height = "auto";
+      target.style.height = `${target.scrollHeight}px`;
+    };
+
+    $textarea.addEventListener("input", e => {
+      this.handleInput(e);
+      autoResize(e.target);
+    });
+
     $button.addEventListener("click", this.handleSubmit);
   };
 
@@ -52,12 +62,11 @@ function PostComment({ $target, onSubmit }) {
     this.$element.innerHTML = `
       <div class="post-comment-textarea-wrapper">
         <textarea class="post-comment-textarea" placeholder="댓글을 남겨주세요!"></textarea>
-      </div>
-      <div class="divider"></div>
-      <div class="post-comment-submit-button-container">
-        <button type="button" class="post-comment-submit-button" disabled>
-          <span class="button-text">댓글 등록</span>
-        </button>
+        <div class="post-comment-submit-button-container">
+          <button type="button" class="post-comment-submit-button" disabled>
+            <span class="button-text">등록</span>
+          </button>
+        </div>
       </div>
     `;
   };

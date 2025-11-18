@@ -4,7 +4,6 @@ import { StatusCode } from "../lib/api/statusCode.js";
 import { showModal, showToast } from "../lib/utils.js";
 import PostBasicInfo from "../components/PostDetail/PostBasicInfo.js";
 import PostContent from "../components/PostDetail/PostContent.js";
-import Divider from "../components/Divider.js";
 import PostStats from "../components/PostDetail/PostStats.js";
 import CommentList from "../components/PostDetail/CommentsList.js";
 import PostComment from "../components/PostDetail/PostComment.js";
@@ -58,8 +57,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       this.onClickLike();
     },
   });
-
-  new Divider({ $target: this.element });
 
   this.postComment = new PostComment({
     $target: this.element,
