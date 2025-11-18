@@ -20,8 +20,9 @@ export default function PostBasicInfo({ $target, post, onModify, onDelete }) {
     this.state = { ...this.state, ...newState };
     this.render();
   };
+
   this.onDropdownToggle = () => {
-    const $dropdownList = $(".dropdown-list", this.$header);
+    const $dropdownList = $(".dropdown-list", this.$element);
     if (!$dropdownList) {
       return;
     }
