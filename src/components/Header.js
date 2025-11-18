@@ -34,15 +34,17 @@ function Header({ $target, moveTo, toBack, initialState }) {
       "post-edit",
       "post-create",
       "signup",
+      "user-info",
+      "withdrawal",
     ];
 
     return `
       <div class="header-back-button-container"> 
         ${
           haveBackButtonPages.includes(page)
-            ? `<div class="back-button-container" data-action="router-back">
+            ? `<button class="back-button-container" data-action="router-back">
               <i class="fa-solid fa-arrow-left fa-xl"></i>
-            </div>`
+            </button>`
             : `<div data-action="back-button-container"></div>`
         }
       </div>
@@ -68,14 +70,14 @@ function Header({ $target, moveTo, toBack, initialState }) {
           <li class="dropdown-item">
             <div>
               <button data-action="user-info">
-                <span>회원정보수정</span>
+                <span>회원 정보 수정</span>
               </button>
             </div>
           </li>
           <li class="dropdown-item">
             <div>
               <button data-action="change-password">
-                <span>비밀번호수정</span>
+                <span>비밀번호 수정</span>
               </button>
             </div>
           </li>
@@ -99,11 +101,17 @@ function Header({ $target, moveTo, toBack, initialState }) {
           <div class="header-contents-container">
             ${this.renderBackButton(currentPage)}
             <div class="header-logo-container">
-                <button class="toggle-menu" data-action="router-post-list">
-                  <div class="header-logo-image-container">
-                    <img src="/public/logo.png" />
-                  </div>
-                </button>
+                ${
+                  currentPage === "user-info"
+                    ? "<span class=`bold`>프로필 편집</span>"
+                    : `
+                        <button data-action="router-post-list">
+                          <div class="header-logo-image-container">
+                            <img src="/public/logo.png" />
+                          </div>
+                        </button>
+                      `
+                }
             </div>
             <div class="header-container-right">
               ${this.renderUserMenu(isLoggedIn)}
