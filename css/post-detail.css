@@ -1,7 +1,7 @@
 .post-detail-page {
   width: 100%;
   max-width: var(--layout-max-width);
-  justify-self: center;
+  justify-content: flex-start;
   padding-top: 16px;
   display: flex;
   flex-direction: column;
@@ -110,7 +110,7 @@
     margin: 32px 0 24px 0;
     padding: 0 24px;
   }
-  
+
   .post-comment-textarea-wrapper {
     border-radius: 16px;
     border: 1px solid var(--border-color-black);
