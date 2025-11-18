@@ -1,20 +1,24 @@
-.modal.hidden {
+#modal.hidden {
   display: none;
+  pointer-events: none;
+  opacity: 0;
 }
 
-.modal {
+#modal {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 4;
 }
 
 .overlay {
+  z-index: 1;
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-wrapper {
+  z-index: 2;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -58,22 +62,13 @@
 
 .modal-actions button {
   padding: 10px 46px;
-  border: none;
   border-radius: 12px;
   cursor: pointer;
   font-size: 20px;
   line-height: 100%;
-}
-
-.positive-button {
-  /* TODO: fix color */
-  background-color: red;
+  border: 1px solid var(--default-color-grey);
   color: var(--default-color-black);
-}
-
-.negative-button {
-  background: var(--default-color-black);
-  color: var(--default-color-white);
+  font-weight: 400;
 }
 
 @keyframes fadeIn {

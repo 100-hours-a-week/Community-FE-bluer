@@ -160,6 +160,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       onPositive: () => {
         this.deletePost(postId);
       },
+      positiveStyle: "border-color:red; ",
     });
   };
 
@@ -215,6 +216,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       onPositive: () => {
         this.deleteComment(commentId);
       },
+      positiveStyle: "border-color:red; ",
     });
   };
 
