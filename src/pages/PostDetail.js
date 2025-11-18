@@ -69,8 +69,9 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     onModify: (commentId, authorId) => {
       this.onClickCommentModify(commentId, authorId);
     },
-    onDelete: (commentId, authorId) =>
-      this.onClickCommentDelete(commentId, authorId),
+    onDelete: (commentId, authorId) => {
+      this.onClickCommentDelete(commentId, authorId);
+    },
   });
 
   this.setState = newState => {

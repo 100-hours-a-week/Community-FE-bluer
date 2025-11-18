@@ -12,8 +12,8 @@
 }
 
 .toast {
-  background: var(--button-bg-color);
-  color: white;
+  background: var(--primary-button-background);
+  color: var(--primary-button-text);
   padding: 10px 16px;
   border-radius: 30px;
   font-size: 14px;
