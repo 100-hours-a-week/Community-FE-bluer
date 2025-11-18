@@ -30,9 +30,10 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
     const allValid = Object.values(isValid).every(v => v);
 
     const $submitButton = $(".submit-button", this.$element);
+
     if ($submitButton) {
       $submitButton.disabled = !allValid;
-      $submitButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
+      $submitButton.classList.toggle("active", allValid);
     }
   };
 
