@@ -23,25 +23,18 @@ function Header({ $target, moveTo, toBack, initialState }) {
       "post-edit",
       "post-create",
       "signup",
+      "user-info",
+      "change-password",
     ];
 
     return haveBackButtonPages.includes(page);
   };
 
   this.renderBackButton = page => {
-    const haveBackButtonPages = [
-      "post-detail",
-      "post-edit",
-      "post-create",
-      "signup",
-      "user-info",
-      "withdrawal",
-    ];
-
     return `
       <div class="header-back-button-container"> 
         ${
-          haveBackButtonPages.includes(page)
+          this.haveBackButtonOnPage(page)
             ? `<button class="back-button-container" data-action="router-back">
               <i class="fa-solid fa-arrow-left fa-xl"></i>
             </button>`
@@ -93,6 +86,22 @@ function Header({ $target, moveTo, toBack, initialState }) {
     `;
   };
 
+  const renderLogoContainer = page => {
+    if (page === "user-info") {
+      return `<span class="bold">프로필 편집</span>`;
+    }
+    if (page === "change-password") {
+      return `<span class="bold">비밀번호 변경</span>`;
+    }
+    return `
+      <button data-action="router-post-list">
+        <div class="header-logo-image-container">
+          <img src="/public/logo.png" />
+        </div>
+      </button>
+    `;
+  };
+
   this.render = () => {
     const { isLoggedIn, history } = getState();
     const currentPage = history.at(-1)?.page || "login";
@@ -101,17 +110,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
           <div class="header-contents-container">
             ${this.renderBackButton(currentPage)}
             <div class="header-logo-container">
-                ${
-                  currentPage === "user-info"
-                    ? "<span class=`bold`>프로필 편집</span>"
-                    : `
-                        <button data-action="router-post-list">
-                          <div class="header-logo-image-container">
-                            <img src="/public/logo.png" />
-                          </div>
-                        </button>
-                      `
-                }
+                ${renderLogoContainer(currentPage)}
             </div>
             <div class="header-container-right">
               ${this.renderUserMenu(isLoggedIn)}
