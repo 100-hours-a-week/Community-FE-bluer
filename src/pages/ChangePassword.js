@@ -17,7 +17,7 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
   };
 
   this.$element = document.createElement("div");
-  this.$element.className = "user-info-page";
+  this.$element.className = "user-info-page page-layout";
 
   this.$errorElement = name => $(`.error-message.${name}`, this.$element);
 
@@ -114,7 +114,6 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
 
   this.render = () => {
     this.$element.innerHTML = `
-      <h2 class="page-title big bold">비밀번호 수정</h2>
       <div class="signup-form-container password-check__change-password">
         <form>
           <ul class="form-input-list">
