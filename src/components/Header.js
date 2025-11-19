@@ -99,6 +99,9 @@ function Header({ $target, moveTo, toBack, initialState }) {
     if (page === "post-edit") {
       return `<span class="bold">게시글 수정</span>`;
     }
+    if (page === "signup") {
+      return `<span class="bold">회원가입</span>`;
+    }
     return `
       <button data-action="router-post-list">
         <div class="header-logo-image-container">
