@@ -93,6 +93,12 @@ function Header({ $target, moveTo, toBack, initialState }) {
     if (page === "change-password") {
       return `<span class="bold">비밀번호 변경</span>`;
     }
+    if (page === "post-create") {
+      return `<span class="bold">커뮤니티 글쓰기</span>`;
+    }
+    if (page === "post-edit") {
+      return `<span class="bold">게시글 수정</span>`;
+    }
     return `
       <button data-action="router-post-list">
         <div class="header-logo-image-container">

@@ -374,3 +374,8 @@ button:hover {
   left: 689px;
   border: 1px solid black;
 }
+
+.divider {
+  height: 1px;
+  background-color: var(--default-color-grey);
+}
