@@ -97,9 +97,12 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
 
       $titleCount.textContent = `${value.length ?? 0}/26`;
     }
-    const hasInput = this.state.title?.length && this.state.content?.length;
+    const hasInput =
+      this.state.title?.length > 0 && this.state.content?.length > 0;
+    const $button = $(".submit-button", this.element);
 
-    $("button", this.element).disabled = !hasInput;
+    $button.disabled = !hasInput;
+    $button.classList.toggle("active", hasInput);
   };
 
   this.handleChangeFileInput = event => {
