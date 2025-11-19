@@ -115,7 +115,7 @@ body {
 .page-layout {
   width: 100%;
   max-width: var(--layout-max-width);
-  min-height: calc(100vh - var(--header-height));
+  min-height: calc(100dvh - var(--header-height));
   top: var(--header-height);
   display: flex;
   justify-self: center;
