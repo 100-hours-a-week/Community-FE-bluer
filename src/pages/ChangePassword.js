@@ -17,7 +17,7 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
   };
 
   this.$element = document.createElement("div");
-  this.$element.className = "user-info-page";
+  this.$element.className = "user-info-page page-layout";
 
   this.$errorElement = name => $(`.error-message.${name}`, this.$element);
 
@@ -30,9 +30,10 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
     const allValid = Object.values(isValid).every(v => v);
 
     const $submitButton = $(".submit-button", this.$element);
+
     if ($submitButton) {
       $submitButton.disabled = !allValid;
-      $submitButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
+      $submitButton.classList.toggle("active", allValid);
     }
   };
 
@@ -114,7 +115,6 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
 
   this.render = () => {
     this.$element.innerHTML = `
-      <h2 class="page-title big bold">비밀번호 수정</h2>
       <div class="signup-form-container password-check__change-password">
         <form>
           <ul class="form-input-list">

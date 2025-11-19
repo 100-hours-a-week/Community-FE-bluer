@@ -23,57 +23,112 @@ function Header({ $target, moveTo, toBack, initialState }) {
       "post-edit",
       "post-create",
       "signup",
+      "user-info",
+      "change-password",
     ];
 
     return haveBackButtonPages.includes(page);
   };
 
-  this.renderBackButton = () => {
+  this.renderBackButton = page => {
     return `
       <div class="header-back-button-container"> 
-        <button data-role="back">
-          <img style="height:100%" src="./public/left-arrow.png" />
-        </button>
+        ${
+          this.haveBackButtonOnPage(page)
+            ? `<button class="back-button-container" data-action="router-back">
+              <i class="fa-solid fa-arrow-left fa-xl"></i>
+            </button>`
+            : `<div data-action="back-button-container"></div>`
+        }
       </div>
+    `;
+  };
+
+  this.renderUserMenu = isLoggedIn => {
+    if (!isLoggedIn) {
+      return `<button class="header-login-button" data-action="login">로그인</button>`;
+    }
+    return `
+      <div class="dropdown-button-container">
+        <button class="dropdown-button" data-action="toggle-menu">
+          <div class="avatar">
+            ${
+              this.state.profileImageUrl
+                ? `<img src=${this.state.profileImageUrl} />`
+                : ""
+            }
+          </div> 
+        </button>
+        <ul class="dropdown-list ${this.state.isOpen ? "" : "none"} ">
+          <li class="dropdown-item">
+            <div>
+              <button data-action="user-info">
+                <span>회원 정보 수정</span>
+              </button>
+            </div>
+          </li>
+          <li class="dropdown-item">
+            <div>
+              <button data-action="change-password">
+                <span>비밀번호 수정</span>
+              </button>
+            </div>
+          </li>
+          <li class="dropdown-item">
+            <div>
+              <button data-action="logout">
+                <span>로그아웃</span>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+    `;
+  };
+
+  const renderLogoContainer = page => {
+    if (page === "user-info") {
+      return `<span class="bold">프로필 편집</span>`;
+    }
+    if (page === "change-password") {
+      return `<span class="bold">비밀번호 변경</span>`;
+    }
+    if (page === "post-create") {
+      return `<span class="bold">커뮤니티 글쓰기</span>`;
+    }
+    if (page === "post-edit") {
+      return `<span class="bold">게시글 수정</span>`;
+    }
+    if (page === "signup") {
+      return `<span class="bold">회원가입</span>`;
+    }
+    return `
+      <button data-action="router-post-list">
+        <div class="header-logo-image-container">
+          <img src="/public/logo.png" />
+        </div>
+      </button>
     `;
   };
 
   this.render = () => {
     const { isLoggedIn, history } = getState();
-    const currentPage = history[history.length - 1]?.page ?? "login";
+    const currentPage = history.at(-1)?.page || "login";
 
-    this.$header.classList.add("header");
     this.$header.innerHTML = `
-      <div class="header-content">
-            ${
-              this.haveBackButtonOnPage(currentPage)
-                ? this.renderBackButton()
-                : `<div style="width: 19px"></div>`
-            }
-          <span class="header-title bold">아무 말 대잔치</span>
-          ${
-            isLoggedIn
-              ? `
-                  <div class="dropdown-button-container">
-                    <button class="dropdown-button" data-role="menu">
-                      <div class="avatar">
-                       ${this.state.profileImageUrl ? `<img src=${this.state.profileImageUrl} />` : ""}
-                      </div> 
-                    </button>
-                    <ul class="dropdown-list none">
-                      <li class="dropdown-item" data-action="user-info">회원정보수정</li>
-                      <li class="dropdown-item" data-action="change-password">비밀번호수정</li>
-                      <li class="dropdown-item" data-action="logout">로그아웃</li>
-                    </ul>
-                  </div>
-            `
-              : '<div class="avatar bg-none"></div>'
-          }
-        </div>
-      </div>
-      
+          <div class="header-contents-container">
+            ${this.renderBackButton(currentPage)}
+            <div class="header-logo-container">
+                ${renderLogoContainer(currentPage)}
+            </div>
+            <div class="header-container-right">
+              ${this.renderUserMenu(isLoggedIn)}
+            </div>
+          </div>
       `;
-    this.target.appendChild(this.$header);
+    if (!this.$header.isConnected) {
+      this.target.appendChild(this.$header);
+    }
   };
 
   this.onBackClick = () => {
@@ -95,34 +150,44 @@ function Header({ $target, moveTo, toBack, initialState }) {
     }
   };
 
-  this.onDropdownItemClick = target => {
-    const action = target.dataset?.action;
-    const actionMap = {
-      "user-info": () => {
-        this.moveTo("user-info");
-      },
-      "change-password": () => {
-        this.moveTo("change-password");
-      },
-      logout: () => {
-        dispatch("LOGOUT");
-      },
-    };
-
-    this.onDropdownToggle();
-    actionMap[action]?.();
-  };
-
   this.handleClick = event => {
     const { target } = event;
 
-    if (target.closest(".header-back-button-container")) {
-      this.onBackClick();
-    } else if (target.closest(".dropdown-button")) {
-      this.onDropdownToggle();
-    } else if (target.closest(".dropdown-item")) {
-      this.onDropdownItemClick(event.target);
+    const $closestButton = target.closest("button");
+    if (!$closestButton) {
+      return;
     }
+
+    const { dataset } = $closestButton;
+    const action = dataset?.action;
+
+    const actionMap = {
+      "router-post-list": () => {
+        this.moveTo("post-list");
+      },
+      login: () => {
+        this.moveTo("login");
+      },
+      "toggle-menu": () => {
+        this.onDropdownToggle();
+      },
+      "router-back": () => {
+        this.onBackClick();
+      },
+      "user-info": () => {
+        this.moveTo("user-info");
+        this.onDropdownToggle();
+      },
+      "change-password": () => {
+        this.moveTo("change-password");
+        this.onDropdownToggle();
+      },
+      logout: () => {
+        dispatch("LOGOUT");
+        this.onDropdownToggle();
+      },
+    };
+    actionMap[action]?.();
   };
 
   this.bindEvents = () => {

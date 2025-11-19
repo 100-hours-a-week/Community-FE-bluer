@@ -4,7 +4,6 @@ import { StatusCode } from "../lib/api/statusCode.js";
 import { showModal, showToast } from "../lib/utils.js";
 import PostBasicInfo from "../components/PostDetail/PostBasicInfo.js";
 import PostContent from "../components/PostDetail/PostContent.js";
-import Divider from "../components/Divider.js";
 import PostStats from "../components/PostDetail/PostStats.js";
 import CommentList from "../components/PostDetail/CommentsList.js";
 import PostComment from "../components/PostDetail/PostComment.js";
@@ -33,6 +32,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
   this.element = document.createElement("div");
   this.element.className = "post-detail-page";
+  this.element.classList.add("page-layout");
   this.getCurrentUserId = () => getState().userId;
 
   this.postBasicInfo = new PostBasicInfo({
@@ -45,12 +45,11 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     },
   });
 
-  new Divider({ $target: this.element });
-
   this.postContent = new PostContent({
     $target: this.element,
     post: this.state.post,
   });
+
   this.postStats = new PostStats({
     $target: this.element,
     post: this.state.post,
@@ -58,8 +57,6 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       this.onClickLike();
     },
   });
-
-  new Divider({ $target: this.element });
 
   this.postComment = new PostComment({
     $target: this.element,
@@ -72,8 +69,9 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     onModify: (commentId, authorId) => {
       this.onClickCommentModify(commentId, authorId);
     },
-    onDelete: (commentId, authorId) =>
-      this.onClickCommentDelete(commentId, authorId),
+    onDelete: (commentId, authorId) => {
+      this.onClickCommentDelete(commentId, authorId);
+    },
   });
 
   this.setState = newState => {
@@ -162,6 +160,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       onPositive: () => {
         this.deletePost(postId);
       },
+      positiveStyle: "border-color:red; ",
     });
   };
 
@@ -217,6 +216,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       onPositive: () => {
         this.deleteComment(commentId);
       },
+      positiveStyle: "border-color:red; ",
     });
   };
 

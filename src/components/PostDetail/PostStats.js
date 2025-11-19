@@ -28,21 +28,22 @@ function PostStats({ $target, post, handleClick }) {
   };
 
   this.render = () => {
-    const { likeCount, viewCount, commentCount } = this.state;
+    const { likeCount, viewCount, commentCount, likedByMe } = this.state;
+
     this.$element.innerHTML = `
       <li>
-        <button class="post-stats-item bold ${this.state.likedByMe ? "active" : ""} "}>
-          <span class="item-content">${likeCount ? formatToK(likeCount) : 0}</span>
-          <span class="item-title">좋아요수</span>
+        <button class="post-stats-item post-like-button"}>
+          <i class="fa-${likedByMe ? "solid" : "regular"} fa-heart fa-lg"></i>
+          <span class="item-content">${likeCount && likeCount > 0 ? formatToK(likeCount) : 0}</span>
         </button>
       </li>
-      <li class="post-stats-item bold">
-        <span class="item-content">${viewCount ? formatToK(viewCount) : 0}</span>
-        <span class="item-title">조회수</span>
-      </li>
-      <li class="post-stats-item bold">
+      <li class="post-stats-item ">
+        <i class="fa-regular fa-comment fa-lg"></i>
         <span class="item-content">${commentCount ? formatToK(commentCount) : 0}</span>
-        <span class="item-title">댓글</span>
+      </li>  
+      <li class="post-stats-item ">
+        <i class="fa-solid fa-chart-column fa-lg"></i>
+        <span class="item-content">${viewCount && viewCount > 0 ? formatToK(viewCount) : 0}</span>
       </li>
     `;
   };
