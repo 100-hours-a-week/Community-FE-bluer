@@ -254,6 +254,8 @@ function UserInfo({ $target }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default UserInfo;

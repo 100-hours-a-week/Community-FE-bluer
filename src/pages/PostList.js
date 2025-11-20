@@ -2,11 +2,11 @@ import { showToast, truncateText } from "../lib/utils.js";
 import { POST_TITLE_MAX_LENGTH } from "../lib/constants.js";
 import PostListItem from "../components/PostListItem.js";
 import { apiManager } from "../lib/api/apiManager.js";
+import { moveToPage } from "../lib/router.js";
 
-function PostList({ $target, initialState, moveTo, currentPage }) {
+function PostList({ $target, initialState, currentPage }) {
   this.target = $target;
   this.currentPage = currentPage;
-  this.moveTo = moveTo;
 
   this.state = {
     ...initialState,
@@ -81,11 +81,15 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
 
     const postId = $post?.dataset?.postId;
 
-    this.moveTo("post-detail", { postId });
+    moveToPage(`posts/${postId}`);
+  };
+
+  this.handleClickPost = postId => {
+    // this.moveTo("post-detail", { postId });
   };
 
   this.onClickAddPost = () => {
-    this.moveTo("post-create");
+    moveToPage("posts/create");
   };
 
   this.appendPosts = async (cursor = null, size = null) => {
@@ -140,25 +144,15 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.$addPostButtonContainer.addEventListener("click", this.onClickAddPost);
   };
 
-  this.getPosts = async () => {
-    try {
-      const { data } = await apiManager.getPosts();
-      const { posts } = data;
-
-      this.setState({ posts: [...posts], hasNext: data.hasNext });
-    } catch (error) {
-      console.error(error);
-      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-    }
-  };
-
   this.init = async () => {
-    await this.getPosts();
+    await this.appendPosts(null, 5);
 
     this.render();
     this.bindEvents();
     this.handleIntersect();
   };
+
+  this.init();
 }
 
 export default PostList;

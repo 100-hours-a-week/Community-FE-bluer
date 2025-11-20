@@ -1,4 +1,5 @@
 import { $ } from "../../lib/dom.js";
+import { formatToLocalDateTime } from "../../lib/utils.js";
 
 export default function PostBasicInfo({ $target, post, onModify, onDelete }) {
   this.$element = document.createElement("div");
@@ -10,10 +11,10 @@ export default function PostBasicInfo({ $target, post, onModify, onDelete }) {
   this.$target.appendChild(this.$element);
 
   this.state = {
-    title: "",
-    authorName: "",
-    authorProfileImageUrl: "",
-    createdAt: "",
+    title: null,
+    authorName: null,
+    authorProfileImageUrl: null,
+    createdAt: null,
   };
 
   this.setState = newState => {
@@ -63,6 +64,7 @@ export default function PostBasicInfo({ $target, post, onModify, onDelete }) {
 
   this.render = () => {
     const { title, authorName, authorProfileImageUrl, createdAt } = this.state;
+
     this.$element.innerHTML = `
       <div class="post-basic-info">
         <div class="post-author-info">
@@ -73,7 +75,7 @@ export default function PostBasicInfo({ $target, post, onModify, onDelete }) {
               </div>
               <span class="post-author bold">${authorName ?? "-"}</span>
             </div>
-            <span class="post-info-item">${createdAt ?? "-"}</span>
+            <span class="post-info-item">${createdAt ? formatToLocalDateTime(createdAt) : "-"}</span>
           </div>
           <div class="post-author-container right">
             <div class="dropdown-button-container">

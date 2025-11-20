@@ -7,10 +7,10 @@ import PostContent from "../components/PostDetail/PostContent.js";
 import PostStats from "../components/PostDetail/PostStats.js";
 import CommentList from "../components/PostDetail/CommentsList.js";
 import PostComment from "../components/PostDetail/PostComment.js";
+import { moveToPage } from "../lib/router.js";
 
-function PostDetail({ $target, moveTo, initialState = {} }) {
+function PostDetail({ $target, params, initialState = {} }) {
   this.$target = $target;
-  this.moveTo = moveTo;
   this.state = {
     ...initialState,
     post: {
@@ -122,7 +122,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       showToast("권한이 없습니다.");
       return;
     }
-    this.moveTo("post-edit", { postId: this.state.post.postId });
+    moveToPage(`/posts/${this.state.post.postId}/edit`);
   };
 
   this.deletePost = async () => {
@@ -133,7 +133,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
       if (response.status === StatusCode.OK) {
         showToast("삭제 완료");
         setTimeout(() => {
-          this.moveTo("post-list");
+          this.moveTo("posts");
         }, 500);
       }
     } catch (error) {
@@ -294,14 +294,15 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
 
   this.init = async () => {
-    const { query } = getCurrentPageInfo();
-    const { postId } = query;
+    const { postId } = params;
 
-    Promise.all([await this.getPost(postId)], await this.getComments(postId));
+    await Promise.all([this.getPost(postId), this.getComments(postId)]);
 
     this.$target.appendChild(this.element);
     this.render();
   };
+
+  this.init();
 }
 
 export default PostDetail;

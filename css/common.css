@@ -200,10 +200,6 @@ body {
   color: var(--default-color-grey);
 }
 
-.submit-button.isLoading {
-  /* TODO: fix bg color */
-}
-
 .link-container {
   margin-top: 12px;
 }

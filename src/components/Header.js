@@ -1,15 +1,14 @@
-import { getState, dispatch } from "../lib/store.js";
+import { getState, dispatch, subscribe } from "../lib/store.js";
 import { $ } from "../lib/dom.js";
 import { showToast } from "../lib/utils.js";
 import { apiManager } from "../lib/api/apiManager.js";
+import { moveToPage } from "../lib/router.js";
 
-function Header({ $target, moveTo, toBack, initialState }) {
+function Header({ $target, initialState }) {
   this.target = $target;
-  this.moveTo = moveTo;
-  this.toBack = toBack;
   this.state = { isOpen: false, profileImageUrl: null, ...initialState };
 
-  this.$header = document.createElement("header");
+  this.$header = document.createElement("div");
   this.$header.classList.add("header");
   this.isBound = false;
 
@@ -44,8 +43,11 @@ function Header({ $target, moveTo, toBack, initialState }) {
     `;
   };
 
-  this.renderUserMenu = isLoggedIn => {
+  this.renderUserMenu = (isLoggedIn, currentPage) => {
     if (!isLoggedIn) {
+      if (currentPage === "login") {
+        return ``;
+      }
       return `<button class="header-login-button" data-action="login">로그인</button>`;
     }
     return `
@@ -112,8 +114,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
   };
 
   this.render = () => {
-    const { isLoggedIn, history } = getState();
-    const currentPage = history.at(-1)?.page || "login";
+    const { isLoggedIn, currentPage } = getState();
 
     this.$header.innerHTML = `
           <div class="header-contents-container">
@@ -122,7 +123,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
                 ${renderLogoContainer(currentPage)}
             </div>
             <div class="header-container-right">
-              ${this.renderUserMenu(isLoggedIn)}
+              ${this.renderUserMenu(isLoggedIn, currentPage)}
             </div>
           </div>
       `;
@@ -132,7 +133,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
   };
 
   this.onBackClick = () => {
-    this.toBack();
+    history.back();
   };
 
   this.onDropdownToggle = () => {
@@ -163,10 +164,10 @@ function Header({ $target, moveTo, toBack, initialState }) {
 
     const actionMap = {
       "router-post-list": () => {
-        this.moveTo("post-list");
+        moveToPage("/posts");
       },
       login: () => {
-        this.moveTo("login");
+        moveToPage("/login");
       },
       "toggle-menu": () => {
         this.onDropdownToggle();
@@ -175,11 +176,11 @@ function Header({ $target, moveTo, toBack, initialState }) {
         this.onBackClick();
       },
       "user-info": () => {
-        this.moveTo("user-info");
+        moveToPage("/user-info");
         this.onDropdownToggle();
       },
       "change-password": () => {
-        this.moveTo("change-password");
+        moveToPage("/change-password");
         this.onDropdownToggle();
       },
       logout: () => {
@@ -188,18 +189,6 @@ function Header({ $target, moveTo, toBack, initialState }) {
       },
     };
     actionMap[action]?.();
-  };
-
-  this.bindEvents = () => {
-    if (this.isBound) {
-      return;
-    }
-
-    this.boundHeaderClick = event => {
-      this.handleClick(event);
-    };
-    this.$header.addEventListener("click", this.boundHeaderClick);
-    this.isBound = true;
   };
 
   this.getUserProfile = async () => {
@@ -215,6 +204,10 @@ function Header({ $target, moveTo, toBack, initialState }) {
     }
   };
 
+  this.bindEvents = () => {
+    this.$header.addEventListener("click", this.handleClick);
+  };
+
   this.init = async () => {
     const { isLoggedIn, history } = getState();
     this.setState({ isLoggedIn, history });
@@ -223,8 +216,19 @@ function Header({ $target, moveTo, toBack, initialState }) {
       await this.getUserProfile();
     }
 
-    this.render();
     this.bindEvents();
+
+    subscribe(async (globalState, type) => {
+      if (type === "SET_CURRENT_PAGE") {
+        this.render();
+      } else if (type === "LOGIN") {
+        this.setState({ isLoggedIn: true });
+        await this.getUserProfile();
+        this.render();
+      } else if (type === "LOGOUT") {
+        this.setState({ isLoggedIn: false });
+      }
+    });
   };
 }
 

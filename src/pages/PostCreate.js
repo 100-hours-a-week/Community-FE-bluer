@@ -74,7 +74,7 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
       if (response.status === StatusCode.CREATED) {
         showToast("추가 완료");
         setTimeout(() => {
-          this.moveTo("post-list");
+          this.moveTo("posts");
         }, 500);
       }
     } catch (error) {
@@ -128,6 +128,8 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default PostCreate;
