@@ -43,8 +43,11 @@ function Header({ $target, initialState }) {
     `;
   };
 
-  this.renderUserMenu = isLoggedIn => {
+  this.renderUserMenu = (isLoggedIn, currentPage) => {
     if (!isLoggedIn) {
+      if (currentPage === "login") {
+        return ``;
+      }
       return `<button class="header-login-button" data-action="login">로그인</button>`;
     }
     return `
@@ -120,7 +123,7 @@ function Header({ $target, initialState }) {
                 ${renderLogoContainer(currentPage)}
             </div>
             <div class="header-container-right">
-              ${this.renderUserMenu(isLoggedIn)}
+              ${this.renderUserMenu(isLoggedIn, currentPage)}
             </div>
           </div>
       `;
