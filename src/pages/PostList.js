@@ -82,11 +82,14 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
 
     const postId = $post?.dataset?.postId;
 
+    moveToPage(`posts/${postId}`);
+  };
+
+  this.handleClickPost = postId => {
     // this.moveTo("post-detail", { postId });
   };
 
   this.onClickAddPost = () => {
-    // this.moveTo("post-create");
     moveToPage("posts/create");
   };
 

@@ -25,31 +25,57 @@ const routes = {
 
 export const moveToPage = url => {
   history.pushState(null, "", url);
-  handleRoute(location.pathname, location.search);
+  handleRoute(location.pathname);
 };
 
-export const handleRoute = (path, search) => {
-  const RouteComponent = routes[path];
+export const handleRoute = path => {
+  let RouteComponent = null;
+  let params = {};
+
+  for (const pattern in routes) {
+    const paramNames = [];
+
+    const regex = new RegExp(
+      "^" +
+        pattern.replace(/:([^/]+)/g, (_, key) => {
+          paramNames.push(key);
+          return "([^/]+)";
+        }) +
+        "$"
+    );
+
+    const match = path.match(regex);
+
+    if (match) {
+      RouteComponent = routes[pattern];
+
+      paramNames.forEach((name, i) => {
+        params[name] = match[i + 1];
+      });
+
+      break;
+    }
+  }
 
   if (!RouteComponent) {
-    // TODO: 404
     $page.innerHTML = "<h1>404 Not Found</h1>";
     return;
   }
 
-  const query = new URLSearchParams(search);
+  $page.innerHTML = "";
 
   new RouteComponent({
     $target: $page,
-    moveTo,
+    moveTo: moveToPage,
+    params,
   });
 };
 
 export const initRouteHandler = () => {
   window.addEventListener("popstate", () => {
-    handleRoute(location.pathname, location.search);
+    handleRoute(location.pathname);
   });
 
   // Run route handler for the first time
-  handleRoute(location.pathname, location.search);
+  handleRoute(location.pathname);
 };

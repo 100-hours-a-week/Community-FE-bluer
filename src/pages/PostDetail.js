@@ -8,7 +8,7 @@ import PostStats from "../components/PostDetail/PostStats.js";
 import CommentList from "../components/PostDetail/CommentsList.js";
 import PostComment from "../components/PostDetail/PostComment.js";
 
-function PostDetail({ $target, moveTo, initialState = {} }) {
+function PostDetail({ $target, moveTo, params, initialState = {} }) {
   this.$target = $target;
   this.moveTo = moveTo;
   this.state = {
@@ -294,14 +294,15 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
   };
 
   this.init = async () => {
-    const { query } = getCurrentPageInfo();
-    const { postId } = query;
+    const { postId } = params;
 
     await Promise.all([this.getPost(postId), this.getComments(postId)]);
 
     this.$target.appendChild(this.element);
     this.render();
   };
+
+  this.init();
 }
 
 export default PostDetail;
