@@ -128,6 +128,8 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default PostCreate;

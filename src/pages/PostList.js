@@ -2,11 +2,12 @@ import { showToast, truncateText } from "../lib/utils.js";
 import { POST_TITLE_MAX_LENGTH } from "../lib/constants.js";
 import PostListItem from "../components/PostListItem.js";
 import { apiManager } from "../lib/api/apiManager.js";
+import { moveToPage } from "../lib/router.js";
 
 function PostList({ $target, initialState, moveTo, currentPage }) {
   this.target = $target;
   this.currentPage = currentPage;
-  this.moveTo = moveTo;
+  // this.moveTo = moveTo;
 
   this.state = {
     ...initialState,
@@ -81,11 +82,12 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
 
     const postId = $post?.dataset?.postId;
 
-    this.moveTo("post-detail", { postId });
+    // this.moveTo("post-detail", { postId });
   };
 
   this.onClickAddPost = () => {
-    this.moveTo("post-create");
+    // this.moveTo("post-create");
+    moveToPage("posts/create");
   };
 
   this.appendPosts = async (cursor = null, size = null) => {
@@ -147,6 +149,8 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.bindEvents();
     this.handleIntersect();
   };
+
+  this.init();
 }
 
 export default PostList;
