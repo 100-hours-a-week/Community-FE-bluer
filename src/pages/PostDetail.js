@@ -133,7 +133,7 @@ function PostDetail({ $target, params, initialState = {} }) {
       if (response.status === StatusCode.OK) {
         showToast("삭제 완료");
         setTimeout(() => {
-          this.moveTo("post-list");
+          this.moveTo("posts");
         }, 500);
       }
     } catch (error) {

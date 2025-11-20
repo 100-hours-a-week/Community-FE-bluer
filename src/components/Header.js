@@ -161,10 +161,10 @@ function Header({ $target, initialState }) {
 
     const actionMap = {
       "router-post-list": () => {
-        moveToPage("post-list");
+        moveToPage("/posts");
       },
       login: () => {
-        moveToPage("login");
+        moveToPage("/login");
       },
       "toggle-menu": () => {
         this.onDropdownToggle();
@@ -173,11 +173,11 @@ function Header({ $target, initialState }) {
         this.onBackClick();
       },
       "user-info": () => {
-        moveToPage("user-info");
+        moveToPage("/user-info");
         this.onDropdownToggle();
       },
       "change-password": () => {
-        moveToPage("change-password");
+        moveToPage("/change-password");
         this.onDropdownToggle();
       },
       logout: () => {

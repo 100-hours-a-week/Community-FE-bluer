@@ -18,8 +18,8 @@ const routes = {
   "/posts/create": PostCreate,
   "/posts/:postId": PostDetail,
   "/posts/:postId/edit": PostEdit,
-  "/user/info": UserInfo,
-  "/user/change-password": ChangePassword,
+  "/user-info": UserInfo,
+  "/change-password": ChangePassword,
   "/login": Login,
   "/signup": Signup,
 };

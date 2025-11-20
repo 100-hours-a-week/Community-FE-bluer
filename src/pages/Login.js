@@ -146,7 +146,7 @@ function Login({ $target, initialState, moveTo, currentPage }) {
     const { isLoggedIn } = getState();
 
     if (isLoggedIn) {
-      this.moveTo("post-list");
+      this.moveTo("posts");
       return;
     }
     this.render();
