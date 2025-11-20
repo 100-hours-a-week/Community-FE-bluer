@@ -297,7 +297,7 @@ function PostDetail({ $target, moveTo, initialState = {} }) {
     const { query } = getCurrentPageInfo();
     const { postId } = query;
 
-    Promise.all([await this.getPost(postId)], await this.getComments(postId));
+    await Promise.all([this.getPost(postId), this.getComments(postId)]);
 
     this.$target.appendChild(this.element);
     this.render();
