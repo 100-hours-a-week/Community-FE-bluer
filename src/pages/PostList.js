@@ -140,20 +140,8 @@ function PostList({ $target, initialState, moveTo, currentPage }) {
     this.$addPostButtonContainer.addEventListener("click", this.onClickAddPost);
   };
 
-  this.getPosts = async () => {
-    try {
-      const { data } = await apiManager.getPosts();
-      const { posts } = data;
-
-      this.setState({ posts: [...posts], hasNext: data.hasNext });
-    } catch (error) {
-      console.error(error);
-      showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-    }
-  };
-
   this.init = async () => {
-    await this.getPosts();
+    await this.appendPosts(null, 5);
 
     this.render();
     this.bindEvents();
