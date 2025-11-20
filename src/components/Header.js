@@ -9,7 +9,7 @@ function Header({ $target, moveTo, toBack, initialState }) {
   this.toBack = toBack;
   this.state = { isOpen: false, profileImageUrl: null, ...initialState };
 
-  this.$header = document.createElement("header");
+  this.$header = document.createElement("div");
   this.$header.classList.add("header");
   this.isBound = false;
 

@@ -7,7 +7,7 @@ function App() {
   const $app = $("#app");
 
   this.header = new Header({
-    $target: $("#app"),
+    $target: $("#header"),
     moveTo: page => {
       // this.moveTo(page);
     },

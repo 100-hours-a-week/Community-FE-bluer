@@ -10,7 +10,7 @@ import {
 } from "../pages/index.js";
 import { $ } from "./dom.js";
 
-const $app = $("#app");
+const $page = $("#page");
 const routes = {
   "/": PostList,
   "/posts": PostList,
@@ -33,14 +33,14 @@ export const handleRoute = (path, search) => {
 
   if (!RouteComponent) {
     // TODO: 404
-    $app.innerHTML = "<h1>404 Not Found</h1>";
+    $page.innerHTML = "<h1>404 Not Found</h1>";
     return;
   }
 
   const query = new URLSearchParams(search);
 
   new RouteComponent({
-    $target: $app,
+    $target: $page,
     moveTo,
   });
 };
