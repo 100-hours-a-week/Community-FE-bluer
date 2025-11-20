@@ -9,6 +9,7 @@ import {
   UserInfo,
 } from "../pages/index.js";
 import { $ } from "./dom.js";
+import { dispatch } from "./store.js";
 
 const $page = $("#page");
 const routes = {
@@ -23,9 +24,26 @@ const routes = {
   "/signup": Signup,
 };
 
-export const moveToPage = url => {
-  history.pushState(null, "", url);
-  handleRoute(location.pathname);
+const pathToRegex = path => {
+  return new RegExp("^" + path.replace(/:([^/]+)/g, "([^/]+)") + "$");
+};
+
+const routeNamePatterns = [
+  { regex: pathToRegex("/"), name: "post-list" },
+  { regex: pathToRegex("/login"), name: "login" },
+  { regex: pathToRegex("/signup"), name: "signup" },
+  { regex: pathToRegex("/posts"), name: "post-list" },
+  { regex: pathToRegex("/posts/create"), name: "post-create" },
+  { regex: pathToRegex("/posts/:id"), name: "post-detail" },
+  { regex: pathToRegex("/posts/:id/edit"), name: "post-edit" },
+  { regex: pathToRegex("/user/info"), name: "user-info" },
+  { regex: pathToRegex("/user/change-password"), name: "change-password" },
+];
+
+const getPageNameFromPath = path => {
+  const matched = routeNamePatterns.find(r => r.regex.test(path));
+
+  return matched?.name ?? "not-found";
 };
 
 export const handleRoute = path => {
@@ -57,6 +75,9 @@ export const handleRoute = path => {
     }
   }
 
+  const pageName = getPageNameFromPath(location.pathname);
+  dispatch("SET_CURRENT_PAGE", { page: pageName });
+
   if (!RouteComponent) {
     $page.innerHTML = "<h1>404 Not Found</h1>";
     return;
@@ -69,6 +90,13 @@ export const handleRoute = path => {
     moveTo: moveToPage,
     params,
   });
+};
+
+export const moveToPage = url => {
+  const pageName = getPageNameFromPath(`/${url}`);
+
+  history.pushState(null, "", url);
+  handleRoute(location.pathname);
 };
 
 export const initRouteHandler = () => {

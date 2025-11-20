@@ -4,10 +4,9 @@ import PostListItem from "../components/PostListItem.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { moveToPage } from "../lib/router.js";
 
-function PostList({ $target, initialState, moveTo, currentPage }) {
+function PostList({ $target, initialState, currentPage }) {
   this.target = $target;
   this.currentPage = currentPage;
-  // this.moveTo = moveTo;
 
   this.state = {
     ...initialState,
