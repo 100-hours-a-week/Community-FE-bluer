@@ -215,9 +215,15 @@ function Header({ $target, initialState }) {
 
     this.bindEvents();
 
-    subscribe((globalState, type) => {
+    subscribe(async (globalState, type) => {
       if (type === "SET_CURRENT_PAGE") {
         this.render();
+      } else if (type === "LOGIN") {
+        this.setState({ isLoggedIn: true });
+        await this.getUserProfile();
+        this.render();
+      } else if (type === "LOGOUT") {
+        this.setState({ isLoggedIn: false });
       }
     });
   };

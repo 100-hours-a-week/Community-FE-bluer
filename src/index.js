@@ -6,23 +6,27 @@ import { initRouteHandler, moveToPage } from "./lib/router.js";
 function App() {
   const $app = $("#app");
 
+  this.moveTo = page => {
+    moveToPage(page);
+  };
+
   this.header = new Header({
     $target: $("#header"),
     moveTo: page => {
-      // this.moveTo(page);
+      this.moveTo(page);
     },
   });
 
   this.init = () => {
     this.header.init();
 
-    // subscribe((globalState, type) => {
-    //   if (type === "LOGIN") {
-    //     this.moveTo("post-list");
-    //   } else if (type === "LOGOUT") {
-    //     this.moveTo("login");
-    //   }
-    // });
+    subscribe((globalState, type) => {
+      if (type === "LOGIN") {
+        this.moveTo("posts");
+      } else if (type === "LOGOUT") {
+        this.moveTo("login");
+      }
+    });
 
     initRouteHandler();
     // this.render();
