@@ -7,10 +7,10 @@ import PostContent from "../components/PostDetail/PostContent.js";
 import PostStats from "../components/PostDetail/PostStats.js";
 import CommentList from "../components/PostDetail/CommentsList.js";
 import PostComment from "../components/PostDetail/PostComment.js";
+import { moveToPage } from "../lib/router.js";
 
-function PostDetail({ $target, moveTo, params, initialState = {} }) {
+function PostDetail({ $target, params, initialState = {} }) {
   this.$target = $target;
-  this.moveTo = moveTo;
   this.state = {
     ...initialState,
     post: {
@@ -122,7 +122,7 @@ function PostDetail({ $target, moveTo, params, initialState = {} }) {
       showToast("권한이 없습니다.");
       return;
     }
-    this.moveTo("post-edit", { postId: this.state.post.postId });
+    moveToPage(`/posts/${this.state.post.postId}/edit`);
   };
 
   this.deletePost = async () => {

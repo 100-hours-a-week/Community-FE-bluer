@@ -5,7 +5,7 @@ import { StatusCode } from "../lib/api/statusCode.js";
 import { $ } from "../lib/dom.js";
 import { uploadToImageBucket } from "../lib/external/imageBucket.js";
 
-function PostEdit({ $target, initialState = {}, moveTo }) {
+function PostEdit({ $target, initialState = {}, params }) {
   this.$target = $target;
   this.state = {
     ...initialState,
@@ -181,14 +181,15 @@ function PostEdit({ $target, initialState = {}, moveTo }) {
   };
 
   this.init = async () => {
-    const { history } = getState();
-    const { postId } = history[history.length - 1].query;
+    const { postId } = params;
 
     await this.getPost(postId);
 
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default PostEdit;
