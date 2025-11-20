@@ -152,6 +152,8 @@ function Login({ $target, initialState, moveTo, currentPage }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default Login;

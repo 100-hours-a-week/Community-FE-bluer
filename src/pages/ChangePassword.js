@@ -152,6 +152,8 @@ function ChangePassword({ $target, initialState = {}, moveTo }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default ChangePassword;

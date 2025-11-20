@@ -248,6 +248,8 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default Signup;
