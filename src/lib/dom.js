@@ -7,6 +7,10 @@ export const createElement = (type, props = null, children = []) => {
   Object.entries(props).forEach(([key, value]) => {
     if (key === "text") {
       element.innerText = value;
+    } else if (key === "event") {
+      value.forEach(({ eventName, handler }) => {
+        element.addEventListener(eventName, handler);
+      });
     } else {
       element.setAttribute(key, value);
     }
