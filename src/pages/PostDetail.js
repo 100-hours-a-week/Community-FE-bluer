@@ -1,4 +1,4 @@
-import { getCurrentPageInfo, getState } from "../lib/store.js";
+import { getState } from "../lib/store.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
 import { showModal, showToast } from "../lib/utils.js";

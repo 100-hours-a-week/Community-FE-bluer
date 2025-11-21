@@ -1,3 +1,4 @@
+import { createElement } from "../../lib/dom.js";
 import { formatToK } from "../../lib/utils.js";
 
 function PostStats({ $target, post, handleClick }) {
@@ -14,42 +15,69 @@ function PostStats({ $target, post, handleClick }) {
     this.render();
   };
 
-  this.handleClick = event => {
-    const $button = event.target.closest("button");
-
-    if (!$button) {
-      return;
-    }
+  this.handleClick = () => {
     handleClick();
-  };
-
-  this.bindEvents = () => {
-    this.$element.addEventListener("click", this.handleClick);
   };
 
   this.render = () => {
     const { likeCount, viewCount, commentCount, likedByMe } = this.state;
+    const formatCount = value => (value && value > 0 ? formatToK(value) : 0);
 
-    this.$element.innerHTML = `
-      <li>
-        <button class="post-stats-item post-like-button"}>
-          <i class="fa-${likedByMe ? "solid" : "regular"} fa-heart fa-lg"></i>
-          <span class="item-content">${likeCount && likeCount > 0 ? formatToK(likeCount) : 0}</span>
-        </button>
-      </li>
-      <li class="post-stats-item ">
-        <i class="fa-regular fa-comment fa-lg"></i>
-        <span class="item-content">${commentCount ? formatToK(commentCount) : 0}</span>
-      </li>  
-      <li class="post-stats-item ">
-        <i class="fa-solid fa-chart-column fa-lg"></i>
-        <span class="item-content">${viewCount && viewCount > 0 ? formatToK(viewCount) : 0}</span>
-      </li>
-    `;
+    this.$element.innerHTML = "";
+
+    const likeItem = createElement("li", {}, [
+      createElement(
+        "button",
+        {
+          class: "post-stats-item post-like-button",
+          event: [
+            {
+              eventName: "click",
+              handler: this.handleClick,
+            },
+          ],
+        },
+        [
+          createElement("i", {
+            class: `fa-${likedByMe ? "solid" : "regular"} fa-heart fa-lg`,
+          }),
+          createElement("span", {
+            class: "item-content",
+            text: formatCount(likeCount),
+          }),
+        ]
+      ),
+    ]);
+
+    const commentItem = createElement("li", { class: "post-stats-item" }, [
+      createElement("i", {
+        class: "fa-regular fa-comment fa-lg",
+      }),
+      createElement("span", {
+        class: "item-content",
+        text: formatCount(commentCount),
+      }),
+    ]);
+
+    const viewItem = createElement("li", { class: "post-stats-item" }, [
+      createElement("i", {
+        class: "fa-solid fa-chart-column fa-lg",
+      }),
+      createElement("span", {
+        class: "item-content",
+        text: formatCount(viewCount),
+      }),
+    ]);
+
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(likeItem);
+    fragment.appendChild(commentItem);
+    fragment.appendChild(viewItem);
+
+    this.$element.appendChild(fragment);
   };
 
   this.render();
-  this.bindEvents();
 }
 
 export default PostStats;

@@ -1,5 +1,4 @@
 import { $ } from "../../lib/dom.js";
-import Divider from "../../components/Divider.js";
 
 function PostComment({ $target, onSubmit }) {
   this.$target = $target;
