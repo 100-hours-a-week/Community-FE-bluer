@@ -35,6 +35,7 @@ body {
   height: 100%;
   line-height: 1.6;
   position: relative;
+  overflow-y: scroll;
 }
 
 #app {
