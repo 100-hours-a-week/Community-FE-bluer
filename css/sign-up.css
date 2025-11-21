@@ -1,0 +1,29 @@
+/* Sign Up Page Styles */
+
+.signup-page {
+  /* background-color: red; */
+  height: calc(100vh - var(--header-height));
+  min-height: 860px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 41px;
+  justify-content: center;
+  align-items: center;
+}
+
+.signup-button {
+  margin-top: 4px;
+}
+
+.profile-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.error-message {
+  height: 15px;
+}

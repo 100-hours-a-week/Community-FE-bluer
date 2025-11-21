@@ -1,0 +1,36 @@
+@import "./reset.css";
+@import "./common.css";
+@import "./login.css";
+@import "./post-list.css";
+@import "./sign-up.css";
+@import "./user-info.css";
+@import "./post-detail.css";
+@import "./post-add.css";
+@import "./toast.css";
+@import "./modal.css";
+
+* {
+  font-family:
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    sans-serif;
+
+  box-sizing: border-box;
+}
+
+body {
+  height: 100%;
+  background-color: var(--body-bg-color);
+}
+
+#app {
+  height: calc(100vh - var(--header-height));
+}
