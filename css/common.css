@@ -376,3 +376,7 @@ button:hover {
   height: 1px;
   background-color: var(--default-color-grey);
 }
+
+textarea {
+  font-family: "Pretendard";
+}
