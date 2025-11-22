@@ -98,12 +98,17 @@ function UserInfo({ $target }) {
 
     const nicknameChanged = nickname !== initialNickname;
 
-    const enabled = hasAllRequired && nicknameChanged;
+    const enabled = () => {
+      if (nicknameChanged) {
+        return hasAllRequired;
+      }
+      return hasAllRequired;
+    };
 
     const $button = $(".submit-button");
 
-    $button.disabled = !enabled;
-    $button.classList.toggle("active", enabled);
+    $button.disabled = !enabled();
+    $button.classList.toggle("active", enabled());
   };
 
   this.handleWithdrawal = async () => {
