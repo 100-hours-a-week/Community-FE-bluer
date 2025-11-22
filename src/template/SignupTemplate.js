@@ -13,7 +13,6 @@ export const signupTemplate = {
   page: ({ photoButtonHtmlString }) => {
     return `
         <div>
-          <h2 class="page-title bold">회원가입</h2>
           <div class="signup-form-container">
             <form>
               <div>
@@ -33,7 +32,7 @@ export const signupTemplate = {
                 <li class="input-container">
                   <label for="password">비밀번호</label>
                   <input type="password" id="password" name="password" />
-                  <span class="error-message password">1</span>
+                  <span class="error-message password"></span>
                 </li>
                 <li class="input-container">
                   <label for="passwordcheck">비밀번호 확인</label>

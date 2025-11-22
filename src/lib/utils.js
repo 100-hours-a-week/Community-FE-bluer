@@ -51,11 +51,15 @@ export const showModal = ({
   onNegative,
   positiveText,
   negativeText,
+  positiveStyle = "",
+  negativeStyle = "",
 }) => {
   const $modal = document.getElementById("modal");
 
-  $modal.innerHTML = "";
+  document.body.style.overflow = "hidden";
+  $modal.classList.remove("hidden");
 
+  $modal.innerHTML = "";
   $modal.innerHTML = `
   <div class="overlay"></div>
     <div class="modal-wrapper">
@@ -63,8 +67,8 @@ export const showModal = ({
         <h2 class="modal-title bold">${modalTitle}</h2>
         <p class="modal-description">${modalDescription}</p>
         <div class="modal-actions">
-          <button class="negative-button">${negativeText}</button>
-          <button class="positive-button">${positiveText}</button>
+          <button class="negative-button" style=${negativeStyle}>${negativeText}</button>
+          <button class="positive-button" style=${positiveStyle}>${positiveText}</button>
         </div>
       </div>
     </div>
@@ -79,6 +83,7 @@ export const showModal = ({
   const close = () => {
     $modal.classList.add("hidden");
     $modal.innerHTML = "";
+    document.body.style.overflow = "";
   };
 
   const handlePositive = () => {

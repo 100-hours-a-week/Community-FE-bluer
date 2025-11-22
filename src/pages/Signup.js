@@ -50,11 +50,11 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       Object.values(isValid).every(v => v) &&
       this.state.profileImgUrl?.length > 0;
 
-    const $signupButton = $(".signup-button", this.$signupPage);
+    const $submitButton = $(".signup-button", this.$signupPage);
 
-    if ($signupButton) {
-      $signupButton.disabled = !allValid;
-      $signupButton.style.backgroundColor = allValid ? "#7F6AEE" : "#ACA0EB";
+    if ($submitButton) {
+      $submitButton.disabled = !allValid;
+      $submitButton.classList.toggle("active", allValid);
     }
   };
 
@@ -148,7 +148,6 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     if (target.tagName !== "INPUT") {
       return;
     }
-    // TODO: validation check using api
 
     const errorType = this.getFormFieldErrorType(name);
 
@@ -183,7 +182,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       if (response.status === StatusCode.CREATED) {
         showToast("가입 완료");
         setTimeout(() => {
-          this.moveTo("login");
+          this.moveTo("/login");
         }, 500);
       }
     } catch (error) {
@@ -220,7 +219,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
   this.onClickSignInLink = event => {
     event.preventDefault();
 
-    this.moveTo("login");
+    this.moveTo("/login");
   };
 
   this.bindEvents = () => {
@@ -249,6 +248,8 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default Signup;

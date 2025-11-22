@@ -1,6 +1,6 @@
 import { formatToK, formatToLocalDateTime } from "../lib/utils.js";
 
-function PostListItem({ $target, post, onClick }) {
+function PostListItem({ $target, post }) {
   this.$target = $target;
   this.post = post;
   this.$post = document.createElement("li");
@@ -16,44 +16,61 @@ function PostListItem({ $target, post, onClick }) {
       createdAt,
       authorName,
       authorProfileImageUrl,
+      content,
       postImageUrl,
     } = this.post;
 
     const htmlString = `
-          <div class="post-top">
-            <div class="post-title bold">${title}</div>
-            <div class="post-info">
-              <div class="post-info left">
-                <div class="post-info-item"><span>좋아요 ${likeCount ? formatToK(likeCount) : 0}</span></div>
-                <div class="post-info-item"><span>댓글 ${commentCount ? formatToK(commentCount) : 0}</span></div>
-                <div class="post-info-item"><span>조회수 ${viewCount ? formatToK(viewCount) : 0}</span></div>
-              </div>
-              <div class="post-info right">
-                <div class="post-info-item"><span>${createdAt ? formatToLocalDateTime(createdAt) : "-"}</span></div>
-              </div>
-            </div>
+      <div class="post-avatar-container">
+        <div class="post-avatar avatar">
+          <img src="${authorProfileImageUrl}" />
+        </div>
+      </div>
+      <div class="post-info-container">
+        <div class="post-info-container-row">
+          <span class="post-author bold">${authorName}</span>
+          <time>${formatToLocalDateTime(createdAt)}</time>
+        </div>
+      </div>
+      <div class="post-content-container" ">
+        <div>
+          <div class="post-title bold">${title}</div>
+          <div class="post-content">
+            ${content}
           </div>
-          <div class="post-bottom">
-            <div class="post-author-container">
-              <div class="post-avatar avatar">
-                <img src="${authorProfileImageUrl}" />
-              </div>
-              <span class="post-author bold">${authorName}</span>
-            </div>
-          </div>
-        `;
+          ${
+            postImageUrl
+              ? `<div class="post-image-container">
+                <img src=${postImageUrl} />
+              </div>`
+              : ""
+          }
+      </div>
+      <div>
+        <ul class="post-stats">
+          <li>
+            <i class="fa-regular fa-heart fa-lg"></i>
+            <span class="item-content">${likeCount && likeCount > 0 ? formatToK(likeCount) : 0}</span>
+          </li>
+          <li class="post-stats-item ">
+            <i class="fa-regular fa-comment fa-lg"></i>
+            <span class="item-content">${commentCount ? formatToK(commentCount) : 0}</span>
+          </li>  
+          <li class="post-stats-item ">
+            <i class="fa-solid fa-chart-column fa-lg"></i>
+            <span class="item-content">${viewCount && viewCount > 0 ? formatToK(viewCount) : 0}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  `;
 
     this.$post.innerHTML = htmlString;
     this.$target.appendChild(this.$post);
   };
 
-  this.bindEvents = () => {
-    this.$post.addEventListener("click", onClick);
-  };
-
   this.init = () => {
     this.render();
-    this.bindEvents();
   };
 
   this.init();

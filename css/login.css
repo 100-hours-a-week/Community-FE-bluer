@@ -1,7 +1,5 @@
 /* Login Page Styles */
 .login-page {
-  height: calc(100vh - var(--header-height));
-  min-height: 350px;
   display: flex;
   flex-direction: column;
   gap: 41px;
@@ -13,8 +11,15 @@
   }
 
   .login-container {
-    /* display: flex; */
-    /* justify-content: center; */
     text-align: center;
+
+    input {
+      background-color: rgb(245, 245, 245);
+      border: 1px solid rgba(0, 0, 0, 0);
+      padding: 16px;
+      line-height: 21px;
+      font-size: 15px;
+      height: 55px;
+    }
   }
 }

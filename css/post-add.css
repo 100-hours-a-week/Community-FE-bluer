@@ -1,25 +1,21 @@
 .post-add-page {
-  width: 100%;
-  max-width: var(--layout-max-width);
-  justify-self: center;
-  padding-top: 24px;
-  padding-bottom: 48px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 64px;
-  /* background-color: yellow; */
+  padding: 18px 30px;
+
+  input:focus {
+    outline: none;
+  }
+
+  textarea:focus {
+    outline: none;
+  }
 }
 
 .post-add-page > form {
-  /* background-color: red; */
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 26px;
 
   .form-item {
-    /* background-color: lime; */
     display: flex;
     flex-direction: column;
     gap: 16px;
@@ -30,9 +26,35 @@
       line-height: 100%;
     }
 
+    .post-title-input-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    input::placeholder {
+      font-weight: normal;
+      color: var(--default-color-grey);
+    }
+
+    textarea::placeholder {
+      font-weight: normal;
+      color: var(--default-color-grey);
+    }
+
     input.form-item-post-title {
+      width: 100%;
+      font-weight: 600;
       border: none;
-      border-radius: 16px;
+      border-bottom: 1px solid var(--default-color-grey);
+      font-size: 24px;
+      padding-left: 0;
+      line-height: 32px;
+    }
+
+    .title-count {
+      position: absolute;
+      right: 30px;
+      color: var(--secondary-text-color);
     }
 
     input.form-item-post-title.input-readonly {
@@ -46,27 +68,58 @@
       font-family: Pretendard;
       font-size: 16px;
       line-height: 141%;
+      padding-right: 50px;
     }
 
     .form-item-content-area {
       width: 100%;
-      /* background-color: lime; */
+      margin-top: 20px;
 
       textarea {
         width: 100%;
         height: 277px;
-        padding: 24px 12px;
         font-weight: 400;
         font-size: 15px;
         line-height: 141%;
         resize: none;
-        border: none;
         background-color: var(--default-color-white);
-        border-radius: 16px;
+        border: none;
       }
     }
+
+    .form-item-file-input {
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      gap: 30px;
+      margin-bottom: 10px;
+    }
+
+    .file-input-selected-text {
+      width: calc(100% - 70px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      /* border: 1px solid red; */
+      margin: auto 0;
+      cursor: pointer;
+    }
   }
+
   .button-container {
-    text-align: center;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      height: 36px;
+      padding: 0 16px;
+      background-color: var(--disabled);
+      color: var(--primary-button-text);
+      font-weight: normal;
+      border-radius: 10px;
+    }
+
+    button.active {
+      background-color: var(--primary-button-background);
+    }
   }
 }

@@ -15,7 +15,7 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
   this.moveTo = moveTo;
 
   this.element = document.createElement("div");
-  this.element.className = "post-add-page";
+  this.element.className = "post-add-page page-layout";
 
   this.setState = nextState => {
     this.state = { ...this.state, ...nextState };
@@ -23,25 +23,26 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
 
   this.render = () => {
     const htmlString = `
-      <h1 class="page-title bold">게시글 작성</h1>
       <form>
         <div class="form-item">
-          <label>제목 *</label>
-          <input
-            class="form-item-post-title bold"
-            name="title"
-            placeholder="제목을 입력해 주세요. (최대 26글자)"
-            maxlength="26"
-          />
+          <div class="post-title-input-container">
+            <input
+              class="form-item-post-title"
+              name="title"
+              placeholder="제목을 입력해 주세요."
+              maxlength="26"
+            />
+            <span class="title-count">${this.state.title?.length || 0}/26</span>
+          </div>
         </div>
         <div class="form-item">
-          <label>내용 *</label>
           <div class="form-item-content-area">
             <textarea name="content" placeholder="내용을 입력해주세요."></textarea>
             <span class="error-message"></span>
           </div>
         </div>
         <div class="form-item">
+          <div class="divider"></div>
           <label>이미지</label>
           <input class="add-photo-file-input block" type="file" accept="image/png, image/jpeg" />
         </div>
@@ -73,7 +74,7 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
       if (response.status === StatusCode.CREATED) {
         showToast("추가 완료");
         setTimeout(() => {
-          this.moveTo("post-list");
+          this.moveTo("/posts");
         }, 500);
       }
     } catch (error) {
@@ -91,9 +92,17 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
     const { name, value } = event.target;
 
     this.setState({ [name]: value });
-    const hasInput = this.state.title?.length && this.state.content?.length;
+    if (name === "title") {
+      const $titleCount = $(".title-count");
 
-    $("button", this.element).disabled = !hasInput;
+      $titleCount.textContent = `${value.length ?? 0}/26`;
+    }
+    const hasInput =
+      this.state.title?.length > 0 && this.state.content?.length > 0;
+    const $button = $(".submit-button", this.element);
+
+    $button.disabled = !hasInput;
+    $button.classList.toggle("active", hasInput);
   };
 
   this.handleChangeFileInput = event => {
@@ -119,6 +128,8 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default PostCreate;

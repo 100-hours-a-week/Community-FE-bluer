@@ -6,10 +6,10 @@ const state = {
   userId: null,
   // example: {page: 'post-detail', query: {id: 1}}
   // history: [{ page: "signup", query: null }],
-  history: [],
+  currentPage: null,
 };
 
-const VALID_ACTIONS = ["LOGIN", "LOGOUT", "PUSH_STATE", "POP_STATE"];
+const VALID_ACTIONS = ["LOGIN", "LOGOUT", "SET_CURRENT_PAGE"];
 
 const setState = (newState, type) => {
   const prevState = { ...state };
@@ -57,30 +57,10 @@ export const dispatch = (type, payload = {}) => {
       setState({ isLoggedIn: false, userToken: null }, type);
       break;
 
-    /*
-        payload: {page: "PAGE_PATH"}
-        
-        ex) PAGE_PATH: login, signup, user-info, change-password, post-list, post-detail, post-create
-    */
-    case "PUSH_STATE":
-      const newRoute = {
-        page: payload.page,
-        query: payload.query || null,
-      };
-      const pushedHistory = [...state.history, newRoute];
-
-      setState({ history: pushedHistory }, type);
+    case "SET_CURRENT_PAGE":
+      setState({ currentPage: payload.page }, type);
       break;
 
-    case "POP_STATE":
-      if (state.history.length > 1) {
-        const poppedHistory = [...state.history];
-
-        poppedHistory.pop();
-
-        setState({ history: poppedHistory }, type);
-      }
-      break;
     default:
       break;
   }
