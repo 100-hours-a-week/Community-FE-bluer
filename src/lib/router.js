@@ -93,10 +93,12 @@ export const handleRoute = path => {
 };
 
 export const moveToPage = url => {
-  const pageName = getPageNameFromPath(`/${url}`);
+  const pageName = getPageNameFromPath(location.pathname);
 
-  history.pushState(null, "", url);
-  handleRoute(location.pathname);
+  if (location.pathname !== url) {
+    history.pushState(null, "", url);
+    handleRoute(location.pathname);
+  }
 };
 
 export const initRouteHandler = () => {
