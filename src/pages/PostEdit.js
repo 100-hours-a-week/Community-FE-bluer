@@ -4,6 +4,7 @@ import { apiManager } from "../lib/api/apiManager.js";
 import { StatusCode } from "../lib/api/statusCode.js";
 import { $ } from "../lib/dom.js";
 import { uploadToImageBucket } from "../lib/external/imageBucket.js";
+import { moveToPage } from "../lib/router.js";
 
 function PostEdit({ $target, initialState = {}, params }) {
   this.$target = $target;
@@ -15,7 +16,6 @@ function PostEdit({ $target, initialState = {}, params }) {
     selectedFileName: "",
     file: null,
   };
-  this.moveTo = moveTo;
 
   this.element = document.createElement("div");
   this.element.className = "post-add-page page-layout";
@@ -130,8 +130,7 @@ function PostEdit({ $target, initialState = {}, params }) {
   this.modifyPost = async () => {
     try {
       const { title, content, file, postImageUrl } = this.state;
-      const { history } = getState();
-      const { postId } = history[history.length - 1].query;
+      const { postId } = params;
 
       let nextImageUrl = postImageUrl;
 
@@ -149,7 +148,7 @@ function PostEdit({ $target, initialState = {}, params }) {
       if (response.status === StatusCode.OK) {
         showToast("수정 완료");
         setTimeout(() => {
-          this.moveTo("post-detail", { postId });
+          moveToPage(`/posts/${postId}`);
         }, 500);
       }
     } catch (error) {

@@ -4,7 +4,7 @@ import { ERROR_MESSAGES } from "../lib/constants.js";
 import { showToast } from "../lib/utils.js";
 import { apiManager } from "../lib/api/apiManager.js";
 
-function ChangePassword({ $target, initialState = {}, moveTo }) {
+function ChangePassword({ $target, initialState = {} }) {
   this.target = $target;
   this.state = {
     ...initialState,

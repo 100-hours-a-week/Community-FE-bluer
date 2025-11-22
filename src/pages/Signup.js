@@ -182,7 +182,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
       if (response.status === StatusCode.CREATED) {
         showToast("가입 완료");
         setTimeout(() => {
-          this.moveTo("login");
+          this.moveTo("/login");
         }, 500);
       }
     } catch (error) {
@@ -219,7 +219,7 @@ function Signup({ $target, initialState, moveTo, currentPage }) {
   this.onClickSignInLink = event => {
     event.preventDefault();
 
-    this.moveTo("login");
+    this.moveTo("/login");
   };
 
   this.bindEvents = () => {

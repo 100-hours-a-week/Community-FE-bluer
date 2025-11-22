@@ -69,11 +69,11 @@ function PostList({ $target, initialState, currentPage }) {
 
     const postId = $post?.dataset?.postId;
 
-    moveToPage(`posts/${postId}`);
+    moveToPage(`/posts/${postId}`);
   };
 
   this.onClickAddPost = () => {
-    moveToPage("posts/create");
+    moveToPage("/posts/create");
   };
 
   this.appendPosts = async (cursor = null, size = null) => {
