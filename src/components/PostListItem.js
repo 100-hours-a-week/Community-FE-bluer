@@ -1,6 +1,6 @@
 import { formatToK, formatToLocalDateTime } from "../lib/utils.js";
 
-function PostListItem({ $target, post, onClick }) {
+function PostListItem({ $target, post }) {
   this.$target = $target;
   this.post = post;
   this.$post = document.createElement("li");
@@ -69,13 +69,8 @@ function PostListItem({ $target, post, onClick }) {
     this.$target.appendChild(this.$post);
   };
 
-  this.bindEvents = () => {
-    this.$post.addEventListener("click", onClick);
-  };
-
   this.init = () => {
     this.render();
-    this.bindEvents();
   };
 
   this.init();

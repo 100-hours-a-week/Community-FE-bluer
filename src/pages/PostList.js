@@ -97,7 +97,6 @@ function PostList({ $target, initialState, currentPage }) {
         new PostListItem({
           $target: this.$postList,
           post: shortenedPost,
-          onClick: this.onClickPost,
         });
       });
     } catch (error) {
