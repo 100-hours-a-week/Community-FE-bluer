@@ -44,6 +44,8 @@ body {
   position: relative;
   margin: 0 auto;
   background-color: var(--body-bg-color);
+
+  word-break: break-word;
 }
 
 .header {
