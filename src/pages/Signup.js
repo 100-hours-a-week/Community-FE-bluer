@@ -15,10 +15,9 @@ import { StatusCode } from "../lib/api/statusCode.js";
 import { showToast } from "../lib/utils.js";
 import { uploadToImageBucket } from "../lib/external/imageBucket.js";
 
-function Signup({ $target, initialState, moveTo, currentPage }) {
+function Signup({ $target, initialState, moveTo }) {
   this.target = $target;
   this.moveTo = moveTo;
-  this.currentPage = currentPage;
 
   this.state = {
     ...initialState,

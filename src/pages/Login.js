@@ -9,9 +9,8 @@ import { getLoginInputError } from "../lib/validation.js";
 
 import { apiManager } from "../lib/api/apiManager.js";
 
-function Login({ $target, initialState, moveTo, currentPage }) {
+function Login({ $target, initialState, moveTo }) {
   this.target = $target;
-  this.currentPage = currentPage;
   this.moveTo = moveTo;
 
   this.state = {
