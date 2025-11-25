@@ -26,7 +26,9 @@ function App() {
       const result = await apiManager.getUserProfile();
 
       if (result.status === StatusCode.OK) {
-        dispatch("LOGIN");
+        dispatch("LOGIN", {
+          userId: result.data.id,
+        });
       }
     } catch (error) {
       dispatch("LOGOUT");
