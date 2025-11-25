@@ -48,6 +48,16 @@ const getPageNameFromPath = path => {
   return matched?.name ?? "not-found";
 };
 
+const safeCleanUp = instance => {
+  if (instance?.cleanUp) {
+    try {
+      instance.cleanUp();
+    } catch (error) {
+      console.error("Error while cleaning up previous page:", error);
+    }
+  }
+};
+
 export const handleRoute = path => {
   let RouteComponent = null;
   let params = {};
@@ -81,13 +91,13 @@ export const handleRoute = path => {
   dispatch("SET_CURRENT_PAGE", { page: pageName });
 
   if (!RouteComponent) {
-    currentPageInstance?.cleanUp?.();
+    safeCleanUp(currentPageInstance);
     currentPageInstance = null;
     $page.innerHTML = "<h1>404 Not Found</h1>";
     return;
   }
 
-  currentPageInstance?.cleanUp?.();
+  safeCleanUp(currentPageInstance);
 
   $page.innerHTML = "";
 

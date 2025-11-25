@@ -140,9 +140,9 @@ function Login({ $target, initialState, moveTo }) {
   };
 
   this.cleanUp = () => {
-    this.$form.removeEventListener("input", this.handleInput);
-    this.$form.removeEventListener("submit", this.handleSubmit);
-    this.$signupLink.removeEventListener("click", this.handleClick);
+    this.$form?.removeEventListener("input", this.handleInput);
+    this.$form?.removeEventListener("submit", this.handleSubmit);
+    this.$signupLink?.removeEventListener("click", this.handleClick);
   };
 
   this.bindEvents = () => {
