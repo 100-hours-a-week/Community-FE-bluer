@@ -28,7 +28,7 @@
 
 ### 접속
 
-- `localhost:5050`
+- `localhost:5500`
 
 ## App Structure (Vanilla JS)
 
