@@ -302,6 +302,13 @@ function PostDetail({ $target, params, initialState = {} }) {
     this.render();
   };
 
+  this.cleanUp = () => {
+    this.commentList.cleanUp();
+    this.postBasicInfo.cleanUp();
+    this.postComment.cleanUp();
+    this.postStats.cleanUp();
+  };
+
   this.init();
 }
 

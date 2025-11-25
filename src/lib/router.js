@@ -24,6 +24,8 @@ const routes = {
   "/signup": Signup,
 };
 
+let currentPageInstance = null;
+
 const pathToRegex = path => {
   return new RegExp("^" + path.replace(/:([^/]+)/g, "([^/]+)") + "$");
 };
@@ -79,13 +81,17 @@ export const handleRoute = path => {
   dispatch("SET_CURRENT_PAGE", { page: pageName });
 
   if (!RouteComponent) {
+    currentPageInstance?.cleanUp?.();
+    currentPageInstance = null;
     $page.innerHTML = "<h1>404 Not Found</h1>";
     return;
   }
 
+  currentPageInstance?.cleanUp?.();
+
   $page.innerHTML = "";
 
-  new RouteComponent({
+  currentPageInstance = new RouteComponent({
     $target: $page,
     moveTo: moveToPage,
     params,
@@ -93,8 +99,6 @@ export const handleRoute = path => {
 };
 
 export const moveToPage = url => {
-  const pageName = getPageNameFromPath(location.pathname);
-
   if (location.pathname !== url) {
     history.pushState(null, "", url);
     handleRoute(location.pathname);

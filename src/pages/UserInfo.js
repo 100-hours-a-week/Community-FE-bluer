@@ -23,6 +23,11 @@ function UserInfo({ $target }) {
   this.$userInfoPage = document.createElement("div");
   this.$userInfoPage.classList.add("user-info-page", "page-layout");
 
+  this.$form = null;
+  this.$withdrawalButton = null;
+  this.$fileInput = null;
+  this.$addPhotoContainer = null;
+
   this.initErrorMessage = () => {
     const errorElement = $(`.error-message.profile`, this.$signupPage);
 
@@ -146,6 +151,10 @@ function UserInfo({ $target }) {
   this.handleChangeFileInput = event => {
     const file = event.target.files[0];
 
+    if (this.state.profileImgUrl) {
+      URL.revokeObjectURL(this.state.profileImgUrl);
+    }
+
     if (file) {
       const blobUrl = URL.createObjectURL(file);
 
@@ -175,17 +184,36 @@ function UserInfo({ $target }) {
   };
 
   this.bindEvents = () => {
-    const $form = $("form", this.$userInfoPage);
-    const $withdrawalButton = $(".withdrawal-button", this.$userInfoPage);
+    this.$form.addEventListener("input", this.handleInput);
+    this.$form.addEventListener("submit", this.handleSubmit);
+    this.$withdrawalButton.addEventListener(
+      "click",
+      this.handleWithdrawalClick
+    );
+    this.$fileInput.addEventListener("change", this.handleChangeFileInput);
+    this.$addPhotoContainer.addEventListener(
+      "click",
+      this.onHiddenFileInputClick
+    );
+  };
 
-    const $fileInput = $(".add-photo-file-input", this.$userInfoPage);
-    const $addPhotoContainer = $(".add-photo-container", this.$userInfoPage);
-
-    $form.addEventListener("input", this.handleInput);
-    $form.addEventListener("submit", this.handleSubmit);
-    $withdrawalButton.addEventListener("click", this.handleWithdrawalClick);
-    $fileInput.addEventListener("change", this.handleChangeFileInput);
-    $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
+  this.cleanUp = () => {
+    this.$form.removeEventListener("input", this.handleInput);
+    this.$form.removeEventListener("submit", this.handleSubmit);
+    this.$withdrawalButton.removeEventListener(
+      "click",
+      this.handleWithdrawalClick
+    );
+    this.$fileInput.removeEventListener("change", this.handleChangeFileInput);
+    this.$addPhotoContainer.removeEventListener(
+      "click",
+      this.onHiddenFileInputClick
+    );
+    if (this.state.profileImgUrl) {
+      URL.revokeObjectURL(this.state.profileImgUrl);
+      this.state.profileImgUrl = null;
+    }
+    this.state.file = null;
   };
 
   this.render = () => {
@@ -251,6 +279,11 @@ function UserInfo({ $target }) {
     `;
 
     this.target.appendChild(this.$userInfoPage);
+
+    this.$form = $("form", this.$userInfoPage);
+    this.$withdrawalButton = $(".withdrawal-button", this.$userInfoPage);
+    this.$fileInput = $(".add-photo-file-input", this.$userInfoPage);
+    this.$addPhotoContainer = $(".add-photo-container", this.$userInfoPage);
   };
 
   this.init = async () => {

@@ -126,6 +126,15 @@ function PostList({ $target, initialState }) {
     this.$addPostButtonContainer.addEventListener("click", this.onClickAddPost);
   };
 
+  this.cleanUp = () => {
+    this.$postList.removeEventListener("click", this.onClickPost);
+    this.$addPostButtonContainer.removeEventListener(
+      "click",
+      this.onClickAddPost
+    );
+    this.observer.disconnect();
+  };
+
   this.init = async () => {
     await this.appendPosts(null, 5);
 

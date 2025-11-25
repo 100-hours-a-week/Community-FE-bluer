@@ -19,6 +19,8 @@ export default function PostContent({ $target, post }) {
     this.render();
   };
 
+  this.cleanUp = () => {};
+
   this.render = () => {
     const { content, postImageUrl } = this.state;
 

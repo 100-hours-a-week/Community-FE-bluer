@@ -19,6 +19,13 @@ function PostStats({ $target, post, handleClick }) {
     handleClick();
   };
 
+  this.cleanUp = () => {
+    const $button = this.$element.querySelector(".post-like-button");
+    if ($button) {
+      $button.removeEventListener("click", this.handleClick);
+    }
+  };
+
   this.render = () => {
     const { likeCount, viewCount, commentCount, likedByMe } = this.state;
     const formatCount = value => (value && value > 0 ? formatToK(value) : 0);

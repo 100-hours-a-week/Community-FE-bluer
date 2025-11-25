@@ -208,6 +208,10 @@ function Header({ $target, initialState }) {
     this.$header.addEventListener("click", this.handleClick);
   };
 
+  this.cleanUp = () => {
+    this.$header.removeEventListener("click", this.handleClick);
+  };
+
   this.init = async () => {
     const { isLoggedIn, history } = getState();
     this.setState({ isLoggedIn, history });

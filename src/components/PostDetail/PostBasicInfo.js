@@ -62,6 +62,11 @@ export default function PostBasicInfo({ $target, post, onModify, onDelete }) {
     this.isBound = true;
   };
 
+  this.cleanUp = () => {
+    this.$element.removeEventListener("click", this.handleClick);
+    this.isBound = false;
+  };
+
   this.render = () => {
     const { title, authorName, authorProfileImageUrl, createdAt } = this.state;
 

@@ -6,6 +6,9 @@ function PostComment({ $target, onSubmit }) {
   this.$element.classList.add("post-comment-container");
   this.$target.appendChild(this.$element);
 
+  this.$textarea = null;
+  this.$button = null;
+
   this.state = {
     content: "",
     isEditMode: false,
@@ -40,21 +43,24 @@ function PostComment({ $target, onSubmit }) {
     this.init();
   };
 
-  this.bindEvents = () => {
-    const $textarea = $("textarea", this.$element);
-    const $button = $("button", this.$element);
-
+  this.handleTextArea = event => {
     const autoResize = target => {
       target.style.height = "auto";
       target.style.height = `${target.scrollHeight}px`;
     };
 
-    $textarea.addEventListener("input", e => {
-      this.handleInput(e);
-      autoResize(e.target);
-    });
+    this.handleInput(event);
+    autoResize(event.target);
+  };
 
-    $button.addEventListener("click", this.handleSubmit);
+  this.bindEvents = () => {
+    this.$textarea.addEventListener("input", this.handleTextArea);
+    this.$button.addEventListener("click", this.handleSubmit);
+  };
+
+  this.cleanUp = () => {
+    this.$textarea.removeEventListener("input", this.handleTextArea);
+    this.$button.removeEventListener("click", this.handleSubmit);
   };
 
   this.render = () => {
@@ -68,6 +74,9 @@ function PostComment({ $target, onSubmit }) {
         </div>
       </div>
     `;
+
+    this.$textarea = $("textarea", this.$element);
+    this.$button = $("button", this.$element);
   };
 
   this.init = () => {
