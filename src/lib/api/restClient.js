@@ -1,5 +1,3 @@
-import { getState, subscribe } from "../store.js";
-
 const END_POINT = "http://localhost:8080";
 const DEFAULT_TIMEOUT = 5000;
 const commonHeaders = {

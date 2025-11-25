@@ -1,7 +1,9 @@
 import Header from "./components/Header.js";
 import { $ } from "./lib/dom.js";
-import { subscribe } from "./lib/store.js";
+import { dispatch, subscribe } from "./lib/store.js";
 import { initRouteHandler, moveToPage } from "./lib/router.js";
+import { apiManager } from "./lib/api/apiManager.js";
+import { StatusCode } from "./lib/api/statusCode.js";
 
 function App() {
   const $app = $("#app");
@@ -17,8 +19,18 @@ function App() {
     },
   });
 
-  this.init = () => {
+  this.init = async () => {
     this.header.init();
+
+    try {
+      const result = await apiManager.getUserProfile();
+
+      if (result.status === StatusCode.OK) {
+        dispatch("LOGIN");
+      }
+    } catch (error) {
+      dispatch("LOGOUT");
+    }
 
     subscribe((globalState, type) => {
       if (type === "LOGIN") {
@@ -29,7 +41,6 @@ function App() {
     });
 
     initRouteHandler();
-    // this.render();
   };
 }
 
