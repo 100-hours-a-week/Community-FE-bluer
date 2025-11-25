@@ -1,17 +1,15 @@
 const listeners = new Set();
 
-const state = {
+let state = {
   isLoggedIn: false,
   userId: null,
-  // example: {page: 'post-detail', query: {id: 1}}
-  // history: [{ page: "signup", query: null }],
 };
 
 const VALID_ACTIONS = ["LOGIN", "LOGOUT", "ROUTE_CHANGE"];
 
 const setState = (newState, type) => {
   const prevState = { ...state };
-  Object.assign(state, newState);
+  state = { ...state, ...newState };
 
   const changed = Object.keys(newState).some(
     key => prevState[key] !== state[key]
@@ -23,9 +21,6 @@ const setState = (newState, type) => {
 };
 
 export const getState = () => ({ ...state });
-
-export const getCurrentPageInfo = () =>
-  getState().history[getState().history.length - 1];
 
 export const subscribe = listener => {
   listeners.add(listener);
