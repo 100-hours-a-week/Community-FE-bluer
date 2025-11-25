@@ -10,10 +10,10 @@ import { uploadToImageBucket } from "../lib/external/imageBucket.js";
 function UserInfo({ $target }) {
   this.target = $target;
   this.state = {
-    email: "",
-    nickname: "",
+    email: null,
+    nickname: null,
     profileImgUrl: null,
-    initialNickname: "",
+    initialNickname: null,
     file: null,
   };
   this.setState = newState => {
@@ -90,8 +90,25 @@ function UserInfo({ $target }) {
 
     this.setState({ ...this.state, [name]: value.trim() });
 
-    $(".submit-button").disabled =
-      this.state.nickname === this.state.initialNickname;
+    const { email, nickname, profileImgUrl, initialNickname } = this.state;
+
+    const hasAllRequired = [email, nickname, profileImgUrl].every(
+      v => v !== null && v.length > 0
+    );
+
+    const nicknameChanged = nickname !== initialNickname;
+
+    const enabled = () => {
+      if (nicknameChanged) {
+        return hasAllRequired;
+      }
+      return hasAllRequired;
+    };
+
+    const $button = $(".submit-button");
+
+    $button.disabled = !enabled();
+    $button.classList.toggle("active", enabled());
   };
 
   this.handleWithdrawal = async () => {
@@ -173,7 +190,6 @@ function UserInfo({ $target }) {
 
   this.render = () => {
     this.$userInfoPage.innerHTML = `
-    <h2 class="page-title big bold">회원정보수정</h2>
       <div class="signup-form-container">
         <form>
           <div>
@@ -187,7 +203,7 @@ function UserInfo({ $target }) {
                 <div class="profile-image-container">
                   <img
                     class="profile-image"
-                    src=${this.state.profileImgUrl}
+                    src=${this.state.profileImgUrl ?? ""}
                   />
                   <div class="profile-overlay">
                     <div class="profile-overlay-text"><span> 변경 </span></div>
@@ -205,7 +221,7 @@ function UserInfo({ $target }) {
                 name="email"
                 placeholder="이메일을 입력하세요"
                 readonly
-                value=${this.state.email}             
+                value="${this.state.email ?? ""}"
               />
             </li>
             <li class="input-container">
@@ -214,14 +230,16 @@ function UserInfo({ $target }) {
                 type="text"
                 id="nickname"
                 name="nickname"
-                value=${this.state.nickname}
+                value="${this.state.nickname ?? ""}"
               />
               <span class="error-message nickname"></span>
             </li>
           </ul>
-          <button class="submit-button signup-button" disabled type="submit">
-            수정하기
-          </button>
+          <div class="edit-button-container"> 
+            <button class="submit-button" disabled type="submit">
+              <span>수정하기</span>
+            </button>
+          </div>
         </form>
         <div class="withdrawal-button-container">
           <button type="button" class="withdrawal-button">
@@ -241,6 +259,8 @@ function UserInfo({ $target }) {
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default UserInfo;

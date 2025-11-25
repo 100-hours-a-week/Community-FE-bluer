@@ -1,7 +1,11 @@
+import { createElement } from "../../lib/dom.js";
+
 export default function PostContent({ $target, post }) {
-  this.$element = document.createElement("div");
-  this.$element.classList.add("post-basic-info");
   this.$target = $target;
+
+  this.$element = createElement("div", {
+    class: "post-content",
+  });
 
   this.$target.appendChild(this.$element);
 
@@ -18,17 +22,28 @@ export default function PostContent({ $target, post }) {
   this.render = () => {
     const { content, postImageUrl } = this.state;
 
-    this.$element.innerHTML = `
-      <div class="post-content">
-        ${
-          postImageUrl
-            ? `<div class="post-content-image"><img src="${postImageUrl}" /></div>`
-            : ""
-        }
-        <p>${content ?? ""}</p>
-      </div>
-    `;
-  };
+    this.$element.innerHTML = "";
 
-  this.render();
+    if (postImageUrl) {
+      const postImage = createElement(
+        "div",
+        {
+          class: "post-content-image",
+        },
+        [
+          createElement("img", {
+            src: postImageUrl,
+          }),
+        ]
+      );
+
+      this.$element.appendChild(postImage);
+    }
+
+    const postText = createElement("p", {
+      text: content,
+    });
+
+    this.$element.appendChild(postText);
+  };
 }

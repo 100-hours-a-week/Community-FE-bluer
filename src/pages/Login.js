@@ -9,9 +9,8 @@ import { getLoginInputError } from "../lib/validation.js";
 
 import { apiManager } from "../lib/api/apiManager.js";
 
-function Login({ $target, initialState, moveTo, currentPage }) {
+function Login({ $target, initialState, moveTo }) {
   this.target = $target;
-  this.currentPage = currentPage;
   this.moveTo = moveTo;
 
   this.state = {
@@ -75,7 +74,9 @@ function Login({ $target, initialState, moveTo, currentPage }) {
   this.render = () => {
     this.$loginPage.innerHTML = `
       <div class="login-container">
-        <h2 class="page-title bold">로그인</h2>
+        <div>
+          <span class="bold">로그인<span>
+        </div>
         <div>
           <form class="form-input-list">
             <div class="input-container">
@@ -144,12 +145,14 @@ function Login({ $target, initialState, moveTo, currentPage }) {
     const { isLoggedIn } = getState();
 
     if (isLoggedIn) {
-      this.moveTo("post-list");
+      this.moveTo("posts");
       return;
     }
     this.render();
     this.bindEvents();
   };
+
+  this.init();
 }
 
 export default Login;

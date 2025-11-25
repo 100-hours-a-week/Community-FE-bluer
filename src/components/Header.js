@@ -1,15 +1,14 @@
-import { getState, dispatch } from "../lib/store.js";
+import { getState, dispatch, subscribe } from "../lib/store.js";
 import { $ } from "../lib/dom.js";
 import { showToast } from "../lib/utils.js";
 import { apiManager } from "../lib/api/apiManager.js";
+import { moveToPage } from "../lib/router.js";
 
-function Header({ $target, moveTo, toBack, initialState }) {
+function Header({ $target, initialState }) {
   this.target = $target;
-  this.moveTo = moveTo;
-  this.toBack = toBack;
   this.state = { isOpen: false, profileImageUrl: null, ...initialState };
 
-  this.$header = document.createElement("header");
+  this.$header = document.createElement("div");
   this.$header.classList.add("header");
   this.isBound = false;
 
@@ -23,61 +22,118 @@ function Header({ $target, moveTo, toBack, initialState }) {
       "post-edit",
       "post-create",
       "signup",
+      "user-info",
+      "change-password",
     ];
 
     return haveBackButtonPages.includes(page);
   };
 
-  this.renderBackButton = () => {
+  this.renderBackButton = page => {
     return `
       <div class="header-back-button-container"> 
-        <button data-role="back">
-          <img style="height:100%" src="./public/left-arrow.png" />
-        </button>
+        ${
+          this.haveBackButtonOnPage(page)
+            ? `<button class="back-button-container" data-action="router-back">
+              <i class="fa-solid fa-arrow-left fa-xl"></i>
+            </button>`
+            : `<div data-action="back-button-container"></div>`
+        }
       </div>
     `;
   };
 
-  this.render = () => {
-    const { isLoggedIn, history } = getState();
-    const currentPage = history[history.length - 1]?.page ?? "login";
-
-    this.$header.classList.add("header");
-    this.$header.innerHTML = `
-      <div class="header-content">
+  this.renderUserMenu = (isLoggedIn, currentPage) => {
+    if (!isLoggedIn) {
+      if (currentPage === "login") {
+        return ``;
+      }
+      return `<button class="header-login-button" data-action="login">로그인</button>`;
+    }
+    return `
+      <div class="dropdown-button-container">
+        <button class="dropdown-button" data-action="toggle-menu">
+          <div class="avatar">
             ${
-              this.haveBackButtonOnPage(currentPage)
-                ? this.renderBackButton()
-                : `<div style="width: 19px"></div>`
+              this.state.profileImageUrl
+                ? `<img src=${this.state.profileImageUrl} />`
+                : ""
             }
-          <span class="header-title bold">아무 말 대잔치</span>
-          ${
-            isLoggedIn
-              ? `
-                  <div class="dropdown-button-container">
-                    <button class="dropdown-button" data-role="menu">
-                      <div class="avatar">
-                       ${this.state.profileImageUrl ? `<img src=${this.state.profileImageUrl} />` : ""}
-                      </div> 
-                    </button>
-                    <ul class="dropdown-list none">
-                      <li class="dropdown-item" data-action="user-info">회원정보수정</li>
-                      <li class="dropdown-item" data-action="change-password">비밀번호수정</li>
-                      <li class="dropdown-item" data-action="logout">로그아웃</li>
-                    </ul>
-                  </div>
-            `
-              : '<div class="avatar bg-none"></div>'
-          }
-        </div>
+          </div> 
+        </button>
+        <ul class="dropdown-list ${this.state.isOpen ? "" : "none"} ">
+          <li class="dropdown-item">
+            <div>
+              <button data-action="user-info">
+                <span>회원 정보 수정</span>
+              </button>
+            </div>
+          </li>
+          <li class="dropdown-item">
+            <div>
+              <button data-action="change-password">
+                <span>비밀번호 수정</span>
+              </button>
+            </div>
+          </li>
+          <li class="dropdown-item">
+            <div>
+              <button data-action="logout">
+                <span>로그아웃</span>
+              </button>
+            </div>
+          </li>
+        </ul>
       </div>
-      
+    `;
+  };
+
+  const renderLogoContainer = page => {
+    if (page === "user-info") {
+      return `<span class="bold">프로필 편집</span>`;
+    }
+    if (page === "change-password") {
+      return `<span class="bold">비밀번호 변경</span>`;
+    }
+    if (page === "post-create") {
+      return `<span class="bold">커뮤니티 글쓰기</span>`;
+    }
+    if (page === "post-edit") {
+      return `<span class="bold">게시글 수정</span>`;
+    }
+    if (page === "signup") {
+      return `<span class="bold">회원가입</span>`;
+    }
+    return `
+      <button data-action="router-post-list">
+        <div class="header-logo-image-container">
+          <img src="/public/logo.png" />
+        </div>
+      </button>
+    `;
+  };
+
+  this.render = () => {
+    const { isLoggedIn, currentPage } = getState();
+
+    this.$header.innerHTML = `
+          <div class="header-contents-container">
+            ${this.renderBackButton(currentPage)}
+            <div class="header-logo-container">
+                ${renderLogoContainer(currentPage)}
+            </div>
+            <div class="header-container-right">
+              ${this.renderUserMenu(isLoggedIn, currentPage)}
+            </div>
+          </div>
       `;
-    this.target.appendChild(this.$header);
+    if (!this.$header.isConnected) {
+      this.target.appendChild(this.$header);
+    }
   };
 
   this.onBackClick = () => {
-    this.toBack();
+    history.back();
   };
 
   this.onDropdownToggle = () => {
@@ -95,46 +151,44 @@ function Header({ $target, moveTo, toBack, initialState }) {
     }
   };
 
-  this.onDropdownItemClick = target => {
-    const action = target.dataset?.action;
-    const actionMap = {
-      "user-info": () => {
-        this.moveTo("user-info");
-      },
-      "change-password": () => {
-        this.moveTo("change-password");
-      },
-      logout: () => {
-        dispatch("LOGOUT");
-      },
-    };
-
-    this.onDropdownToggle();
-    actionMap[action]?.();
-  };
-
   this.handleClick = event => {
     const { target } = event;
 
-    if (target.closest(".header-back-button-container")) {
-      this.onBackClick();
-    } else if (target.closest(".dropdown-button")) {
-      this.onDropdownToggle();
-    } else if (target.closest(".dropdown-item")) {
-      this.onDropdownItemClick(event.target);
-    }
-  };
-
-  this.bindEvents = () => {
-    if (this.isBound) {
+    const $closestButton = target.closest("button");
+    if (!$closestButton) {
       return;
     }
 
-    this.boundHeaderClick = event => {
-      this.handleClick(event);
+    const { dataset } = $closestButton;
+    const action = dataset?.action;
+
+    const actionMap = {
+      "router-post-list": () => {
+        moveToPage("/posts");
+      },
+      login: () => {
+        moveToPage("/login");
+      },
+      "toggle-menu": () => {
+        this.onDropdownToggle();
+      },
+      "router-back": () => {
+        this.onBackClick();
+      },
+      "user-info": () => {
+        moveToPage("/user-info");
+        this.onDropdownToggle();
+      },
+      "change-password": () => {
+        moveToPage("/change-password");
+        this.onDropdownToggle();
+      },
+      logout: () => {
+        dispatch("LOGOUT");
+        this.onDropdownToggle();
+      },
     };
-    this.$header.addEventListener("click", this.boundHeaderClick);
-    this.isBound = true;
+    actionMap[action]?.();
   };
 
   this.getUserProfile = async () => {
@@ -150,6 +204,10 @@ function Header({ $target, moveTo, toBack, initialState }) {
     }
   };
 
+  this.bindEvents = () => {
+    this.$header.addEventListener("click", this.handleClick);
+  };
+
   this.init = async () => {
     const { isLoggedIn, history } = getState();
     this.setState({ isLoggedIn, history });
@@ -158,8 +216,19 @@ function Header({ $target, moveTo, toBack, initialState }) {
       await this.getUserProfile();
     }
 
-    this.render();
     this.bindEvents();
+
+    subscribe(async (globalState, type) => {
+      if (type === "SET_CURRENT_PAGE") {
+        this.render();
+      } else if (type === "LOGIN") {
+        this.setState({ isLoggedIn: true });
+        await this.getUserProfile();
+        this.render();
+      } else if (type === "LOGOUT") {
+        this.setState({ isLoggedIn: false });
+      }
+    });
   };
 }
 

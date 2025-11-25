@@ -1,7 +1,7 @@
 /* toast */
 #toast-container {
   position: fixed;
-  bottom: 200px;
+  bottom: 10%;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -12,8 +12,8 @@
 }
 
 .toast {
-  background: var(--button-bg-color);
-  color: white;
+  background: var(--primary-button-background);
+  color: var(--primary-button-text);
   padding: 10px 16px;
   border-radius: 30px;
   font-size: 14px;
