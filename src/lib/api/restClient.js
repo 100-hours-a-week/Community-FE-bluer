@@ -47,25 +47,13 @@ async function extractDataFromResponse(promise) {
   return { status: response.status, data: responseData.data };
 }
 
-let authHeader = {};
-
-const updateAuthHeader = state => {
-  authHeader = state.isLoggedIn
-    ? {
-        Authorization: `Bearer ${state.userToken}`,
-      }
-    : {};
-};
-
-subscribe(updateAuthHeader);
-
 const isFetchError = err => err?.name === "AbortError" || err instanceof Error;
 
 async function request(url, options = {}) {
   const mergedOptions = {
+    credentials: "include",
     ...options,
     headers: {
-      ...authHeader,
       ...commonHeaders,
       ...(options.headers || {}),
     },

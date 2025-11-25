@@ -203,6 +203,10 @@ body {
   color: var(--default-color-grey);
 }
 
+.submit-button.isLoading {
+  cursor: wait;
+}
+
 .link-container {
   margin-top: 12px;
 }

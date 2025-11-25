@@ -8,11 +8,10 @@
 
 ### 구조 요약
 
-| 역할                  | 포트                              | 설명                           |
-| --------------------- | --------------------------------- | ------------------------------ |
-| Frontend              | `http://localhost:5500`           | live-server로 정적 페이지 실행 |
-| Backend (Spring Boot) | `http://localhost:8080`           | Java Spring REST API 서버      |
-| Proxy                 | `http://localhost:5501/proxy/...` | CORS 우회용 프록시 서버        |
+| 역할                  | 포트                    | 설명                      |
+| --------------------- | ----------------------- | ------------------------- |
+| Frontend              | `http://localhost:5500` | live-server로 페이지 실행 |
+| Backend (Spring Boot) | `http://localhost:8080` | Java Spring REST API 서버 |
 
 ## 실행 방법
 
@@ -25,20 +24,11 @@
 ### 2️⃣ 프론트엔드 실행
 
 - `live-server`
-  - 기본 포트는 5500
-    페이지 주소는 `http://localhost:5500`
-
-### 3️⃣ 프록시 서버 실행 (CORS 우회)
-
-- Install
-  - `npm install -g local-cors-proxy`
-
-- 실행
-  - `lcp --proxyUrl http://localhost:8080 --port 5501`
+  - `npx live-server . --port=5500`
 
 ### 접속
 
-- `localhost:8080`
+- `localhost:5050`
 
 ## App Structure (Vanilla JS)
 

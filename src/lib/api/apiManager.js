@@ -8,9 +8,7 @@ export const apiManager = {
   login: ({ email, password }) => {
     const params = { email, password };
 
-    return restClient.post("/users/signin", params, {
-      credentials: "include",
-    });
+    return restClient.post("/users/signin", params);
   },
   signUp: ({ email, password, nickname, profileImageUrl = TEMPORARY_URL }) => {
     const params = { email, password, nickname, profileImageUrl };

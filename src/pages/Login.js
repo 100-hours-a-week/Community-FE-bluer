@@ -55,7 +55,6 @@ function Login({ $target, initialState, moveTo }) {
       $(".submit-button", this.$loginPage).classList.add("isLoading");
       setTimeout(() => {
         dispatch("LOGIN", {
-          userToken: result.data.token,
           userId: result.data.userId,
         });
       }, LOGIN_DELAY_MILLISECONDS);

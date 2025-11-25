@@ -2,7 +2,6 @@ const listeners = new Set();
 
 const state = {
   isLoggedIn: false,
-  userToken: null,
   userId: null,
   // example: {page: 'post-detail', query: {id: 1}}
   // history: [{ page: "signup", query: null }],
@@ -46,7 +45,6 @@ export const dispatch = (type, payload = {}) => {
       setState(
         {
           isLoggedIn: true,
-          userToken: payload.userToken,
           userId: payload.userId,
         },
         type
@@ -54,7 +52,12 @@ export const dispatch = (type, payload = {}) => {
       break;
 
     case "LOGOUT":
-      setState({ isLoggedIn: false, userToken: null }, type);
+      setState(
+        {
+          isLoggedIn: false,
+        },
+        type
+      );
       break;
 
     case "SET_CURRENT_PAGE":
