@@ -2,7 +2,7 @@ import { getState, dispatch, subscribe } from "../lib/store.js";
 import { $ } from "../lib/dom.js";
 import { showToast } from "../lib/utils.js";
 import { apiManager } from "../lib/api/apiManager.js";
-import { moveToPage } from "../lib/router.js";
+import { moveToPage, getPageNameFromPath } from "../lib/router.js";
 
 function Header({ $target, initialState }) {
   this.target = $target;
@@ -114,7 +114,8 @@ function Header({ $target, initialState }) {
   };
 
   this.render = () => {
-    const { isLoggedIn, currentPage } = getState();
+    const { isLoggedIn } = getState();
+    const currentPage = getPageNameFromPath(location.pathname);
 
     this.$header.innerHTML = `
           <div class="header-contents-container">
@@ -213,24 +214,26 @@ function Header({ $target, initialState }) {
   };
 
   this.init = async () => {
-    const { isLoggedIn, history } = getState();
-    this.setState({ isLoggedIn, history });
+    const { isLoggedIn } = getState();
+    this.setState({ isLoggedIn });
 
     if (this.state.isLoggedIn) {
       await this.getUserProfile();
     }
 
+    this.render();
     this.bindEvents();
 
     subscribe(async (globalState, type) => {
-      if (type === "SET_CURRENT_PAGE") {
-        this.render();
-      } else if (type === "LOGIN") {
+      if (type === "LOGIN") {
         this.setState({ isLoggedIn: true });
         await this.getUserProfile();
         this.render();
       } else if (type === "LOGOUT") {
-        this.setState({ isLoggedIn: false });
+        this.setState({ isLoggedIn: false, profileImageUrl: null, isOpen: false });
+        this.render();
+      } else if (type === "ROUTE_CHANGE") {
+        this.render();
       }
     });
   };

@@ -42,7 +42,7 @@ const routeNamePatterns = [
   { regex: pathToRegex("/user/change-password"), name: "change-password" },
 ];
 
-const getPageNameFromPath = path => {
+export const getPageNameFromPath = path => {
   const matched = routeNamePatterns.find(r => r.regex.test(path));
 
   return matched?.name ?? "not-found";
@@ -88,12 +88,12 @@ export const handleRoute = path => {
   }
 
   const pageName = getPageNameFromPath(location.pathname);
-  dispatch("SET_CURRENT_PAGE", { page: pageName });
 
   if (!RouteComponent) {
     safeCleanUp(currentPageInstance);
     currentPageInstance = null;
     $page.innerHTML = "<h1>404 Not Found</h1>";
+    dispatch("ROUTE_CHANGE", { pageName, path: location.pathname });
     return;
   }
 
@@ -106,6 +106,8 @@ export const handleRoute = path => {
     moveTo: moveToPage,
     params,
   });
+
+  dispatch("ROUTE_CHANGE", { pageName, path: location.pathname });
 };
 
 export const moveToPage = url => {

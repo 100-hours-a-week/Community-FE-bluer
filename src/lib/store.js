@@ -5,10 +5,9 @@ const state = {
   userId: null,
   // example: {page: 'post-detail', query: {id: 1}}
   // history: [{ page: "signup", query: null }],
-  currentPage: null,
 };
 
-const VALID_ACTIONS = ["LOGIN", "LOGOUT", "SET_CURRENT_PAGE"];
+const VALID_ACTIONS = ["LOGIN", "LOGOUT", "ROUTE_CHANGE"];
 
 const setState = (newState, type) => {
   const prevState = { ...state };
@@ -60,8 +59,8 @@ export const dispatch = (type, payload = {}) => {
       );
       break;
 
-    case "SET_CURRENT_PAGE":
-      setState({ currentPage: payload.page }, type);
+    case "ROUTE_CHANGE":
+      listeners.forEach(listener => listener({ ...state }, type, payload));
       break;
 
     default:
