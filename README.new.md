@@ -7,14 +7,13 @@
 ## 특징
 
 - 단일 페이지 애플리케이션입니다.
-- Spring Boot 백엔드(`http://localhost:8080`)와 쿠키 기반 세션으로 통신하며, `history.pushState`로 라우팅을 관리합니다.
+- Spring Boot 백엔드(`http://localhost:8080`)와 쿠키 기반으로 통신하며, `history.pushState`로 라우팅을 관리합니다.
 - 빌드 도구 없이 정적 자바스크립트 모듈만 사용하므로, 정적 서버만 띄우면 즉시 실행됩니다.
 
 ## 실행 방법
 
-1. 백엔드 서버를 먼저 실행합니다. [백엔드 링크]()
-
-- Spring Boot 서버를 `http://localhost:8080`에서 실행합니다. (예: `./gradlew bootRun`)
+1. 백엔드 서버를 먼저 실행합니다. [백엔드 링크](https://github.com/100-hours-a-week/ktb3-bluer-full/tree/main/week04/main-assignment/community)
+   - Spring Boot 서버를 `http://localhost:8080`에서 실행합니다. (예: `./gradlew bootRun`)
 
 2. 프론트엔드를 루트에서 실행합니다.
    ```bash
@@ -29,6 +28,33 @@
 - **게시글**: 목록 무한 스크롤(5개씩 추가 로드), 작성/수정/삭제, Cloudinary 이미지 업로드, 상세 보기, 좋아요 토글, 조회수·댓글수·좋아요수 표시.
 - **댓글**: 작성/수정/삭제, 작성자만 수정·삭제 가능하도록 프론트 단 권한 체크.
 - **UX 요소**: 헤더 드롭다운(뒤로가기/로그인/프로필/비밀번호 변경/로그아웃), 공용 토스트 알림, 공용 모달 확인창.
+
+### Demo 영상
+<table>
+  <tr>
+    <td style="vertical-align: top; padding: 10px;">
+      <strong>회원가입 · 로그인</strong><br/>
+      <video src="https://github.com/user-attachments/assets/0645526e-4f31-4f1f-b014-9b7cb20dce25" controls width="360"></video>
+    </td>
+    <td style="vertical-align: top; padding: 10px;">
+      <strong>로그인/로그아웃</strong><br/>
+      <video src="https://github.com/user-attachments/assets/f42b2e06-c87b-46d1-8144-a9180c5f4fee" controls width="360"></video>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top; padding: 10px;">
+      <strong>게시글 조회/작성/수정/삭제</strong><br/>
+      <video src="https://github.com/user-attachments/assets/dbece29b-8fed-4afa-b73a-4b63838f12a8" controls width="360"></video>
+    </td>
+    <td style="vertical-align: top; padding: 10px;">
+      <strong>게시글 좋아요 Toggle / 댓글</strong><br/>
+      <video src="https://github.com/user-attachments/assets/5d47fc2b-d213-415f-b8fd-409e597f47e7" controls width="360"></video>
+    </td>
+  </tr>
+</table>
+
+
+
 
 ## 디렉토리 구조 (요약)
 
@@ -77,21 +103,17 @@ index.html          # 엔트리 (Pretendard, Font Awesome CDN 포함)
 ### Single Page Application
 
 - [`src/lib/router.js`](./src/lib/router.js)는 `history.pushState` 기반 SPA 라우팅을 처리하고, 잘못된 경로는 404 화면을 렌더링합니다.
+  - 라우팅 관련 세부 로직은 [`route.md`](./route.md)를 참고해 주세요.
 - [`src/lib/api/apiManager.js`](./src/lib/api/apiManager.js)가 모든 REST 호출을 모으고, `restClient`에서 공통 헤더와 타임아웃, `credentials: "include"`를 설정합니다.
 - 게시글/댓글 이미지 업로드는 Cloudinary REST API를 직접 호출합니다(`uploadToImageBucket`).
 
-#### 라우팅
 
-| 경로                  | 화면                      |
-| --------------------- | ------------------------- |
-| `/` , `/posts`        | 게시글 목록 (무한 스크롤) |
-| `/posts/create`       | 게시글 작성               |
-| `/posts/:postId`      | 게시글 상세/좋아요/댓글   |
-| `/posts/:postId/edit` | 게시글 수정               |
-| `/login`              | 로그인                    |
-| `/signup`             | 회원가입                  |
-| `/user-info`          | 프로필 수정/탈퇴          |
-| `/change-password`    | 비밀번호 변경             |
+### Vanilla JS 기반 Mini Component System
+* 학습을 위해 일부 컴포넌트엔 React의 Element 생성 방식과 유사하게 Element를 생성하도록 구현했습니다.
+* 적용 코드:
+  - [`src/lib/dom.js`](./src/lib/dom.js)
+  - [`src/components/PostDetail/PostStats.js`](./src/components/PostDetail/PostStats.js)
+  - [`src/components/PostDetail/PostContent.js`](./src/components/PostDetail/PostContent.js)
 
 ## 이외
 
