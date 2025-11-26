@@ -3,9 +3,10 @@ const listeners = new Set();
 let state = {
   isLoggedIn: false,
   userId: null,
+  profileImageUrl: null,
 };
 
-const VALID_ACTIONS = ["LOGIN", "LOGOUT", "ROUTE_CHANGE"];
+const VALID_ACTIONS = ["LOGIN", "LOGOUT", "ROUTE_CHANGE", "UPDATE_PROFILE"];
 
 const setState = (newState, type) => {
   const prevState = { ...state };
@@ -40,6 +41,7 @@ export const dispatch = (type, payload = {}) => {
         {
           isLoggedIn: true,
           userId: payload.userId,
+          profileImageUrl: payload.profileImageUrl ?? state.profileImageUrl,
         },
         type
       );
@@ -49,10 +51,20 @@ export const dispatch = (type, payload = {}) => {
       setState(
         {
           isLoggedIn: false,
+          userId: null,
+          profileImageUrl: null,
         },
         type
       );
       break;
+
+    case "UPDATE_PROFILE": {
+      if (payload?.profileImageUrl !== undefined) {
+        setState({ profileImageUrl: payload.profileImageUrl }, type);
+      }
+
+      break;
+    }
 
     case "ROUTE_CHANGE":
       listeners.forEach(listener => listener({ ...state }, type, payload));

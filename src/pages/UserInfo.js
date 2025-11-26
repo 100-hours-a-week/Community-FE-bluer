@@ -83,6 +83,15 @@ function UserInfo({ $target }) {
         nickname,
         profileImageUrl: nextProfileUrl,
       });
+
+      dispatch("UPDATE_PROFILE", { profileImageUrl: nextProfileUrl });
+
+      this.setState({
+        profileImgUrl: nextProfileUrl,
+        initialNickname: nickname,
+        file: null,
+      });
+      this.renderProfileImage();
       showToast("수정 완료");
     } catch (error) {
       console.error(error);

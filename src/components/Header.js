@@ -224,13 +224,18 @@ function Header({ $target, initialState }) {
     this.render();
     this.bindEvents();
 
-    subscribe(async (globalState, type) => {
+    subscribe(async (_globalState, type, changedState) => {
       if (type === "LOGIN") {
         this.setState({ isLoggedIn: true });
         await this.getUserProfile();
         this.render();
       } else if (type === "LOGOUT") {
         this.setState({ isLoggedIn: false, profileImageUrl: null, isOpen: false });
+        this.render();
+      } else if (type === "UPDATE_PROFILE" && changedState?.profileImageUrl !== undefined) {
+        this.setState({
+          profileImageUrl: changedState.profileImageUrl,
+        });
         this.render();
       } else if (type === "ROUTE_CHANGE") {
         this.render();
