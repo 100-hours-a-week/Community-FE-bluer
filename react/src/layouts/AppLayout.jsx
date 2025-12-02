@@ -8,7 +8,7 @@ function AppLayout() {
     <div className="flex h-screen flex-col">
       <Header />
 
-      <main className="flex-1 overflow-y-auto">
+      <main className="mt-(--height-header-height) flex-1 overflow-y-auto">
         <Outlet />
       </main>
 

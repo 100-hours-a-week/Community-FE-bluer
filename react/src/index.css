@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 @theme {
+  /* Key color */
+  --color-blue: #1b9ae5;
+
   --color-base-white: #ffffff;
   --color-base-black: #000000;
   --color-base-grey: #fafafa;
@@ -15,17 +18,21 @@
 
   --color-text-primary: #000000;
 
-  --font-base: "Inter", "Pretendard", sans-serif;
+  --font-base: system-ui, "Inter", "Pretendard", sans-serif;
+
+  --height-header-height: 60px;
+  --maxwidth-app-layout: 640px;
 }
 
 body {
   background-color: var(--color-base-grey);
   font-family: var(--font-base);
   color: var(--color-text-primary);
+  line-height: 1.4;
 }
 
 #root {
-  max-width: 480px;
+  max-width: var(--maxwidth-app-layout);
   margin: 0 auto;
   background-color: var(--color-base-white);
   min-height: 100vh;

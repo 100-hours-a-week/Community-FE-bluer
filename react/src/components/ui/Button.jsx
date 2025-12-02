@@ -2,7 +2,7 @@ import { cva } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 
 const buttonStyles = cva(
-  "inline-flex items-center justify-center rounded-md font-medium transition disabled:cursor-not-allowed",
+  "inline-flex items-center  text-center rounded-md font-medium transition disabled:cursor-not-allowed leading-8",
   {
     variants: {
       variant: {
@@ -15,9 +15,9 @@ const buttonStyles = cva(
         false: "",
       },
       size: {
-        sm: "px-3 py-2 text-sm",
-        md: "px-4 py-2 text-md",
-        lg: "px-5 py-3 text-lg",
+        sm: "px-3",
+        md: "px-4",
+        lg: "px-5",
       },
     },
     defaultVariants: {
