@@ -1,10 +1,13 @@
-// src/router/index.jsx
 import { createBrowserRouter } from "react-router-dom";
 
+import { routePatterns } from "@/hooks/useRouteName";
 import AppLayout from "@/layouts/AppLayout";
 import RootLayout from "@/layouts/RootLayout";
 
-import PostList from "@/pages/PostList";
+const routes = routePatterns.map(({ pattern, page }) => ({
+  path: pattern,
+  element: page,
+}));
 
 export const router = createBrowserRouter([
   {
@@ -12,7 +15,7 @@ export const router = createBrowserRouter([
     children: [
       {
         element: <AppLayout />,
-        children: [{ path: "/", element: <PostList /> }],
+        children: routes,
       },
     ],
   },

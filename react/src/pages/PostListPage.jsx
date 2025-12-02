@@ -1,4 +1,4 @@
-function PostList() {
+function PostListPage() {
   return (
     <>
       postList
@@ -14,4 +14,4 @@ function PostList() {
   );
 }
 
-export default PostList;
+export default PostListPage;
