@@ -28,7 +28,7 @@ const buttonStyles = cva(
   }
 );
 
-export default function Button({ variant, disabled, size, className, children, ...props }) {
+function Button({ variant, disabled, size, className, children, ...props }) {
   return (
     <button
       className={cn(buttonStyles({ variant, disabled, size }), className)}
@@ -39,3 +39,5 @@ export default function Button({ variant, disabled, size, className, children, .
     </button>
   );
 }
+
+export default Button;
