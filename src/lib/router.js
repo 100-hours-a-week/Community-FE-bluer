@@ -24,6 +24,8 @@ const routes = {
   "/signup": Signup,
 };
 
+let currentPageInstance = null;
+
 const pathToRegex = path => {
   return new RegExp("^" + path.replace(/:([^/]+)/g, "([^/]+)") + "$");
 };
@@ -40,10 +42,20 @@ const routeNamePatterns = [
   { regex: pathToRegex("/user/change-password"), name: "change-password" },
 ];
 
-const getPageNameFromPath = path => {
+export const getPageNameFromPath = path => {
   const matched = routeNamePatterns.find(r => r.regex.test(path));
 
   return matched?.name ?? "not-found";
+};
+
+const safeCleanUp = instance => {
+  if (instance?.cleanUp) {
+    try {
+      instance.cleanUp();
+    } catch (error) {
+      console.error("Error while cleaning up previous page:", error);
+    }
+  }
 };
 
 export const handleRoute = path => {
@@ -76,25 +88,29 @@ export const handleRoute = path => {
   }
 
   const pageName = getPageNameFromPath(location.pathname);
-  dispatch("SET_CURRENT_PAGE", { page: pageName });
 
   if (!RouteComponent) {
+    safeCleanUp(currentPageInstance);
+    currentPageInstance = null;
     $page.innerHTML = "<h1>404 Not Found</h1>";
+    dispatch("ROUTE_CHANGE", { pageName, path: location.pathname });
     return;
   }
 
+  safeCleanUp(currentPageInstance);
+
   $page.innerHTML = "";
 
-  new RouteComponent({
+  currentPageInstance = new RouteComponent({
     $target: $page,
     moveTo: moveToPage,
     params,
   });
+
+  dispatch("ROUTE_CHANGE", { pageName, path: location.pathname });
 };
 
 export const moveToPage = url => {
-  const pageName = getPageNameFromPath(location.pathname);
-
   if (location.pathname !== url) {
     history.pushState(null, "", url);
     handleRoute(location.pathname);

@@ -20,6 +20,9 @@ function PostEdit({ $target, initialState = {}, params }) {
   this.element = document.createElement("div");
   this.element.className = "post-add-page page-layout";
 
+  this.$form = null;
+  this.$fileInputButton = null;
+
   this.setState = nextState => {
     this.state = { ...this.state, ...nextState };
   };
@@ -76,6 +79,9 @@ function PostEdit({ $target, initialState = {}, params }) {
 
     this.$fileInput = $(".post-image-input", this.element);
     this.$fileStatusText = $(".file-input-selected-text", this.element);
+
+    this.$form = $("form", this.element);
+    this.$fileInputButton = $(".file-input-button", this.element);
   };
 
   this.getPost = async postId => {
@@ -163,20 +169,29 @@ function PostEdit({ $target, initialState = {}, params }) {
     this.modifyPost();
   };
 
-  this.bindEvents = () => {
-    const $form = $("form", this.element);
-    const $fileInputButton = $(".file-input-button", this.element);
+  this.handleClickFileInput = () => {
+    this.$fileInput?.click();
+  };
 
-    if (!$form) {
+  this.bindEvents = () => {
+    if (!this.$form) {
       return;
     }
 
-    $form.addEventListener("submit", this.handleSubmit);
-    $form.addEventListener("input", this.handleInput);
-    $fileInputButton?.addEventListener("click", () => {
-      this.$fileInput?.click();
-    });
+    this.$form.addEventListener("submit", this.handleSubmit);
+    this.$form.addEventListener("input", this.handleInput);
+    this.$fileInputButton?.addEventListener("click", this.handleClickFileInput);
     this.$fileInput?.addEventListener("change", this.handleFileChange);
+  };
+
+  this.cleanUp = () => {
+    this.$form.removeEventListener("submit", this.handleSubmit);
+    this.$form.removeEventListener("input", this.handleInput);
+    this.$fileInputButton?.removeEventListener(
+      "click",
+      this.handleClickFileInput
+    );
+    this.$fileInput?.removeEventListener("change", this.handleFileChange);
   };
 
   this.init = async () => {

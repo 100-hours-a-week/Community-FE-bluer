@@ -24,6 +24,8 @@ function Login({ $target, initialState, moveTo }) {
   };
   this.$loginPage = document.createElement("div");
   this.$loginPage.classList.add("login-page", "page-layout");
+  this.$form = null;
+  this.$signupLink = null;
 
   this.renderErrorMessages = errorType => {
     const $emailErrorMessage = $(".error-message.email", this.$loginPage);
@@ -55,7 +57,6 @@ function Login({ $target, initialState, moveTo }) {
       $(".submit-button", this.$loginPage).classList.add("isLoading");
       setTimeout(() => {
         dispatch("LOGIN", {
-          userToken: result.data.token,
           userId: result.data.userId,
         });
       }, LOGIN_DELAY_MILLISECONDS);
@@ -98,9 +99,11 @@ function Login({ $target, initialState, moveTo }) {
     `;
 
     this.target.appendChild(this.$loginPage);
+    this.$form = $("form", this.$loginPage);
+    this.$signupLink = $(".link-container.signup a", this.$loginPage);
   };
 
-  this.handleSubmit = () => {
+  this.onSubmit = () => {
     this.setState({ isErrorEmail: false, isErrorPassword: false });
 
     const { errorType } = getLoginInputError(
@@ -126,19 +129,26 @@ function Login({ $target, initialState, moveTo }) {
     this.setState({ ...this.state, [name]: value });
   };
 
-  this.bindEvents = () => {
-    const $form = $("form", this.$loginPage);
-    const $signupLink = $(".link-container.signup a", this.$loginPage);
+  this.handleSubmit = event => {
+    event.preventDefault();
+    this.onSubmit();
+  };
 
-    $form.addEventListener("input", this.handleInput);
-    $form.addEventListener("submit", event => {
-      event.preventDefault();
-      this.handleSubmit();
-    });
-    $signupLink.addEventListener("click", event => {
-      event.preventDefault();
-      this.moveTo("signup");
-    });
+  this.handleClick = event => {
+    event.preventDefault();
+    this.moveTo("signup");
+  };
+
+  this.cleanUp = () => {
+    this.$form?.removeEventListener("input", this.handleInput);
+    this.$form?.removeEventListener("submit", this.handleSubmit);
+    this.$signupLink?.removeEventListener("click", this.handleClick);
+  };
+
+  this.bindEvents = () => {
+    this.$form.addEventListener("input", this.handleInput);
+    this.$form.addEventListener("submit", this.handleSubmit);
+    this.$signupLink.addEventListener("click", this.handleClick);
   };
 
   this.init = () => {

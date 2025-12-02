@@ -69,6 +69,8 @@ function PostListItem({ $target, post }) {
     this.$target.appendChild(this.$post);
   };
 
+  this.cleanUp = () => {};
+
   this.init = () => {
     this.render();
   };

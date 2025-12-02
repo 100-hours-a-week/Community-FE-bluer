@@ -39,6 +39,13 @@ function Signup({ $target, initialState, moveTo }) {
   this.$signupPage.classList.add("signup-page", "page-layout");
   this.$errorElement = name => $(`.error-message.${name}`, this.$signupPage);
 
+  this.$form = null;
+  this.$fileInput = null;
+  this.$addPhotoContainer = null;
+  this.$signInLink = null;
+
+  this.target.appendChild(this.$signupPage);
+
   this.setState = newState => {
     this.state = { ...this.state, ...newState };
   };
@@ -199,6 +206,10 @@ function Signup({ $target, initialState, moveTo }) {
   this.handleChangeFileInput = event => {
     const file = event.target.files[0];
 
+    if (this.state.profileImgUrl) {
+      URL.revokeObjectURL(this.state.profileImgUrl);
+    }
+
     if (!file) {
       this.setState({ profileImgUrl: null });
       this.initFileInput();
@@ -222,23 +233,43 @@ function Signup({ $target, initialState, moveTo }) {
   };
 
   this.bindEvents = () => {
-    const $form = $("form", this.$signupPage);
-    const $fileInput = $(".add-photo-file-input", this.$signupPage);
-    const $addPhotoContainer = $(".add-photo-container", this.$signupPage);
-    const $signInLink = $(".link-container.login a", this.$signupPage);
+    this.$form.addEventListener("input", this.handleInput);
+    this.$form.addEventListener("blur", this.handleBlur, true);
+    this.$form.addEventListener("submit", this.handleSubmit);
+    this.$fileInput.addEventListener("change", this.handleChangeFileInput);
+    this.$addPhotoContainer.addEventListener(
+      "click",
+      this.onHiddenFileInputClick
+    );
+    this.$signInLink.addEventListener("click", this.onClickSignInLink);
+  };
 
-    $form.addEventListener("input", this.handleInput);
-    $form.addEventListener("blur", this.handleBlur, true);
-    $form.addEventListener("submit", this.handleSubmit);
-    $fileInput.addEventListener("change", this.handleChangeFileInput);
-    $addPhotoContainer.addEventListener("click", this.onHiddenFileInputClick);
-    $signInLink.addEventListener("click", this.onClickSignInLink);
+  this.cleanUp = () => {
+    this.$form.removeEventListener("input", this.handleInput);
+    this.$form.removeEventListener("blur", this.handleBlur, true);
+    this.$form.removeEventListener("submit", this.handleSubmit);
+    this.$fileInput.removeEventListener("change", this.handleChangeFileInput);
+    this.$addPhotoContainer.removeEventListener(
+      "click",
+      this.onHiddenFileInputClick
+    );
+    this.$signInLink.removeEventListener("click", this.onClickSignInLink);
+    if (this.state.profileImgUrl) {
+      URL.revokeObjectURL(this.state.profileImgUrl);
+      this.state.profileImgUrl = null;
+    }
+    this.state.file = null;
   };
 
   this.render = () => {
     this.$signupPage.innerHTML = signupTemplate.page({
       photoButtonHtmlString: signupTemplate.photoButton(this.state),
     });
+
+    this.$form = $("form", this.$signupPage);
+    this.$fileInput = $(".add-photo-file-input", this.$signupPage);
+    this.$addPhotoContainer = $(".add-photo-container", this.$signupPage);
+    this.$signInLink = $(".link-container.login a", this.$signupPage);
 
     this.target.appendChild(this.$signupPage);
   };

@@ -18,6 +18,7 @@ function ChangePassword({ $target, initialState = {} }) {
 
   this.$element = document.createElement("div");
   this.$element.className = "user-info-page page-layout";
+  this.$form = null;
 
   this.$errorElement = name => $(`.error-message.${name}`, this.$element);
 
@@ -106,11 +107,15 @@ function ChangePassword({ $target, initialState = {} }) {
   };
 
   this.bindEvents = () => {
-    const $form = $("form", this.$element);
+    this.$form.addEventListener("input", this.handleInput);
+    this.$form.addEventListener("blur", this.handleBlur, true);
+    this.$form.addEventListener("submit", this.handleSubmit);
+  };
 
-    $form.addEventListener("input", this.handleInput);
-    $form.addEventListener("blur", this.handleBlur, true);
-    $form.addEventListener("submit", this.handleSubmit);
+  this.cleanUp = () => {
+    this.$form.removeEventListener("input", this.handleInput);
+    this.$form.removeEventListener("blur", this.handleBlur, true);
+    this.$form.removeEventListener("submit", this.handleSubmit);
   };
 
   this.render = () => {
@@ -146,6 +151,7 @@ function ChangePassword({ $target, initialState = {} }) {
     `;
 
     this.target.appendChild(this.$element);
+    this.$form = $("form", this.$element);
   };
 
   this.init = () => {
