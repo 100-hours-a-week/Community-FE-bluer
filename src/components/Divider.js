@@ -5,4 +5,5 @@ export default function Divider({ $target }) {
 
   $target.appendChild($divider);
   this.render = () => {};
+  this.cleanUp = () => {};
 }

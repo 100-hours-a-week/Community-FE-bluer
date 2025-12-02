@@ -11,11 +11,14 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
     title: null,
     content: null,
     postImageUrl: null,
+    file: null,
   };
   this.moveTo = moveTo;
 
   this.element = document.createElement("div");
   this.element.className = "post-add-page page-layout";
+  this.$form = null;
+  this.$fileInput = null;
 
   this.setState = nextState => {
     this.state = { ...this.state, ...nextState };
@@ -54,6 +57,8 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
 
     this.element.innerHTML = htmlString;
     this.$target.appendChild(this.element);
+    this.$form = $("form");
+    this.$fileInput = $(".add-photo-file-input", this.$userInfoPage);
   };
 
   this.addPost = async () => {
@@ -108,20 +113,34 @@ function PostCreate({ $target, initialState = {}, moveTo }) {
   this.handleChangeFileInput = event => {
     const file = event.target.files[0];
 
+    if (this.state.postImageUrl) {
+      URL.revokeObjectURL(this.state.postImageUrl);
+    }
+
     if (file) {
       const blobUrl = URL.createObjectURL(file);
 
       this.setState({ postImageUrl: blobUrl, file });
+    } else {
+      this.setState({ postImageUrl: null, file: null });
     }
   };
 
   this.bindEvents = () => {
-    const $form = $("form");
-    const $fileInput = $(".add-photo-file-input", this.$userInfoPage);
+    this.$form.addEventListener("submit", this.handleSubmit);
+    this.$form.addEventListener("input", this.handleInput);
+    this.$fileInput.addEventListener("change", this.handleChangeFileInput);
+  };
 
-    $form.addEventListener("submit", this.handleSubmit);
-    $form.addEventListener("input", this.handleInput);
-    $fileInput.addEventListener("change", this.handleChangeFileInput);
+  this.cleanUp = () => {
+    this.$form.removeEventListener("submit", this.handleSubmit);
+    this.$form.removeEventListener("input", this.handleInput);
+    this.$fileInput.removeEventListener("change", this.handleChangeFileInput);
+    if (this.state.postImageUrl) {
+      URL.revokeObjectURL(this.state.postImageUrl);
+      this.state.postImageUrl = null;
+    }
+    this.state.file = null;
   };
 
   this.init = () => {

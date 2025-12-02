@@ -44,10 +44,16 @@ function CommentList({ $target, comments, onModify, onDelete }) {
     }
   };
 
+  this.onPageClick = event => {
+    this.handleClick(event.target, event.target?.dataset?.mode);
+  };
+
   this.bindEvents = () => {
-    this.$element.addEventListener("click", event => {
-      this.handleClick(event.target, event.target?.dataset?.mode);
-    });
+    this.$element.addEventListener("click", this.onPageClick);
+  };
+
+  this.cleanUp = () => {
+    this.$element.removeEventListener("click", this.onPageClick);
   };
 
   this.render = () => {

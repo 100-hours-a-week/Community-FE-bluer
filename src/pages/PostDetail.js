@@ -225,12 +225,14 @@ function PostDetail({ $target, params, initialState = {} }) {
       const response = await apiManager.getPost(postId);
 
       if (response.status === StatusCode.OK) {
-        this.setState({ post: response.data });
+        return response.data;
       }
     } catch (error) {
       console.error(error);
       showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
+
+    return null;
   };
 
   this.getComments = async postId => {
@@ -238,12 +240,14 @@ function PostDetail({ $target, params, initialState = {} }) {
       const response = await apiManager.getComments(postId);
 
       if (response.status === StatusCode.OK) {
-        this.setState({ comments: response.data });
+        return response.data;
       }
     } catch (error) {
       console.error(error);
       showToast("오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
     }
+
+    return null;
   };
 
   this.addLike = async () => {
@@ -293,13 +297,38 @@ function PostDetail({ $target, params, initialState = {} }) {
     }
   };
 
-  this.init = async () => {
+  this.fetchPost = async () => {
     const { postId } = params;
 
-    await Promise.all([this.getPost(postId), this.getComments(postId)]);
+    const [post, comments] = await Promise.all([
+      this.getPost(postId),
+      this.getComments(postId),
+    ]);
+
+    const nextState = {};
+    if (post) {
+      nextState.post = post;
+    }
+    if (comments) {
+      nextState.comments = comments;
+    }
+    if (Object.keys(nextState).length > 0) {
+      this.setState(nextState);
+    }
+  };
+
+  this.init = () => {
+    this.fetchPost();
 
     this.$target.appendChild(this.element);
     this.render();
+  };
+
+  this.cleanUp = () => {
+    this.commentList.cleanUp();
+    this.postBasicInfo.cleanUp();
+    this.postComment.cleanUp();
+    this.postStats.cleanUp();
   };
 
   this.init();

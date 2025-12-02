@@ -4,6 +4,8 @@ import PostListItem from "../components/PostListItem.js";
 import { apiManager } from "../lib/api/apiManager.js";
 import { moveToPage } from "../lib/router.js";
 
+const POSTS_PER_PAGE = 5;
+
 function PostList({ $target, initialState }) {
   this.target = $target;
 
@@ -126,8 +128,20 @@ function PostList({ $target, initialState }) {
     this.$addPostButtonContainer.addEventListener("click", this.onClickAddPost);
   };
 
+  this.cleanUp = () => {
+    this.$postList?.removeEventListener("click", this.onClickPost);
+    this.$addPostButtonContainer?.removeEventListener(
+      "click",
+      this.onClickAddPost
+    );
+    if (this.observer) {
+      this.observer.disconnect();
+      this.observer = null;
+    }
+  };
+
   this.init = async () => {
-    await this.appendPosts(null, 5);
+    await this.appendPosts(null, POSTS_PER_PAGE);
 
     this.render();
     this.bindEvents();

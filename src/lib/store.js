@@ -1,19 +1,16 @@
 const listeners = new Set();
 
-const state = {
+let state = {
   isLoggedIn: false,
-  userToken: null,
   userId: null,
-  // example: {page: 'post-detail', query: {id: 1}}
-  // history: [{ page: "signup", query: null }],
-  currentPage: null,
+  profileImageUrl: null,
 };
 
-const VALID_ACTIONS = ["LOGIN", "LOGOUT", "SET_CURRENT_PAGE"];
+const VALID_ACTIONS = ["LOGIN", "LOGOUT", "ROUTE_CHANGE", "UPDATE_PROFILE"];
 
 const setState = (newState, type) => {
   const prevState = { ...state };
-  Object.assign(state, newState);
+  state = { ...state, ...newState };
 
   const changed = Object.keys(newState).some(
     key => prevState[key] !== state[key]
@@ -25,9 +22,6 @@ const setState = (newState, type) => {
 };
 
 export const getState = () => ({ ...state });
-
-export const getCurrentPageInfo = () =>
-  getState().history[getState().history.length - 1];
 
 export const subscribe = listener => {
   listeners.add(listener);
@@ -46,19 +40,34 @@ export const dispatch = (type, payload = {}) => {
       setState(
         {
           isLoggedIn: true,
-          userToken: payload.userToken,
           userId: payload.userId,
+          profileImageUrl: payload.profileImageUrl ?? state.profileImageUrl,
         },
         type
       );
       break;
 
     case "LOGOUT":
-      setState({ isLoggedIn: false, userToken: null }, type);
+      setState(
+        {
+          isLoggedIn: false,
+          userId: null,
+          profileImageUrl: null,
+        },
+        type
+      );
       break;
 
-    case "SET_CURRENT_PAGE":
-      setState({ currentPage: payload.page }, type);
+    case "UPDATE_PROFILE": {
+      if (payload?.profileImageUrl !== undefined) {
+        setState({ profileImageUrl: payload.profileImageUrl }, type);
+      }
+
+      break;
+    }
+
+    case "ROUTE_CHANGE":
+      listeners.forEach(listener => listener({ ...state }, type, payload));
       break;
 
     default:
