@@ -4,8 +4,8 @@ import { cn } from "@/utils/cn";
 const textStyles = cva("font-normal text-text-primary leading-[1.6]", {
   variants: {
     variant: {
-      body: "",
-      caption: "",
+      body: "font-normal",
+      caption: "font-light",
       title: "font-semibold",
       label: "font-medium",
     },

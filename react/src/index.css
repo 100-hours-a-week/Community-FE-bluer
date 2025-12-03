@@ -21,8 +21,11 @@
   --color-button-text-secondary: #000000;
 
   --color-text-primary: #000000;
+  --color-text-secondary: #999999;
 
   --color-button-bg-hover: rgba(0, 0, 0, 0.035);
+
+  --color-border-grey: #ebebeb;
 
   /* Size */
   --height-header-height: 60px;
