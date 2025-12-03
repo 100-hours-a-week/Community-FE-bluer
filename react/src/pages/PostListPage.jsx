@@ -7,15 +7,17 @@ import List from "@/components/ui/List";
 function PostListPage() {
   const { posts, isLoading, isError, hasNext, fetchNextPage } = usePosts();
   const { targetRef, isIntersecting } = useIntersectionObserver({
-    rootMargin: "300px 0px",
-    threshold: 0,
+    rootMargin: "100px",
+    threshold: 0.1,
   });
 
+
   useEffect(() => {
-    if (isIntersecting && hasNext) {
-      fetchNextPage();
+    if (!isIntersecting || !hasNext || isLoading) {
+      return;
     }
-  }, [isIntersecting, hasNext, fetchNextPage]);
+    fetchNextPage();
+  }, [isIntersecting, hasNext, fetchNextPage, isLoading]);
 
   if (isLoading) {
     return <>loading</>;
@@ -29,7 +31,7 @@ function PostListPage() {
     <>
       <List direction="column">
         {posts?.map((post) => {
-          return <PostItem key={post.postId} imgUrl={"/logo.png"} />;
+          return <PostItem key={post.postId} {...post} />;
         })}
       </List>
       <div className="h-5" ref={targetRef}></div>

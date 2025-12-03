@@ -20,14 +20,17 @@ function PostStatItem(props) {
 
 function PostItem(props) {
   const {
-    authorName = "testuser",
-    createdAt = "createdAt",
-    content = "lorem ipsum",
-    likeCount = 1,
+    authorName,
+    authorProfileImageUrl,
+    commentCount,
+    content,
+    createdAt,
+    likeCount,
+    // TODO: get data from another api
     isLike = false,
-    commentCount = 2,
-    viewCount = 3,
-    imgUrl = null,
+    viewCount,
+    postImageUrl,
+    // title,
     toggleLike,
   } = props;
   // TODO: API 연동 시 state 값 정리
@@ -35,11 +38,12 @@ function PostItem(props) {
   return (
     <div className="border-border-grey border border-t-0 border-r-0 border-l-0 p-3">
       <div className="grid grid-cols-[48px_minmax(0,1fr)]">
-        <Avatar size={"md"} className="row-span-3" />
+        <Avatar size={"md"} className="row-span-3" imgUrl={authorProfileImageUrl} />
         <div className="col-start-2 row-start-1 flex gap-x-1.5 self-start">
           <Text variant={"title"}>{authorName}</Text>
           <time>
             <Text variant={"caption"} className="text-text-secondary">
+              {/* TODO: formatting */}
               {createdAt}
             </Text>
           </time>
@@ -50,10 +54,10 @@ function PostItem(props) {
               {content}
             </Text>
           </div>
-          {imgUrl && (
+          {postImageUrl && (
             <div className="mt-2">
               <Image
-                src={imgUrl}
+                src={postImageUrl}
                 fit="cover"
                 maxHeight="360px"
                 className="max-w-[80%] rounded-2xl border border-gray-200"
