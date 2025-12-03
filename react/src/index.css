@@ -29,6 +29,7 @@
 
   /* Size */
   --height-header-height: 60px;
+  --height-bottom-nav-height: 50px;
   --maxwidth-app-layout: 640px;
 }
 
