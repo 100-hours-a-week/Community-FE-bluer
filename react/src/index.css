@@ -9,7 +9,7 @@
 
   --color-base-white: #ffffff;
   --color-base-black: #000000;
-  --color-base-grey: #fafafa;
+  --color-base-grey: var(--color-gray-200);
   --color-fallback: #fafafa;
 
   --color-bg-primary: #000000;

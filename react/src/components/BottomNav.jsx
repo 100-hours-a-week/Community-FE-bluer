@@ -13,7 +13,7 @@ function BottomNavLinkButton(props) {
   return (
     <IconButton
       className={`flex-col gap-1 px-6 py-2 transition-all duration-300 ${
-        routeName === targetName ? "text-gray-600" : "text-gray-400"
+        routeName === targetName ? "text-(--color-base-black)" : "text-gray-400"
       }`}
       as={Link}
       to={to}
@@ -25,7 +25,7 @@ function BottomNavLinkButton(props) {
 
 function BottomNav() {
   return (
-    <nav className="border-t border-[#EBEBEB] bg-white shadow-lg">
+    <nav className="border-border-grey border-t-2 bg-white shadow-lg">
       <ul className="mx-auto flex h-16 max-w-lg items-center justify-around px-4">
         <li className="flex flex-1 justify-center">
           <BottomNavLinkButton targetName={"post-list"} to={"/"} icon={faHome} />

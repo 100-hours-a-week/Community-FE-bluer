@@ -14,7 +14,7 @@ function DefaultHeader() {
   };
 
   return (
-    <header className="h-header-height fixed grid w-full max-w-(--maxwidth-app-layout) grid-cols-[1fr_32px_1fr] grid-rows-[1fr] border">
+    <header className="h-header-height border-border-grey fixed grid w-full max-w-(--maxwidth-app-layout) grid-cols-[1fr_32px_1fr] grid-rows-[1fr] border-b-2">
       {/* Left */}
       <IconButton className="w-14" onClick={handleGoBack}>
         <FontAwesomeIcon icon={faArrowLeft} size="xl" />
