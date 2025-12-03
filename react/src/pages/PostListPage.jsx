@@ -1,15 +1,16 @@
+import PostItem from "@/components/item/Posttem";
+import List from "@/components/ui/List";
+
 function PostListPage() {
   return (
     <>
-      postList
-      <ul>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-        <li>4</li>
-        <li>5</li>
-        <li>6</li>
-      </ul>
+      <List direction="column">
+        <PostItem />
+        <PostItem />
+        <PostItem imgUrl={"/public/logo.png"} />
+        <PostItem />
+        <PostItem />
+      </List>
     </>
   );
 }
