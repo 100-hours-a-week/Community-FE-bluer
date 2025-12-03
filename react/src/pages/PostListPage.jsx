@@ -1,15 +1,24 @@
+import usePosts from "@/hooks/api/usePosts";
 import PostItem from "@/components/item/Posttem";
 import List from "@/components/ui/List";
 
 function PostListPage() {
+  const { posts, isLoading, isError } = usePosts();
+
+  if (isLoading) {
+    return <>loading</>;
+  }
+
+  if (isError) {
+    return <>error</>;
+  }
+
   return (
     <>
       <List direction="column">
-        <PostItem />
-        <PostItem />
-        <PostItem imgUrl={"/public/logo.png"} />
-        <PostItem />
-        <PostItem />
+        {posts?.map((post) => {
+          return <PostItem key={post.postId} imgUrl={"/logo.png"} />;
+        })}
       </List>
     </>
   );
