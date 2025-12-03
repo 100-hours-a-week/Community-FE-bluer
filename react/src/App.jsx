@@ -1,18 +1,8 @@
-import { BrowserRouter, Route, Routes } from "react-router";
-import Button from "@/components/ui/Button";
+import { RouterProvider } from "react-router-dom";
+import { router } from "@/router";
 
 function App() {
-  return (
-    <>
-      <div className="app">
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Button>123</Button>}></Route>
-          </Routes>
-        </BrowserRouter>
-      </div>
-    </>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
