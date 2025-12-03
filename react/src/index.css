@@ -1,12 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  /* Key color */
-  --color-blue: #1b9ae5;
+  /* font */
+  --font-base: system-ui, "Inter", "Pretendard", sans-serif;
+
+  /* color */
+  --color-blue: #1b9ae5; /* Key Color */
 
   --color-base-white: #ffffff;
   --color-base-black: #000000;
   --color-base-grey: #fafafa;
+  --color-fallback: #fafafa;
 
   --color-bg-primary: #000000;
   --color-bg-secondary: #f7f7f9;
@@ -18,8 +22,9 @@
 
   --color-text-primary: #000000;
 
-  --font-base: system-ui, "Inter", "Pretendard", sans-serif;
+  --color-button-bg-hover: rgba(0, 0, 0, 0.035);
 
+  /* Size */
   --height-header-height: 60px;
   --maxwidth-app-layout: 640px;
 }
