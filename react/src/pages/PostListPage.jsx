@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import usePosts from "@/hooks/api/usePosts";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
-import PostItem from "@/components/item/PostItem";
+import ThreadItem from "@/components/item/ThreadItem";
 import List from "@/components/ui/List";
 import ListItem from "@/components/ui/ListItem";
 import ProgressFragment from "@/components/ui/ProgressFragment";
@@ -41,9 +41,10 @@ function PostListPage() {
                 navigate(`/posts/${post.postId}`);
               }}
             >
-              <PostItem
+              <ThreadItem
                 {...post}
-                toggleLike={() => {
+                type="post"
+                onClickLike={() => {
                   // TODO: add api
                   console.log(`like toggleItem: ${post.postId}`);
                 }}
