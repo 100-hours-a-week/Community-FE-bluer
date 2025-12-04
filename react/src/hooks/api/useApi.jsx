@@ -12,7 +12,7 @@ function useApi(requestUrl, params) {
       try {
         const { data } = await restClient.get(requestUrl, params);
 
-        setData({ ...data });
+        setData(data);
       } catch (error) {
         console.error(error);
         setError(true);
