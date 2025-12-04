@@ -1,7 +1,7 @@
 import { faHeart as normalHeart, faComment } from "@fortawesome/free-regular-svg-icons";
 import { faChartColumn, faHeart as solidHeart } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Avatar from "@/components/ui/avatar";
+import Avatar from "@/components/ui/Avatar";
 import IconButton from "@/components/ui/IconButton";
 import Image from "@/components/ui/Image";
 import List from "@/components/ui/List";
