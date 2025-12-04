@@ -5,6 +5,7 @@ import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import PostItem from "@/components/item/PostItem";
 import List from "@/components/ui/List";
 import ListItem from "@/components/ui/ListItem";
+import ProgressFragment from "@/components/ui/ProgressFragment";
 
 function PostListPage() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ function PostListPage() {
   }, [isIntersecting, hasNext, fetchNextPage, isLoading]);
 
   if (posts.length === 0 && isLoading) {
-    return <>loading</>;
+    return <ProgressFragment />;
   }
 
   if (isError) {
