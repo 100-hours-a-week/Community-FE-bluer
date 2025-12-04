@@ -3,7 +3,7 @@ import React, { createContext, useContext, useEffect, useRef } from "react";
 const DropdownContext = createContext();
 
 export function Dropdown(props) {
-  const { children, direction = "left" } = props;
+  const { children, direction = "left", className = "" } = props;
   const ref = useRef(null);
   const [open, toggle] = React.useState(false);
 
@@ -20,7 +20,7 @@ export function Dropdown(props) {
   return (
     <div
       ref={ref}
-      className={`absolute top-1.5 ${direction === "left" ? "left-1.5" : "right-1.5"}`}
+      className={`absolute top-1.5 ${direction === "left" ? "left-1.5" : "right-1.5"} ${className}`}
     >
       <DropdownContext.Provider value={{ open, toggle, direction }}>
         {children}

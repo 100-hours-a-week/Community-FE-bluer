@@ -66,9 +66,11 @@ function ThreadItem(props) {
               event.stopPropagation();
             }}
           >
-            <Dropdown direction="right">
+            <Dropdown direction="right" className="top-[-4px]">
               <Dropdown.Trigger asChild>
-                <IconButton>
+                <IconButton
+                  className={"hover:bg-button-bg-hover rounded-xl p-2 hover:cursor-pointer"}
+                >
                   <FontAwesomeIcon icon={faEllipsis} />
                 </IconButton>
               </Dropdown.Trigger>
