@@ -30,7 +30,10 @@ const textStyles = cva("font-normal text-text-primary leading-[1.6]", {
 
 function Text({ as: Component = "span", variant, size, align, className, children, ...props }) {
   return (
-    <Component className={cn(textStyles({ variant, size, align }), className)} {...props}>
+    <Component
+      className={`${cn(textStyles({ variant, size, align }), className)} wrap-break-word`}
+      {...props}
+    >
       {children}
     </Component>
   );
