@@ -8,10 +8,10 @@ import List from "@/components/ui/List";
 import Text from "@/components/ui/Text";
 
 function PostStatItem(props) {
-  const { iconElement, count, className } = props;
+  const { iconElement, count, className, onClick } = props;
 
   return (
-    <li className={`flex h-9 items-center gap-x-1 p-2 ${className}`}>
+    <li className={`flex h-9 items-center gap-x-1 p-2 ${className}`} onClick={onClick}>
       {iconElement}
       <Text>{count > 0 && count}</Text>
     </li>
@@ -36,7 +36,7 @@ function PostItem(props) {
   // TODO: API 연동 시 state 값 정리
 
   return (
-    <div className="border-border-grey border border-t-0 border-r-0 border-l-0 p-3">
+    <div className="border-border-grey border border-t-0 border-r-0 border-l-0 p-3 hover:cursor-pointer">
       <div className="grid grid-cols-[48px_minmax(0,1fr)]">
         <Avatar size={"md"} className="row-span-3" imgUrl={authorProfileImageUrl} />
         <div className="col-start-2 row-start-1 flex gap-x-1.5 self-start">
@@ -68,7 +68,10 @@ function PostItem(props) {
             <List className="items-center">
               <PostStatItem
                 className={"hover:bg-button-bg-hover rounded-xl hover:cursor-pointer"}
-                onClick={toggleLike}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleLike?.();
+                }}
                 iconElement={
                   <IconButton>
                     {isLike ? (
