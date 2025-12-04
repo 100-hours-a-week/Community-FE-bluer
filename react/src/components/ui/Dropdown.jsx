@@ -43,7 +43,7 @@ function List(props) {
   return (
     open && (
       <ul
-        className={`bg-base-grey absolute top-7 w-40 p-0 ${direction === "left" ? "left-1.5" : "right-1.5"} z-1 ${className} `}
+        className={`bg-base-white border-base-grey absolute top-7 w-40 border-2 p-0 ${direction === "left" ? "left-1.5" : "right-1.5"} z-1 ${className} `}
       >
         {children}
       </ul>
@@ -54,7 +54,7 @@ function List(props) {
 function Item(props) {
   const { children } = props;
 
-  return <li className="cursor-pointer list-none p-4">{children}</li>;
+  return <li className="hover:bg-base-grey cursor-pointer list-none p-4">{children}</li>;
 }
 
 Dropdown.Trigger = Trigger;

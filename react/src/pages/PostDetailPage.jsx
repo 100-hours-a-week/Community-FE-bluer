@@ -3,7 +3,6 @@ import usePostDetail from "@/hooks/api/usePostDetail";
 import ThreadItem from "@/components/item/ThreadItem";
 import CommentListContainer from "@/components/page/PostDetailPage/CommentListContainer";
 import ProgressFragment from "@/components/ui/ProgressFragment";
-import Separator from "@/components/ui/Seperator";
 
 function PostDetailPage() {
   const { id: postId } = useParams();
@@ -20,7 +19,7 @@ function PostDetailPage() {
   return (
     <div className="flex flex-col gap-y-10">
       <ThreadItem
-        type={"post"}
+        type={"postDetail"}
         onClickLike={() => {
           alert("toggle like");
         }}
