@@ -11,7 +11,6 @@ function PostListPage() {
     threshold: 0.1,
   });
 
-
   useEffect(() => {
     if (!isIntersecting || !hasNext || isLoading) {
       return;
@@ -19,7 +18,7 @@ function PostListPage() {
     fetchNextPage();
   }, [isIntersecting, hasNext, fetchNextPage, isLoading]);
 
-  if (isLoading) {
+  if (posts.length === 0 && isLoading) {
     return <>loading</>;
   }
 
