@@ -28,20 +28,22 @@ const buttonStyles = cva(
   }
 );
 
-function Button({
-  as: Component = "button",
-  variant,
-  disabled,
-  size,
-  className,
-  children,
-  ...props
-}) {
+function Button(props) {
+  const {
+    as: Component = "button",
+    variant,
+    disabled,
+    size,
+    className,
+    children,
+    ...others
+  } = props;
+
   return (
     <Component
       className={cn(buttonStyles({ variant, disabled, size }), className)}
       disabled={disabled}
-      {...props}
+      {...others}
     >
       {children}
     </Component>

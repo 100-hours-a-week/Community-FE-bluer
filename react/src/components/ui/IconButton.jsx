@@ -9,9 +9,11 @@ const iconButtonStyles = cva("flex items-center justify-center cursor-pointer ",
   defaultVariants: {},
 });
 
-function IconButton({ as: Component = "button", size, variant, className, children, ...props }) {
+function IconButton(props) {
+  const { as: Component = "button", size, variant, className, children, ...others } = props;
+
   return (
-    <Component className={cn(iconButtonStyles({ size, variant }), className)} {...props}>
+    <Component className={cn(iconButtonStyles({ size, variant }), className)} {...others}>
       {children}
     </Component>
   );

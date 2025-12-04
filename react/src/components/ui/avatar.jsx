@@ -20,7 +20,8 @@ const avatarStyles = cva(
   }
 );
 
-function Avatar({ size, imgUrl, alt = "", fallbackText, className }) {
+function Avatar(props) {
+  const { size, imgUrl, alt = "", fallbackText, className } = props;
   const [error, setError] = useState(false);
 
   const showFallback = error || !imgUrl;

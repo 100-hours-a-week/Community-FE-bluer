@@ -28,11 +28,13 @@ const textStyles = cva("font-normal text-text-primary leading-[1.6]", {
   },
 });
 
-function Text({ as: Component = "span", variant, size, align, className, children, ...props }) {
+function Text(props) {
+  const { as: Component = "span", variant, size, align, className, children, ...others } = props;
+
   return (
     <Component
       className={`${cn(textStyles({ variant, size, align }), className)} wrap-break-word`}
-      {...props}
+      {...others}
     >
       {children}
     </Component>
