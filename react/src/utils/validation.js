@@ -3,6 +3,8 @@ import {
   EmailErrorType,
   NicknameErrorMessage,
   NicknameErrorType,
+  PasswordErrorMessage,
+  PasswordErrorType,
 } from "@/lib/constants";
 
 export function isValidEmail(email) {
@@ -46,6 +48,31 @@ export const getNicknameError = (nickname) => {
         message: NicknameErrorMessage.TOO_LONG,
       };
     }
+  }
+
+  return null;
+};
+
+const isValidPassword = (password) => {
+  // 비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/;
+  return passwordRegex.test(password);
+};
+
+export const getPasswordError = (password) => {
+  if (!password || password?.length < 1) {
+    console.log("fis");
+    return {
+      errorType: PasswordErrorType.TOO_SHORT,
+      message: PasswordErrorMessage.TOO_SHORT,
+    };
+  }
+
+  if (!isValidPassword(password)) {
+    return {
+      errorType: PasswordErrorType.WRONG_FORMAT,
+      message: PasswordErrorMessage.WRONG_FORMAT,
+    };
   }
 
   return null;

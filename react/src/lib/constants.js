@@ -28,3 +28,14 @@ export const NicknameErrorMessage = Object.freeze({
   [NicknameErrorType.TOO_LONG]: "닉네임은 최대 10자 까지 작성 가능합니다.",
   [NicknameErrorType.DUPLICATED]: "중복된 닉네임 입니다.",
 });
+
+export const PasswordErrorType = Object.freeze({
+  TOO_SHORT: "TOO_SHORT",
+  WRONG_FORMAT: "WRONG_FORMAT",
+});
+
+export const PasswordErrorMessage = Object.freeze({
+  [PasswordErrorType.TOO_SHORT]: "비밀번호를 입력해주세요.",
+  [PasswordErrorType.WRONG_FORMAT]:
+    "비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.",
+});
