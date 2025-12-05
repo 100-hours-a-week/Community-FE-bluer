@@ -4,8 +4,8 @@ export function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-export async function getEmailError(email) {
-  if (!email)
+export function getEmailError(email) {
+  if (!email || email.length === 0)
     return {
       errorType: EmailErrorType.REQUIRED,
       message: EmailErrorMessage.REQUIRED,

@@ -1,9 +1,9 @@
 import { useState } from "react";
 
+import { getEmailError } from "@/utils/validation";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import Text from "@/components/ui/Text";
-import { getEmailError } from "@/utils/validation";
 
 function EmailStep(props) {
   const { formData, setFormData, completedSteps, setCompletedSteps } = props;
@@ -18,24 +18,7 @@ function EmailStep(props) {
     }
   };
 
-  const validateEmail = (email) => {
-    // ex. user@localhost => wrong
-    // if (!email) {
-    //   return "이메일을 입력해 주세요";
-    // }
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(email)) {
-    //   return "올바른 이메일 주소 형식을 입력해주세요. (예: example@example.com)";
-    // }
-    // api
-    // if (false) {
-    // return "* 중복된 이메일 입니다.";
-    // }
-  };
-
   const onClick = () => {
-    // TODO: if valid state
-    // const errorMessage = validateEmail(email);
     const emailError = getEmailError(email);
 
     if (!emailError) {
