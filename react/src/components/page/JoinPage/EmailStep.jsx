@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import { checkEmailDuplication } from "@/service/userService";
 import { getEmailError } from "@/utils/validation";
 import Button from "@/components/ui/Button";
@@ -7,7 +6,7 @@ import Input from "@/components/ui/Input";
 import Text from "@/components/ui/Text";
 
 function EmailStep(props) {
-  const { formData, setFormData, completedSteps, setCompletedSteps } = props;
+  const { formData, setFormData, completedSteps, setCompletedSteps, goToNextPage } = props;
   const [email, setEmail] = useState(formData.email);
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -18,7 +17,6 @@ function EmailStep(props) {
       setErrorMessage(null);
     }
   };
-
   const onClick = async () => {
     const emailError = getEmailError(email);
 
@@ -37,6 +35,7 @@ function EmailStep(props) {
     }
     setFormData({ ...formData, email });
     setCompletedSteps({ ...completedSteps, email: true });
+    goToNextPage();
   };
 
   return (

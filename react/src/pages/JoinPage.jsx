@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import EmailStep from "@/components/page/JoinPage/EmailStep";
 
 function NicknameStep() {
@@ -12,6 +12,7 @@ function PasswordStep() {
 }
 
 function JoinPage() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     nickname: "",
@@ -34,6 +35,9 @@ function JoinPage() {
             setFormData={setFormData}
             completedSteps={completedSteps}
             setCompletedSteps={setCompletedSteps}
+            goToNextPage={() => {
+              navigate("/join/nickname");
+            }}
           />
         }
       />
