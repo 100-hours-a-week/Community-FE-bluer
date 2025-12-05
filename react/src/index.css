@@ -29,6 +29,7 @@
 
   /* Size */
   --height-header-height: 60px;
+  --height-bottom-nav-height: 50px;
   --maxwidth-app-layout: 640px;
 }
 
@@ -37,6 +38,12 @@ body {
   font-family: var(--font-base);
   color: var(--color-text-primary);
   line-height: 1.4;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 #root {

@@ -2,6 +2,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link, useNavigate } from "react-router-dom";
 
+import { Z_INDEX } from "@/lib/constants";
 import Button from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import Text from "@/components/ui/Text";
@@ -14,7 +15,9 @@ function DefaultHeader() {
   };
 
   return (
-    <header className="h-header-height border-border-grey fixed grid w-full max-w-(--maxwidth-app-layout) grid-cols-[1fr_32px_1fr] grid-rows-[1fr] border-b-2">
+    <header
+      className={`h-header-height border-border-grey fixed z-${Z_INDEX.HEADER} grid w-full max-w-(--maxwidth-app-layout) grid-cols-[1fr_32px_1fr] grid-rows-[1fr] border-b-2`}
+    >
       {/* Left */}
       <IconButton className="w-14" onClick={handleGoBack}>
         <FontAwesomeIcon icon={faArrowLeft} size="xl" />
@@ -25,7 +28,7 @@ function DefaultHeader() {
         <div className="flex h-full items-center">
           <div className="h-8">
             <Link to={{ pathname: "/" }}>
-              <img className="h-full" src="/public/logo.png" />
+              <img className="h-full" src="/logo.png" />
             </Link>
           </div>
         </div>

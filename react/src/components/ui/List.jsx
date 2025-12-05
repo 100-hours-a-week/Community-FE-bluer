@@ -1,4 +1,5 @@
-function List({ children, type = "ul", direction = "row", className = "" }) {
+function List(props) {
+  const { children, type = "ul", direction = "row", className = "" } = props;
   const Component = type; // 'ul' | 'ol'
 
   const flexDirection = direction === "row" ? "flex flex-row" : "flex flex-col";

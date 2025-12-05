@@ -1,16 +1,59 @@
-import PostItem from "@/components/item/Posttem";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import usePosts from "@/hooks/api/usePosts";
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import ThreadItem from "@/components/item/ThreadItem";
 import List from "@/components/ui/List";
+import ListItem from "@/components/ui/ListItem";
+import ProgressFragment from "@/components/ui/ProgressFragment";
 
 function PostListPage() {
+  const navigate = useNavigate();
+  const { posts, isLoading, isError, hasNext, fetchNextPage } = usePosts();
+  const { targetRef, isIntersecting } = useIntersectionObserver({
+    rootMargin: "100px",
+    threshold: 0.1,
+  });
+
+  useEffect(() => {
+    if (!isIntersecting || !hasNext || isLoading) {
+      return;
+    }
+    fetchNextPage();
+  }, [isIntersecting, hasNext, fetchNextPage, isLoading]);
+
+  if (posts.length === 0 && isLoading) {
+    return <ProgressFragment />;
+  }
+
+  if (isError) {
+    return <>error</>;
+  }
+
   return (
     <>
       <List direction="column">
-        <PostItem />
-        <PostItem />
-        <PostItem imgUrl={"/public/logo.png"} />
-        <PostItem />
-        <PostItem />
+        {posts?.map((post) => {
+          return (
+            <ListItem
+              key={post.postId}
+              onClick={() => {
+                navigate(`/posts/${post.postId}`);
+              }}
+            >
+              <ThreadItem
+                {...post}
+                type="post"
+                onClickLike={() => {
+                  // TODO: add api
+                  console.log(`like toggleItem: ${post.postId}`);
+                }}
+              />
+            </ListItem>
+          );
+        })}
       </List>
+      <div className="h-5" ref={targetRef}></div>
     </>
   );
 }
