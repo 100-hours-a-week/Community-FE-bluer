@@ -61,7 +61,6 @@ const isValidPassword = (password) => {
 
 export const getPasswordError = (password) => {
   if (!password || password?.length < 1) {
-    console.log("fis");
     return {
       errorType: PasswordErrorType.TOO_SHORT,
       message: PasswordErrorMessage.TOO_SHORT,
