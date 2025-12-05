@@ -43,7 +43,7 @@ async function extractDataFromResponse(promise) {
   return { status: response.status, data: responseData.data };
 }
 
-const isFetchError = (err) => err?.name === "AbortError" || err instanceof Error;
+// const isFetchError = (err) => err?.name === "AbortError" || err instanceof Error;
 
 async function request(url, options = {}) {
   const mergedOptions = {

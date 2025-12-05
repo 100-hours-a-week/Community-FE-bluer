@@ -1,8 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import EmailStep from "@/components/page/JoinPage/EmailStep";
-import NicknameStep from "@/components/page/JoinPage/NicknameStep";
-import PasswordStep from "@/components/page/JoinPage/PasswordStep";
+import { CompleteStep, EmailStep, NicknameStep, PasswordStep } from "@/components/page/JoinPage";
 
 const steps = ["email", "nickname", "password", "complete"];
 
@@ -10,7 +8,7 @@ const stepComponents = {
   email: EmailStep,
   nickname: NicknameStep,
   password: PasswordStep,
-  complete: () => <div>complete</div>,
+  complete: CompleteStep,
 };
 
 function JoinPage() {
