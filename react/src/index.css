@@ -5,8 +5,7 @@
   --font-base: system-ui, "Inter", "Pretendard", sans-serif;
 
   /* color */
-  --color-blue: #1b9ae5; /* Key Color */
-
+  --color-blue: var(--color-blue-600); /* Key Color */
   --color-base-white: #ffffff;
   --color-base-black: #000000;
   --color-base-grey: var(--color-gray-200);
@@ -26,7 +25,7 @@
 
   --color-button-bg-hover: rgba(0, 0, 0, 0.035);
 
-  --color-border-grey: #ebebeb;
+  --color-border-grey: #cbd2d9;
   --color-input-bg-filled: #f7f7f8;
 
   /* Size */
