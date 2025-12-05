@@ -13,7 +13,7 @@ import {
 export const routePatterns = [
   { pattern: "/", name: "post-list", page: <PostListPage /> },
   { pattern: "/login", name: "login", page: <LoginPage /> },
-  { pattern: "/join", name: "join", page: <JoinPage /> },
+  { pattern: "/join/*", name: "join", page: <JoinPage /> },
   { pattern: "/posts/create", name: "post-create", page: <PostCreatePage /> },
   { pattern: "/posts/:id", name: "post-detail", page: <PostDetailPage /> },
   { pattern: "/posts/:id/edit", name: "post-edit", page: <PostEditPage /> },

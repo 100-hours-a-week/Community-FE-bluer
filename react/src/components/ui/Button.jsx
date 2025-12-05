@@ -9,12 +9,14 @@ const buttonStyles = cva(
         primary: "bg-button-bg-primary text-button-text-primary border-none",
         secondary:
           "bg-button-bg-secondary  text-button-text-secondary border border-solid border-black",
+        submit: "bg-blue text-button-text-primary border-none ",
       },
       disabled: {
         true: "",
         false: "",
       },
       size: {
+        xs: "p-2",
         sm: "p-3",
         md: "p-4",
         lg: "p-5",

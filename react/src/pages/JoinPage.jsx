@@ -1,5 +1,57 @@
+import { useState } from "react";
+import { Route, Routes } from "react-router-dom";
+import EmailStep from "@/components/page/JoinPage/EmailStep";
+
+function NicknameStep() {
+  // const { formData, setFormData } = props;
+  return <div>nicknamestep</div>;
+}
+function PasswordStep() {
+  // const { formData, setFormData } = props;
+  return <div>passwordstep</div>;
+}
+
 function JoinPage() {
-  return <>JoinPage</>;
+  const [formData, setFormData] = useState({
+    email: "",
+    nickname: "",
+    password: "",
+  });
+
+  const [completedSteps, setCompletedSteps] = useState({
+    email: false,
+    nickname: false,
+    password: false,
+  });
+
+  return (
+    <Routes>
+      <Route
+        path="/email"
+        element={
+          <EmailStep
+            formData={formData}
+            setFormData={setFormData}
+            completedSteps={completedSteps}
+            setCompletedSteps={setCompletedSteps}
+          />
+        }
+      />
+      <Route
+        path="/nickname"
+        element={
+          <NicknameStep completedSteps={completedSteps} setCompletedSteps={completedSteps} />
+        }
+      />
+      <Route
+        path="/password"
+        element={
+          <PasswordStep completedSteps={completedSteps} setCompletedSteps={completedSteps} />
+        }
+      />
+      <Route path="/complete" element={<div>complete</div>} />
+    </Routes>
+  );
 }
 
 export default JoinPage;

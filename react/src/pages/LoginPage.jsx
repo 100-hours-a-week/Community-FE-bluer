@@ -1,8 +1,7 @@
+import { Link } from "react-router-dom";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import Separator from "@/components/ui/Seperator";
 import Text from "@/components/ui/Text";
-import { Link } from "react-router-dom";
 
 function LoginPage() {
   return (
@@ -14,7 +13,7 @@ function LoginPage() {
         onSubmit={(event) => {
           event.preventDefault();
         }}
-        className="border-b-blue flex w-full max-w-[375px] flex-col gap-y-3"
+        className="flex w-full max-w-[375px] flex-col gap-y-3"
       >
         {/* TODO: if error, set variant error  */}
         <Input
