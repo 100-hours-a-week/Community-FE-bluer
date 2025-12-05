@@ -21,15 +21,14 @@ function EmailStep(props) {
   const onClick = () => {
     const emailError = getEmailError(email);
 
-    if (!emailError) {
-      setFormData({ ...formData, email });
-      setCompletedSteps({ ...completedSteps, email: true });
+    if (emailError) {
+      const { message } = emailError;
+
+      setErrorMessage(message);
       return;
     }
-
-    const { message } = emailError;
-
-    setErrorMessage(message);
+    setFormData({ ...formData, email });
+    setCompletedSteps({ ...completedSteps, email: true });
   };
 
   return (
