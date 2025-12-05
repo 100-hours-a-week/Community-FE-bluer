@@ -10,7 +10,7 @@ export function isValidEmail(email) {
 }
 
 export function getEmailError(email) {
-  if (!email || email.length === 0)
+  if (!email || email?.length < 1)
     return {
       errorType: EmailErrorType.REQUIRED,
       message: EmailErrorMessage.REQUIRED,
@@ -26,7 +26,10 @@ export function getEmailError(email) {
 export const isValidNickname = (nickname) => /^[^\s]{1,10}$/.test(nickname);
 export const getNicknameError = (nickname) => {
   if (!nickname || nickname?.length < 1) {
-    return { errorType: NicknameErrorType.REQUIRED, message: NicknameErrorMessage.REQUIRED };
+    return {
+      errorType: NicknameErrorType.REQUIRED,
+      message: NicknameErrorMessage.REQUIRED,
+    };
   }
 
   if (!isValidNickname(nickname)) {
@@ -38,7 +41,10 @@ export const getNicknameError = (nickname) => {
     }
 
     if (nickname.length > 10) {
-      return { errorType: NicknameErrorType.TOO_LONG };
+      return {
+        errorType: NicknameErrorType.TOO_LONG,
+        message: NicknameErrorMessage.TOO_LONG,
+      };
     }
   }
 

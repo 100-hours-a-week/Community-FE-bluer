@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useJoinStep } from "@/hooks/useJoinStep";
 import { checkNicknameDuplication } from "@/service/userService";
 import { getNicknameError } from "@/utils/validation";
 import Button from "@/components/ui/Button";
@@ -7,37 +7,17 @@ import Text from "@/components/ui/Text";
 
 function NicknameStep(props) {
   const { formData, setFormData, completedSteps, setCompletedSteps, goToNextPage } = props;
-  const [nickname, setNickname] = useState(formData.nickname);
-  const [errorMessage, setErrorMessage] = useState(null);
 
-  const handleChange = (event) => {
-    setNickname(event.target.value);
-
-    if (errorMessage) {
-      setErrorMessage(null);
-    }
-  };
-
-  const onClick = async () => {
-    const nicknameError = getNicknameError(nickname);
-
-    if (nicknameError) {
-      const { message } = nicknameError;
-
-      setErrorMessage(message);
-      return;
-    }
-
-    const result = await checkNicknameDuplication(nickname);
-
-    if (result?.type && result?.message) {
-      setErrorMessage(result.message);
-      return;
-    }
-    setFormData({ ...formData, nickname });
-    setCompletedSteps({ ...completedSteps, email: true });
-    goToNextPage();
-  };
+  const { value, handleChange, submit, error } = useJoinStep({
+    formKey: "nickname",
+    validator: getNicknameError,
+    checker: checkNicknameDuplication,
+    formData,
+    setFormData,
+    completedSteps,
+    setCompletedSteps,
+    onSuccess: goToNextPage,
+  });
 
   return (
     <div className="p-3">
@@ -48,15 +28,21 @@ function NicknameStep(props) {
         <Text>사용하실 닉네임을 입력해 주세요</Text>
         <Input
           type="text"
-          value={nickname}
+          value={value}
           onChange={handleChange}
           className=""
           variant="outlined"
           placeholder="닉네임"
-          helper={errorMessage ? { type: "error", text: errorMessage } : null}
+          helper={error ? { type: "error", text: error } : null}
         />
         <div />
-        <Button variant="submit" size="xs" onClick={onClick}>
+        <Button
+          variant="submit"
+          size="xs"
+          onClick={() => {
+            submit();
+          }}
+        >
           <span className="mx-auto">다음</span>
         </Button>
       </div>
