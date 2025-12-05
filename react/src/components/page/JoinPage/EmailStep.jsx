@@ -1,5 +1,6 @@
 import { useState } from "react";
 
+import { checkEmailDuplication } from "@/service/userService";
 import { getEmailError } from "@/utils/validation";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -18,13 +19,20 @@ function EmailStep(props) {
     }
   };
 
-  const onClick = () => {
+  const onClick = async () => {
     const emailError = getEmailError(email);
 
     if (emailError) {
       const { message } = emailError;
 
       setErrorMessage(message);
+      return;
+    }
+
+    const result = await checkEmailDuplication(email);
+
+    if (result?.type && result?.message) {
+      setErrorMessage(result.message);
       return;
     }
     setFormData({ ...formData, email });
