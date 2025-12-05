@@ -17,14 +17,14 @@ function Header() {
 
   const renderHeaderByPath = useCallback(() => {
     console.log(`routename: ${name}`);
+    if (name === "login") {
+      return <></>;
+    }
     return <DefaultHeader />;
     // TODO: render header by route
     /*
     if (name === "post-list" || name === "/") {
       return <>posts header</>;
-    }
-    if (name === "login") {
-      return <>login header</>;
     }
     if (name === "post-create") {
       return <>post-create</>;
