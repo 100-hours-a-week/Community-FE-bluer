@@ -78,7 +78,8 @@ function PostWritePage(props) {
         if (mode === "create") {
           await apiManager.addPost({ title, content, imageUrl: uploadedImageUrl });
         } else {
-          await apiManager.updatePost(initialData.id, {
+          await apiManager.updatePost({
+            postId: initialData.postId,
             title,
             content,
             imageUrl: uploadedImageUrl,
@@ -96,11 +97,11 @@ function PostWritePage(props) {
     if (mode === "edit" && initialData) {
       queueMicrotask(() => {
         setTitle(initialData.title ?? "");
-        setOriginImageUrl(initialData.imageUrl || null);
+        setOriginImageUrl(initialData.postImageUrl || null);
       });
 
-      if (initialData.imageUrl) {
-        urlToFile(initialData.imageUrl).then((file) => setFile(file));
+      if (initialData.postImageUrl) {
+        urlToFile(initialData.postImageUrl).then((file) => setFile(file));
       }
     }
   }, [mode, initialData]);
