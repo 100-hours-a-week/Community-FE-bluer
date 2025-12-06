@@ -12,9 +12,14 @@ import {
 
 export const routePatterns = [
   { pattern: "/", name: "post-list", page: <PostListPage /> },
-  { pattern: "/login", name: "login", page: <LoginPage /> },
-  { pattern: "/join", name: "join-redirect", page: <Navigate to="/join/email" replace /> },
-  { pattern: "/join/:step", name: "join", page: <JoinPage /> },
+  { pattern: "/login", name: "login", page: <LoginPage />, guestOnly: true },
+  {
+    pattern: "/join",
+    name: "join-redirect",
+    page: <Navigate to="/join/email" replace />,
+    guestOnly: true,
+  },
+  { pattern: "/join/:step", name: "join", page: <JoinPage />, guestOnly: true },
   { pattern: "/posts/create", name: "post-create", page: <PostCreatePage />, protected: true },
   { pattern: "/posts/:id", name: "post-detail", page: <PostDetailPage /> },
   { pattern: "/posts/:id/edit", name: "post-edit", page: <PostEditPage />, protected: true },
