@@ -56,4 +56,5 @@ export const MAX_LENGTH = Object.freeze({
   NICKNAME: 10,
   EMAIL: 30,
   PASSWORD: 20,
+  COMMENT: 500,
 });

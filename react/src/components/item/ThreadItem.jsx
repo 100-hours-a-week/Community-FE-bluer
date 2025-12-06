@@ -37,7 +37,6 @@ function ThreadItem(props) {
     postImageUrl,
     // title,
     onClickLike,
-    onClickComment,
     // type: post || postDetail || comment
     type,
   } = props;
@@ -120,15 +119,7 @@ function ThreadItem(props) {
                   />
                   <ThreadStatItem
                     className={"hover:bg-button-bg-hover rounded-xl hover:cursor-pointer"}
-                    iconElement={
-                      <IconButton>
-                        <FontAwesomeIcon icon={faComment} />
-                      </IconButton>
-                    }
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onClickComment?.();
-                    }}
+                    iconElement={<FontAwesomeIcon icon={faComment} />}
                     count={commentCount}
                   />
                   <ThreadStatItem

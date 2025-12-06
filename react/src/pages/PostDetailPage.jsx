@@ -1,13 +1,53 @@
-import { useParams } from "react-router-dom";
+import { startTransition } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import usePostDetail from "@/hooks/api/usePostDetail";
+import useIsLoggedIn from "@/contexts/useIsLoggedIn";
+import { apiManager } from "@/lib/api/apiManager";
+import { MAX_LENGTH } from "@/lib/constants";
 import ThreadItem from "@/components/item/ThreadItem";
 import CommentListContainer from "@/components/page/PostDetailPage/CommentListContainer";
+import IconButton from "@/components/ui/IconButton";
 import ProgressFragment from "@/components/ui/ProgressFragment";
+import Separator from "@/components/ui/Seperator";
+import Text from "@/components/ui/Text";
+import TextArea from "@/components/ui/TextArea";
 
 function PostDetailPage() {
   const { id: postId } = useParams();
+  const navigate = useNavigate();
 
   const { post, isLoading, isError } = usePostDetail(postId);
+  const isLoggedIn = useIsLoggedIn();
+
+  const postComment = async (content) => {
+    try {
+      await apiManager.postComment({ postId, content });
+
+      startTransition(() => {
+        navigate(0);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const onSubmit = (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const comment = formData.get("comment");
+
+    if (comment.length < 1) {
+      return;
+    }
+
+    postComment(comment);
+  };
+
+  const onClick = () => {
+    if (!isLoggedIn) {
+      navigate("/login");
+    }
+  };
 
   if (isLoading) {
     return <ProgressFragment />;
@@ -17,19 +57,35 @@ function PostDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-y-10">
-      <ThreadItem
-        type={"postDetail"}
-        onClickLike={() => {
-          alert("toggle like");
-        }}
-        onClickComment={() => {
-          alert("comment");
-        }}
-        {...post}
-      />
-      <div>
-        <CommentListContainer postId={postId} />
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col">
+        <ThreadItem
+          type={"postDetail"}
+          onClickLike={() => {
+            alert("toggle like");
+          }}
+          {...post}
+        />
+        <Separator className={"h-2.5"} />
+        <div>
+          <CommentListContainer postId={postId} />
+        </div>
+      </div>
+      <div className="border-t-border-grey border-t px-2 py-4">
+        <form onSubmit={onSubmit} onClick={onClick}>
+          <TextArea
+            name="comment"
+            variant="outlined"
+            multiline={true}
+            placeholder="댓글을 적어주세요"
+            maxLength={MAX_LENGTH.COMMENT}
+            endAdornment={
+              <IconButton type="submit">
+                <Text variant="title">등록</Text>
+              </IconButton>
+            }
+          />
+        </form>
       </div>
     </div>
   );
