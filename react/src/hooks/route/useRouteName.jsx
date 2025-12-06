@@ -10,6 +10,7 @@ import {
   UserInfoPage,
 } from "@/pages";
 import ChangeNicknamePage from "@/pages/ChangeNicknamePage";
+import WithdrawalPage from "@/pages/WithdrawalPage";
 
 export const routePatterns = [
   { pattern: "/", name: "post-list", page: <PostListPage /> },
@@ -35,6 +36,12 @@ export const routePatterns = [
     pattern: "/user/info/change-nickname",
     name: "change-nickname",
     page: <ChangeNicknamePage />,
+    protected: true,
+  },
+  {
+    pattern: "/user/info/withdrawal",
+    name: "withdrawal",
+    page: <WithdrawalPage />,
     protected: true,
   },
 ];
