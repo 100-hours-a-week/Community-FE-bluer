@@ -41,6 +41,8 @@ function PostDetailPage() {
     try {
       await apiManager.postComment({ postId, content });
 
+      textareaRef.current.value = null;
+      textareaRef.current = null;
       mutate();
     } catch (error) {
       console.error(error);
@@ -56,6 +58,7 @@ function PostDetailPage() {
       textareaRef.current.value = null;
       textareaRef.current = null;
       commentIdRef.current = null;
+      mode.current = null;
       mutate();
     } catch (error) {
       console.error(error);
@@ -136,7 +139,6 @@ function PostDetailPage() {
             ref={textareaRef}
             name="comment"
             variant="outlined"
-            multiline={true}
             placeholder="댓글을 적어주세요"
             maxLength={MAX_LENGTH.COMMENT}
             endAdornment={
