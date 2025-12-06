@@ -2,7 +2,7 @@ import { faPlus, faUser, faHome } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { Link } from "react-router-dom";
-import useRouteName from "@/hooks/useRouteName";
+import useRouteName from "@/hooks/route/useRouteName";
 import IconButton from "@/components/ui/IconButton";
 
 function BottomNavLinkButton(props) {

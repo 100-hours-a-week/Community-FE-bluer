@@ -1,4 +1,6 @@
 import { useJoinStep } from "@/hooks/useJoinStep";
+import { MAX_LENGTH } from "@/lib/constants";
+import { checkNicknameDuplication } from "@/service/userService";
 import { getNicknameError } from "@/utils/validation";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -10,6 +12,7 @@ function NicknameStep(props) {
   const { value, handleChange, submit, error } = useJoinStep({
     formKey: "nickname",
     validator: getNicknameError,
+    checker: checkNicknameDuplication,
     formData,
     setFormData,
     completedSteps,
@@ -30,8 +33,9 @@ function NicknameStep(props) {
           onChange={handleChange}
           className=""
           variant="outlined"
-          placeholder="닉네임"
           helper={error ? { type: "error", text: error } : null}
+          placeholder={`닉네임 (최대 ${MAX_LENGTH.NICKNAME}자)`}
+          maxLength={MAX_LENGTH.NICKNAME}
         />
         <div />
         <Button

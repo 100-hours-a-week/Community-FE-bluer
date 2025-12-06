@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import useRouteName from "@/hooks/useRouteName";
+import useRouteName from "@/hooks/route/useRouteName";
 import DefaultHeader from "@/components/header/DefaultHeader";
 
 /**
@@ -16,7 +16,6 @@ function Header() {
   const name = useRouteName();
 
   const renderHeaderByPath = useCallback(() => {
-    console.log(`routename: ${name}`);
     if (name === "login") {
       return <></>;
     }

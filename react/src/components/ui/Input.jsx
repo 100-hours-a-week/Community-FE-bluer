@@ -46,7 +46,11 @@ function Input(props) {
       <div className="relative flex w-full flex-row">
         <input type={inputType} className={cn(inputStyles({ variant }), className)} {...others} />
         {isPasswordVisible && (
-          <IconButton className="right absolute top-4 right-3" onClick={onTogglePasswordType}>
+          <IconButton
+            type="button"
+            className="right absolute top-4 right-3"
+            onClick={onTogglePasswordType}
+          >
             {inputType === "text" ? (
               <FontAwesomeIcon icon={faEye} />
             ) : (
