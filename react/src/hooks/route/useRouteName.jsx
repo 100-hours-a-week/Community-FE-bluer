@@ -9,6 +9,7 @@ import {
   PostEditPage,
   UserInfoPage,
 } from "@/pages";
+import ChangeNicknamePage from "@/pages/ChangeNicknamePage";
 
 export const routePatterns = [
   { pattern: "/", name: "post-list", page: <PostListPage /> },
@@ -33,7 +34,7 @@ export const routePatterns = [
   {
     pattern: "/user/info/change-nickname",
     name: "change-nickname",
-    page: <ChangePasswordPage />,
+    page: <ChangeNicknamePage />,
     protected: true,
   },
 ];
