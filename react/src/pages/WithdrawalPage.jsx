@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/contexts/ToastContext";
 import useClearUserContext from "@/contexts/useClearUserContext";
 import useRefreshUser from "@/contexts/useRefreshUser";
 import { apiManager } from "@/lib/api/apiManager";
@@ -8,6 +9,7 @@ import Text from "@/components/ui/Text";
 
 function WithdrawalPage() {
   const navigate = useNavigate();
+  const toast = useToast();
   const { clearUserInfo } = useClearUserContext();
   const { refreshUserInfo } = useRefreshUser();
 
@@ -28,7 +30,7 @@ function WithdrawalPage() {
         refreshUserInfo();
         navigate("/");
       } catch (error) {
-        // TODO: error
+        toast("에러 발생");
         console.error(error);
       }
     }

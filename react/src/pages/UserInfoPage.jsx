@@ -1,5 +1,6 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useFileInput from "@/hooks/useFileInput";
+import { useToast } from "@/contexts/ToastContext";
 import useClearUserContext from "@/contexts/useClearUserContext";
 import useLoggedInUser from "@/contexts/useLoggedInUser";
 import useRefreshUser from "@/contexts/useRefreshUser";
@@ -15,17 +16,17 @@ function UserInfoPage() {
   const { user } = useLoggedInUser();
   const { clearUserInfo } = useClearUserContext();
   const { refreshUserInfo } = useRefreshUser();
+  const toast = useToast();
 
   const navigate = useNavigate();
   const location = useLocation();
 
   const changeProfileImage = async (file) => {
-    // TODO: toast or error
-
     let uploadedImageUrl;
     try {
       uploadedImageUrl = await uploadToImageBucket(file);
     } catch (error) {
+      toast("이미지 업로드 중 에러 발생");
       console.error(error);
     }
 
@@ -34,6 +35,7 @@ function UserInfoPage() {
 
       refreshUserInfo();
     } catch (error) {
+      toast("에러 발생");
       console.error(error);
     }
   };
@@ -49,6 +51,7 @@ function UserInfoPage() {
       clearUserInfo();
       navigate("/");
     } catch (error) {
+      toast("에러 발생");
       console.error(error);
     }
   };

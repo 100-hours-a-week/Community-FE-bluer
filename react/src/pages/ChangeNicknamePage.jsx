@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/contexts/ToastContext";
 import useRefreshUser from "@/contexts/useRefreshUser";
 import { apiManager } from "@/lib/api/apiManager";
 import { MAX_LENGTH } from "@/lib/constants";
@@ -12,6 +13,7 @@ import Text from "@/components/ui/Text";
 function ChangeNicknamePage() {
   const navigate = useNavigate();
   const { refreshUserInfo } = useRefreshUser();
+  const toast = useToast();
   const [nicknameError, setNicknameError] = useState(null);
 
   const validateNicknameForm = async (nickname) => {
@@ -41,8 +43,7 @@ function ChangeNicknamePage() {
       });
 
       refreshUserInfo();
-      // TODO: success toast
-      alert("성공");
+      toast("변경 완료");
       navigate("/user/info");
     } catch (error) {
       console.error(error);

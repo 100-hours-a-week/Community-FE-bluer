@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/contexts/ToastContext";
 import { apiManager } from "@/lib/api/apiManager";
 import ProgressFragment from "@/components/ui/ProgressFragment";
 
@@ -7,6 +8,7 @@ function CompleteStep(props) {
   const { formData } = props;
 
   const navigate = useNavigate();
+  const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
@@ -15,19 +17,18 @@ function CompleteStep(props) {
       setIsLoading(true);
 
       await apiManager.signUp({ ...formData });
-      // TODO: toast
-      alert("성공");
+      toast("가입 완료");
       navigate("/login");
     } catch (error) {
       console.error(error);
       setError(error);
-      // TODO: toast
+      toast("에러 발생");
     } finally {
       setTimeout(() => {
         setIsLoading(false);
       }, 3000);
     }
-  }, [formData, navigate]);
+  }, [formData, navigate, toast]);
 
   useEffect(() => {
     signup();
@@ -39,10 +40,7 @@ function CompleteStep(props) {
   }
 
   if (error) {
-    return (
-      // TODO: development fail case
-      <button onClick={signup}>다시 시도하기</button>
-    );
+    return <button onClick={signup}>다시 시도하기</button>;
   }
   return <></>;
 }
