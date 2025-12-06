@@ -1,13 +1,17 @@
 import { cva } from "class-variance-authority";
 import { cn } from "@/utils/cn";
 
-const textStyles = cva("font-normal text-text-primary leading-[1.6]", {
+const textStyles = cva(" leading-[1.6]", {
   variants: {
     variant: {
       body: "font-normal",
       caption: "font-light",
       title: "font-semibold",
       label: "font-medium",
+    },
+    hierarchy: {
+      primary: "text-text-primary",
+      secondary: "text-text-secondary",
     },
     size: {
       sm: "text-sm",
@@ -25,15 +29,25 @@ const textStyles = cva("font-normal text-text-primary leading-[1.6]", {
     variant: "body",
     size: "md",
     align: "left",
+    hierarchy: "primary",
   },
 });
 
 function Text(props) {
-  const { as: Component = "span", variant, size, align, className, children, ...others } = props;
+  const {
+    as: Component = "span",
+    variant,
+    size,
+    align,
+    hierarchy,
+    className,
+    children,
+    ...others
+  } = props;
 
   return (
     <Component
-      className={`${cn(textStyles({ variant, size, align }), className)} wrap-break-word`}
+      className={`${cn(textStyles({ variant, size, align, hierarchy }), className)} wrap-break-word`}
       {...others}
     >
       {children}

@@ -5,11 +5,11 @@
   --font-base: system-ui, "Inter", "Pretendard", sans-serif;
 
   /* color */
-  --color-blue: #1b9ae5; /* Key Color */
-
+  --color-blue: var(--color-blue-600); /* Key Color */
   --color-base-white: #ffffff;
   --color-base-black: #000000;
   --color-base-grey: var(--color-gray-200);
+  --color-base-error: var(--color-red-600);
   --color-fallback: #fafafa;
 
   --color-bg-primary: #000000;
@@ -24,8 +24,10 @@
   --color-text-secondary: #999999;
 
   --color-button-bg-hover: rgba(0, 0, 0, 0.035);
+  --color-button-secondary-border: #e0e0e0;
 
-  --color-border-grey: #ebebeb;
+  --color-border-grey: #cbd2d9;
+  --color-input-bg-filled: #f7f7f8;
 
   /* Size */
   --height-header-height: 60px;

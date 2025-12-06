@@ -13,18 +13,23 @@ export const apiManager = {
 
     return restClient.post("/users/signup", params);
   },
+  signOut: () => {
+    const params = {};
+
+    return restClient.post("/users/signout", params);
+  },
   getUserProfile: () => {
     return restClient.get("/users/profile");
   },
 
-  checkAvailability: ({ nickname = null, email = null }) => {
-    const params = { nickname, email };
-    if (!nickname) {
-      delete params.nickname;
-    }
-    if (!email) {
-      delete params.email;
-    }
+  getEmailAvailable: ({ email = null }) => {
+    const params = { email };
+
+    return restClient.get("/users/check", params);
+  },
+  getNicknameAvailable: ({ nickname }) => {
+    const params = { nickname };
+
     return restClient.get("/users/check", params);
   },
   updatePassword: ({ password }) => {

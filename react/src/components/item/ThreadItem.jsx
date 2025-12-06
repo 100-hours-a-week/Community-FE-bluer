@@ -2,7 +2,6 @@ import { faHeart as normalHeart, faComment } from "@fortawesome/free-regular-svg
 import {
   faChartColumn,
   faEllipsis,
-  faListDots,
   faHeart as solidHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
