@@ -1,7 +1,7 @@
 import ThreadItem from "@/components/item/ThreadItem";
 
 function CommentList(props) {
-  const { comments, onModify, userId } = props;
+  const { comments, onModify, onDelete, userId } = props;
 
   return (
     <>
@@ -15,6 +15,7 @@ function CommentList(props) {
             authorName={nickname}
             authorProfileImageUrl={profileImageUrl}
             onClickModify={onModify}
+            onClickDelete={onDelete}
             showDropdown={comment.author.id === userId}
             threadId={comment.commentId}
             {...comment}

@@ -16,7 +16,6 @@ import Separator from "@/components/ui/Seperator";
 import TextArea from "@/components/ui/TextArea";
 
 const EDIT = "EDIT";
-const CREATE = "CREATE";
 
 function PostDetailPage() {
   const { id: postId } = useParams();
@@ -65,6 +64,15 @@ function PostDetailPage() {
     }
   };
 
+  const deleteComment = async (commentId) => {
+    try {
+      await apiManager.deleteComment({ postId, commentId });
+      mutate();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onSubmit = (event) => {
     event.preventDefault();
     const formData = new FormData(event.target);
@@ -91,6 +99,13 @@ function PostDetailPage() {
     mode.current = EDIT;
     textareaRef.current.value = content;
     commentIdRef.current = commentId;
+  };
+
+  const onClickCommentDelete = (commentId) => {
+    // TODO: dialog
+    if (confirm("정말 삭제하시겠습니까?")) {
+      deleteComment(commentId);
+    }
   };
 
   if (isLoading) {
@@ -128,6 +143,7 @@ function PostDetailPage() {
             <CommentListContainer
               comments={comments}
               onModify={onClickCommentModiFy}
+              onDelete={onClickCommentDelete}
               userId={user?.userId}
             />
           )}

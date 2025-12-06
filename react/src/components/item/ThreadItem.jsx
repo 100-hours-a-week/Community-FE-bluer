@@ -58,6 +58,12 @@ function ThreadItem(props) {
     }
   };
 
+  const handleClickDelete = () => {
+    if (type === "comment") {
+      onClickDelete(threadId);
+    }
+  };
+
   return (
     <div
       className={`border-border-grey border border-t-0 border-r-0 border-l-0 p-3 ${type === "post" ? "hover:cursor-pointer" : ""}`}
@@ -91,7 +97,7 @@ function ThreadItem(props) {
                 </Dropdown.Trigger>
                 <Dropdown.List>
                   <Dropdown.Item onClick={handleClickModify}>수정하기</Dropdown.Item>
-                  <Dropdown.Item onClick={onClickDelete}>삭제하기</Dropdown.Item>
+                  <Dropdown.Item onClick={handleClickDelete}>삭제하기</Dropdown.Item>
                 </Dropdown.List>
               </Dropdown>
             </div>
