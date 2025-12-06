@@ -3,7 +3,11 @@ import UserContext from "@/contexts/UserContext";
 
 function useLoggedInUser() {
   const userContext = useContext(UserContext);
-  return userContext.userInfo;
+
+  return {
+    user: userContext.userInfo,
+    isLoading: userContext.isLoading,
+  };
 }
 
 export default useLoggedInUser;
