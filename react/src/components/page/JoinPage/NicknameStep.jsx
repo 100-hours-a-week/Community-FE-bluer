@@ -1,4 +1,5 @@
 import { useJoinStep } from "@/hooks/useJoinStep";
+import { MAX_LENGTH } from "@/lib/constants";
 import { getNicknameError } from "@/utils/validation";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
@@ -30,8 +31,9 @@ function NicknameStep(props) {
           onChange={handleChange}
           className=""
           variant="outlined"
-          placeholder="닉네임"
           helper={error ? { type: "error", text: error } : null}
+          placeholder={`닉네임 (최대 ${MAX_LENGTH.NICKNAME}자)`}
+          maxLength={MAX_LENGTH.NICKNAME}
         />
         <div />
         <Button

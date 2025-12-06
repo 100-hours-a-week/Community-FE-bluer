@@ -1,4 +1,5 @@
 import { useJoinStep } from "@/hooks/useJoinStep";
+import { MAX_LENGTH } from "@/lib/constants";
 import { checkEmailDuplication } from "@/service/userService";
 import { getEmailError } from "@/utils/validation";
 import Button from "@/components/ui/Button";
@@ -32,8 +33,9 @@ function EmailStep(props) {
           onChange={handleChange}
           className=""
           variant="outlined"
-          placeholder="이메일 주소"
           helper={error ? { type: "error", text: error } : null}
+          placeholder={`이메일 주소 (최대 ${MAX_LENGTH.EMAIL}자)`}
+          maxLength={MAX_LENGTH.EMAIL}
         />
         <div />
         <Button

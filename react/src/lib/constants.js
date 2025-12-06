@@ -51,3 +51,9 @@ export const LoginErrorType = Object.freeze({
 export const LoginErrorMessage = Object.freeze({
   [LoginErrorType.LOGIN_FAILED]: "아이디 또는 비밀번호를 확인해 주세요",
 });
+
+export const MAX_LENGTH = Object.freeze({
+  NICKNAME: 10,
+  EMAIL: 30,
+  PASSWORD: 20,
+});
