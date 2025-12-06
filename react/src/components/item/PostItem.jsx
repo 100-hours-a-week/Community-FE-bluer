@@ -12,7 +12,7 @@ import List from "@/components/ui/List";
 import Text from "@/components/ui/Text";
 import { Dropdown } from "../ui/Dropdown";
 
-function ThreadStatItem(props) {
+function PostStatItem(props) {
   const { iconElement, count, className, onClick } = props;
 
   return (
@@ -23,7 +23,7 @@ function ThreadStatItem(props) {
   );
 }
 
-function ThreadItem(props) {
+function PostItem(props) {
   const {
     authorName,
     authorProfileImageUrl,
@@ -44,7 +44,7 @@ function ThreadItem(props) {
     // type: post || postDetail || comment
     type,
 
-    threadId,
+    itemId,
   } = props;
 
   const handleClickModify = () => {
@@ -52,12 +52,12 @@ function ThreadItem(props) {
       return;
     }
 
-    onClickModify(content, threadId);
+    onClickModify(content, itemId);
   };
 
   const handleClickDelete = () => {
     if (type === "comment") {
-      onClickDelete(threadId);
+      onClickDelete(itemId);
       return;
     }
     if (type === "postDetail") {
@@ -125,7 +125,7 @@ function ThreadItem(props) {
               )}
               <div className="mt-2">
                 <List className="items-center">
-                  <ThreadStatItem
+                  <PostStatItem
                     className={"hover:bg-button-bg-hover rounded-xl hover:cursor-pointer"}
                     onClick={(event) => {
                       event.stopPropagation();
@@ -142,12 +142,12 @@ function ThreadItem(props) {
                     }
                     count={likeCount}
                   />
-                  <ThreadStatItem
+                  <PostStatItem
                     className={"hover:bg-button-bg-hover rounded-xl hover:cursor-pointer"}
                     iconElement={<FontAwesomeIcon icon={faComment} />}
                     count={commentCount}
                   />
-                  <ThreadStatItem
+                  <PostStatItem
                     iconElement={<FontAwesomeIcon icon={faChartColumn} />}
                     count={viewCount}
                   />
@@ -161,4 +161,4 @@ function ThreadItem(props) {
   );
 }
 
-export default ThreadItem;
+export default PostItem;

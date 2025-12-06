@@ -3,12 +3,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import usePostDetail from "@/hooks/api/usePostDetail";
-import useThreadComments from "@/hooks/thread/useThreadComments";
+import usePostComments from "@/hooks/usePostComments";
 import useIsLoggedIn from "@/contexts/useIsLoggedIn";
 import useLoggedInUser from "@/contexts/useLoggedInUser";
 import { apiManager } from "@/lib/api/apiManager";
 import { MAX_LENGTH } from "@/lib/constants";
-import ThreadItem from "@/components/item/ThreadItem";
+import PostItem from "@/components/item/PostItem";
 import CommentListContainer from "@/components/page/PostDetailPage/CommentListContainer";
 import IconButton from "@/components/ui/IconButton";
 import ProgressFragment from "@/components/ui/ProgressFragment";
@@ -31,7 +31,7 @@ function PostDetailPage() {
     onClickCommentModiFy,
     onClickCommentDelete,
     textareaRef,
-  } = useThreadComments(postId);
+  } = usePostComments(postId);
 
   const onDeletePost = async () => {
     const response = confirm("정말 삭제하시겠습니끼?");
@@ -64,7 +64,7 @@ function PostDetailPage() {
   return (
     <div className="flex h-full flex-col justify-between">
       <div className="flex flex-col">
-        <ThreadItem
+        <PostItem
           type={"postDetail"}
           showDropdown={user?.userId === post?.authorId}
           onClickLike={() => {

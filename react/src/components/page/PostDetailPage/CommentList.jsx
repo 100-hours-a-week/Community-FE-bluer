@@ -1,4 +1,4 @@
-import ThreadItem from "@/components/item/ThreadItem";
+import PostItem from "@/components/item/PostItem";
 
 function CommentList(props) {
   const { comments, onModify, onDelete, userId } = props;
@@ -9,7 +9,7 @@ function CommentList(props) {
         const { nickname, profileImageUrl } = comment.author;
 
         return (
-          <ThreadItem
+          <PostItem
             key={comment.commentId}
             type="comment"
             authorName={nickname}
@@ -17,7 +17,7 @@ function CommentList(props) {
             onClickModify={onModify}
             onClickDelete={onDelete}
             showDropdown={comment.author.id === userId}
-            threadId={comment.commentId}
+            itemId={comment.commentId}
             {...comment}
           />
         );

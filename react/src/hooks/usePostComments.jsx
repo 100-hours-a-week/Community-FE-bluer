@@ -4,7 +4,7 @@ import { apiManager } from "@/lib/api/apiManager";
 
 const EDIT = "EDIT";
 
-function useThreadComments(postId) {
+function usePostComments(postId) {
   const {
     comments,
     isLoading: isCommentsLoading,
@@ -106,4 +106,4 @@ function useThreadComments(postId) {
   };
 }
 
-export default useThreadComments;
+export default usePostComments;

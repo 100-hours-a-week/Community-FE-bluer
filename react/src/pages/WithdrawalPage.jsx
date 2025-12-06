@@ -16,10 +16,8 @@ function WithdrawalPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const reason = formData.get("reason");
-    console.log(reason);
-    // TODO: dialog
+    // const formData = new FormData(event.target);
+    // const reason = formData.get("reason");
     const response = confirm("정말 탈퇴하시겠습니까?");
 
     if (response) {

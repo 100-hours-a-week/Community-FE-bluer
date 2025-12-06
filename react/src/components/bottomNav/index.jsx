@@ -4,7 +4,6 @@ import DefaultBottomNav from "@/components/bottomNav/DefaultBottomNav";
 function BottomNav() {
   const name = useRouteName();
 
-  console.log(name);
   if (name === "") {
     return <></>;
   }
