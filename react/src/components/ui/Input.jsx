@@ -28,45 +28,48 @@ function Input(props) {
     type = "text",
     className,
     helper,
-    isPasswordVisible = false,
+    endAdornment,
+    isPasswordVisible, // TODO: remove
     ...others
   } = props;
+
   const [inputType, setInputType] = useState(type);
 
+  const shouldShowPasswordToggle =
+    isPasswordVisible !== undefined ? isPasswordVisible : type === "password";
+
   const onTogglePasswordType = () => {
-    if (inputType === "password") {
-      setInputType("text");
-    } else {
-      setInputType("password");
-    }
+    setInputType((prev) => (prev === "password" ? "text" : "password"));
   };
 
+  const passwordToggle = shouldShowPasswordToggle && (
+    <IconButton type="button" onClick={onTogglePasswordType}>
+      <FontAwesomeIcon icon={inputType === "text" ? faEye : faEyeSlash} />
+    </IconButton>
+  );
+
+  const finalEndAdornment = endAdornment || passwordToggle;
+
   return (
-    <div className={`${helper ? "flex flex-col" : "flex flex-row"}`}>
-      <div className="relative flex w-full flex-row">
-        <input type={inputType} className={cn(inputStyles({ variant }), className)} {...others} />
-        {isPasswordVisible && (
-          <IconButton
-            type="button"
-            className="right absolute top-4 right-3"
-            onClick={onTogglePasswordType}
-          >
-            {inputType === "text" ? (
-              <FontAwesomeIcon icon={faEye} />
-            ) : (
-              <FontAwesomeIcon icon={faEyeSlash} />
-            )}
-          </IconButton>
+    <div className="flex w-full flex-col">
+      <div className="relative flex w-full items-center">
+        <input
+          type={inputType}
+          className={cn(inputStyles({ variant }), finalEndAdornment && "pr-10", className)}
+          {...others}
+        />
+
+        {finalEndAdornment && (
+          <div className="absolute right-3 flex items-center">{finalEndAdornment}</div>
         )}
       </div>
-      {helper ? (
+
+      {helper && (
         <Text
           className={`mt-1.5 pl-2 ${helper.type === "error" ? "text-(--color-base-error)" : ""}`}
         >
           {helper.text}
         </Text>
-      ) : (
-        <></>
       )}
     </div>
   );
