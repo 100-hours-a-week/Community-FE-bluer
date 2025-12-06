@@ -36,8 +36,14 @@ export const apiManager = {
     const params = { password };
     return restClient.put("/users/password", params);
   },
+  getIsPasswordMatched: ({ password }) => {
+    const params = { password };
+
+    return restClient.post("/users/password/check", params);
+  },
   updateProfile: ({ nickname, profileImageUrl }) => {
     const params = { nickname, profileImageUrl };
+
     return restClient.put("/users/profile", params);
   },
   withdrawProfile: () => {

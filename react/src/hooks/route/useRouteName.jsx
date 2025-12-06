@@ -25,8 +25,14 @@ export const routePatterns = [
   { pattern: "/posts/:id/edit", name: "post-edit", page: <PostEditPage />, protected: true },
   { pattern: "/user/info", name: "user-info", page: <UserInfoPage />, protected: true },
   {
-    pattern: "/user/change-password",
+    pattern: "/user/info/change-password",
     name: "change-password",
+    page: <ChangePasswordPage />,
+    protected: true,
+  },
+  {
+    pattern: "/user/info/change-nickname",
+    name: "change-nickname",
     page: <ChangePasswordPage />,
     protected: true,
   },

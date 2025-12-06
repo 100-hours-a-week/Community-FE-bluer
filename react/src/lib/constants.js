@@ -32,12 +32,16 @@ export const NicknameErrorMessage = Object.freeze({
 export const PasswordErrorType = Object.freeze({
   TOO_SHORT: "TOO_SHORT",
   WRONG_FORMAT: "WRONG_FORMAT",
+  NOT_MATCH_ORIGIN_PASSWORD: "NOT_MATCH_ORIGIN_PASSWORD",
+  NOT_MATCH_CONFIRM: "NOT_MATCH_CONFIRM",
 });
 
 export const PasswordErrorMessage = Object.freeze({
   [PasswordErrorType.TOO_SHORT]: "비밀번호를 입력해주세요.",
   [PasswordErrorType.WRONG_FORMAT]:
     "비밀번호는 8자 이상, 20자 이하이며, 대문자, 소문자, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.",
+  [PasswordErrorType.NOT_MATCH_ORIGIN_PASSWORD]: "기존 비밀번호와 일치하지 않습니다.",
+  [PasswordErrorType.NOT_MATCH_CONFIRM]: "비밀번호가 일치하지 않습니다.",
 });
 
 export const LoginErrorType = Object.freeze({

@@ -1,11 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import useClearUserContext from "@/contexts/useClearUserContext";
 import useLoggedInUser from "@/contexts/useLoggedInUser";
+import { apiManager } from "@/lib/api/apiManager";
 import UserInfoPageMenuItem from "@/components/page/UserInfoPage/UserInfoPageItem";
 import Avatar from "@/components/ui/avatar";
 import Button from "@/components/ui/Button";
 import Text from "@/components/ui/Text";
-import { apiManager } from "@/lib/api/apiManager";
 
 function UserInfoPage() {
   const { user } = useLoggedInUser();
