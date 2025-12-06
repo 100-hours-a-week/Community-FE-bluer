@@ -52,8 +52,27 @@ export const LoginErrorMessage = Object.freeze({
   [LoginErrorType.LOGIN_FAILED]: "아이디 또는 비밀번호를 확인해 주세요",
 });
 
+export const PostErrorType = Object.freeze({
+  title: {
+    REQUIRED: "REQUIRED",
+  },
+  content: {
+    REQUIRED: "REQUIRED",
+  },
+});
+
+export const PostErrorMessage = Object.freeze({
+  title: {
+    [PostErrorType.title.REQUIRED]: "제목을 작성해 주세요",
+  },
+  content: {
+    [PostErrorType.content.REQUIRED]: "내용을 작성해 주세요",
+  },
+});
+
 export const MAX_LENGTH = Object.freeze({
   NICKNAME: 10,
   EMAIL: 30,
   PASSWORD: 20,
+  COMMENT: 500,
 });

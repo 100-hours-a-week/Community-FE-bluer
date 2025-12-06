@@ -37,11 +37,34 @@ function ThreadItem(props) {
     postImageUrl,
     // title,
     onClickLike,
-    onClickComment,
+    onClickModify,
+    onClickDelete,
+    showDropdown,
+
     // type: post || postDetail || comment
     type,
+
+    threadId,
   } = props;
-  // TODO: API 연동 시 state 값 정리
+
+  const handleClickModify = () => {
+    if (!onClickModify) {
+      return;
+    }
+
+    onClickModify(content, threadId);
+  };
+
+  const handleClickDelete = () => {
+    if (type === "comment") {
+      onClickDelete(threadId);
+      return;
+    }
+    if (type === "postDetail") {
+      onClickDelete();
+      return;
+    }
+  };
 
   return (
     <div
@@ -59,27 +82,28 @@ function ThreadItem(props) {
               </Text>
             </time>
           </div>
-          <div
-            className="relative"
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            <Dropdown direction="right" className="top-[-4px]">
-              <Dropdown.Trigger asChild>
-                <IconButton
-                  className={"hover:bg-button-bg-hover rounded-xl p-2 hover:cursor-pointer"}
-                >
-                  <FontAwesomeIcon icon={faEllipsis} />
-                </IconButton>
-              </Dropdown.Trigger>
-              <Dropdown.List>
-                <Dropdown.Item>1</Dropdown.Item>
-                <Dropdown.Item>2</Dropdown.Item>
-                <Dropdown.Item>3</Dropdown.Item>
-              </Dropdown.List>
-            </Dropdown>
-          </div>
+          {showDropdown && (
+            <div
+              className="relative"
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              <Dropdown direction="right" className="top-[-4px]">
+                <Dropdown.Trigger asChild>
+                  <IconButton
+                    className={"hover:bg-button-bg-hover rounded-xl p-2 hover:cursor-pointer"}
+                  >
+                    <FontAwesomeIcon icon={faEllipsis} />
+                  </IconButton>
+                </Dropdown.Trigger>
+                <Dropdown.List>
+                  <Dropdown.Item onClick={handleClickModify}>수정하기</Dropdown.Item>
+                  <Dropdown.Item onClick={handleClickDelete}>삭제하기</Dropdown.Item>
+                </Dropdown.List>
+              </Dropdown>
+            </div>
+          )}
         </div>
         <div className="col-start-2 row-start-2 row-end-3">
           <div>
@@ -120,15 +144,7 @@ function ThreadItem(props) {
                   />
                   <ThreadStatItem
                     className={"hover:bg-button-bg-hover rounded-xl hover:cursor-pointer"}
-                    iconElement={
-                      <IconButton>
-                        <FontAwesomeIcon icon={faComment} />
-                      </IconButton>
-                    }
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onClickComment?.();
-                    }}
+                    iconElement={<FontAwesomeIcon icon={faComment} />}
                     count={commentCount}
                   />
                   <ThreadStatItem

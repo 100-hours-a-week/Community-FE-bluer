@@ -1,0 +1,54 @@
+import { cva } from "class-variance-authority";
+import { cn } from "@/utils/cn";
+import Text from "@/components/ui/Text";
+
+const textAreaStyles = cva(
+  "w-full p-2 flex items-center flex items-center justify-center rounded-lg border border-transparent outline-none resize-none",
+  {
+    variants: {
+      variant: {
+        filled: "bg-input-bg-filled",
+        outlined: "border-border-grey border",
+        error: "border-base-error border",
+      },
+    },
+    defaultVariants: {
+      variant: "filled",
+    },
+  }
+);
+
+function TextArea(props) {
+  const {
+    variant = "filled",
+    className,
+    endAdornment,
+    ref,
+    wrapperStyle,
+    helper,
+    ...others
+  } = props;
+
+  return (
+    <div className={`flex w-full flex-col ${wrapperStyle}`}>
+      <div className={`relative flex w-full items-center text-center ${wrapperStyle}`}>
+        <textarea
+          ref={ref}
+          className={cn(textAreaStyles({ variant }), endAdornment && "pr-10", className)}
+          {...others}
+        />
+
+        {endAdornment && <div className="absolute right-3 flex items-center">{endAdornment}</div>}
+      </div>
+      {helper && (
+        <Text
+          className={`mt-1.5 pl-2 ${helper.type === "error" ? "text-(--color-base-error)" : ""}`}
+        >
+          {helper.text}
+        </Text>
+      )}
+    </div>
+  );
+}
+
+export default TextArea;

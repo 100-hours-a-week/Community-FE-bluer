@@ -5,6 +5,8 @@ import {
   NicknameErrorType,
   PasswordErrorMessage,
   PasswordErrorType,
+  PostErrorMessage,
+  PostErrorType,
 } from "@/lib/constants";
 
 export function isValidEmail(email) {
@@ -74,5 +76,25 @@ export const getPasswordError = (password) => {
     };
   }
 
+  return null;
+};
+
+export const getPostTitleError = (title) => {
+  if (!title || title?.trim()?.length < 1) {
+    return {
+      errorType: PostErrorType.title.REQUIRED,
+      message: PostErrorMessage.title.REQUIRED,
+    };
+  }
+  return null;
+};
+
+export const getPostContentError = (content) => {
+  if (!content || content?.trim()?.length < 1) {
+    return {
+      errorType: PostErrorType.content.REQUIRED,
+      message: PostErrorMessage.content.REQUIRED,
+    };
+  }
   return null;
 };
