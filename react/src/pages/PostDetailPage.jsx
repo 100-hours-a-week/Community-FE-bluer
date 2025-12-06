@@ -14,6 +14,8 @@ import IconButton from "@/components/ui/IconButton";
 import ProgressFragment from "@/components/ui/ProgressFragment";
 import Separator from "@/components/ui/Seperator";
 import TextArea from "@/components/ui/TextArea";
+import { useToast } from "@/contexts/ToastContext";
+import useToggleLike from "@/hooks/useToggleLike";
 
 function PostDetailPage() {
   const { id: postId } = useParams();
@@ -22,7 +24,7 @@ function PostDetailPage() {
   const isLoggedIn = useIsLoggedIn();
   const { user } = useLoggedInUser();
 
-  const { post, isLoading, isError } = usePostDetail(postId);
+  const { post, isLoading, isError, mutate } = usePostDetail(postId);
   const {
     comments,
     isCommentsLoading,
@@ -32,6 +34,8 @@ function PostDetailPage() {
     onClickCommentDelete,
     textareaRef,
   } = usePostComments(postId);
+
+  const { toggleLike } = useToggleLike(mutate);
 
   const onDeletePost = async () => {
     const response = confirm("정말 삭제하시겠습니끼?");
@@ -68,8 +72,7 @@ function PostDetailPage() {
           type={"postDetail"}
           showDropdown={user?.userId === post?.authorId}
           onClickLike={() => {
-            // TODO
-            alert("toggle like");
+            toggleLike(postId, post.likedByMe);
           }}
           onClickModify={() => {
             navigate(`/posts/${postId}/edit`);

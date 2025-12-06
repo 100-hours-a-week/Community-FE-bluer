@@ -32,7 +32,7 @@ function PostItem(props) {
     createdAt,
     likeCount,
     // TODO: get data from another api
-    isLike = false,
+    likedByMe = false,
     viewCount,
     postImageUrl,
     // title,
@@ -133,7 +133,7 @@ function PostItem(props) {
                     }}
                     iconElement={
                       <IconButton>
-                        {isLike ? (
+                        {likedByMe ? (
                           <FontAwesomeIcon icon={solidHeart} />
                         ) : (
                           <FontAwesomeIcon icon={normalHeart} />

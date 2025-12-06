@@ -11,34 +11,46 @@ function usePosts(initialCursor = null, size = PER_PAGE) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchNextPage = useCallback(async () => {
+  const fetchPage = useCallback(async () => {
+    const { data } = await apiManager.getPosts(cursor, size);
+
+    setPosts((prevPosts) => {
+      return [...prevPosts, ...data.posts];
+    });
+    setHasNext(data.hasNext);
+    setNextCursor(data.nextCursor);
+    setCursor(data.nextCursor);
+  }, [cursor, size]);
+
+  const fetchNextPage = useCallback(() => {
     if (!hasNext || isLoading) {
       return;
     }
     setIsLoading(true);
 
     try {
-      const { data } = await apiManager.getPosts(cursor, size);
-
-      setPosts((prevPosts) => {
-        return [...prevPosts, ...data.posts];
-      });
-      setHasNext(data.hasNext);
-      setNextCursor(data.nextCursor);
-      setCursor(data.nextCursor);
+      fetchPage();
     } catch (error) {
       console.error(error);
       setError(true);
     } finally {
       setIsLoading(false);
     }
-  }, [cursor, hasNext, isLoading, size]);
+  }, [fetchPage, hasNext, isLoading]);
 
   useEffect(() => {
     fetchNextPage();
-  }, []);
+  }, [fetchNextPage]);
 
-  return { posts, isLoading, isError: !!error, hasNext, nextCursor, fetchNextPage };
+  return {
+    posts,
+    isLoading,
+    isError: !!error,
+    hasNext,
+    nextCursor,
+    fetchNextPage,
+    mutate: fetchPage,
+  };
 }
 
 export default usePosts;
