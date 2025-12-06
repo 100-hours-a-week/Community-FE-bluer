@@ -13,6 +13,11 @@ export const apiManager = {
 
     return restClient.post("/users/signup", params);
   },
+  signOut: () => {
+    const params = {};
+
+    return restClient.post("/users/signout", params);
+  },
   getUserProfile: () => {
     return restClient.get("/users/profile");
   },

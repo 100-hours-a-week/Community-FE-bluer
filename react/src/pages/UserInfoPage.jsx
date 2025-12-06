@@ -1,5 +1,72 @@
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import useClearUserContext from "@/contexts/useClearUserContext";
+import useLoggedInUser from "@/contexts/useLoggedInUser";
+import UserInfoPageMenuItem from "@/components/page/UserInfoPage/UserInfoPageItem";
+import Avatar from "@/components/ui/avatar";
+import Button from "@/components/ui/Button";
+import Text from "@/components/ui/Text";
+import { apiManager } from "@/lib/api/apiManager";
+
 function UserInfoPage() {
-  return <>UserInfoPage</>;
+  const { user } = useLoggedInUser();
+  const { clearUserInfo } = useClearUserContext();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const logout = async () => {
+    try {
+      const result = await apiManager.signOut();
+
+      console.log(result);
+
+      clearUserInfo();
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  return (
+    <div className="flex h-full flex-col justify-between p-3">
+      <div>
+        <div className="mb-3 flex items-center gap-x-2">
+          <Avatar size="xl" imgUrl={user.profileImageUrl} />
+          <div className="flex flex-col gap-0.5">
+            <Text variant="title">{user.nickname}</Text>
+            <Text hierarchy="secondary">Email: {`${user.email}`}</Text>
+          </div>
+        </div>
+        <div className="flex w-full gap-x-2 pt-1 pb-3">
+          <Button variant="secondary" className="border-button-secondary-border h-9 w-full">
+            <Text className="mx-auto">프로필 이미지 변경</Text>
+          </Button>
+          <Button
+            as={Link}
+            to={`${location.pathname}/change-nickname`}
+            variant="secondary"
+            className="border-button-secondary-border h-9 w-full"
+          >
+            <Text className="mx-auto">닉네임 변경</Text>
+          </Button>
+        </div>
+        <ul>
+          <li>
+            <UserInfoPageMenuItem
+              to={`${location.pathname}/change-password`}
+              menuName="비밀번호 변경"
+            />
+          </li>
+          <li>
+            <UserInfoPageMenuItem to={`${location.pathname}/withdrawal`} menuName="회원탈퇴" />
+          </li>
+        </ul>
+      </div>
+      <Text size="sm" className="underline hover:cursor-pointer" onClick={logout}>
+        로그아웃
+      </Text>
+    </div>
+  );
 }
 
 export default UserInfoPage;
