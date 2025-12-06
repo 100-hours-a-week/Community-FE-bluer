@@ -43,8 +43,20 @@ function ThreadItem(props) {
 
     // type: post || postDetail || comment
     type,
+
+    threadId,
   } = props;
   // TODO: API 연동 시 state 값 정리
+
+  const handleClickModify = () => {
+    if (!onClickModify) {
+      return;
+    }
+
+    if (type === "comment") {
+      onClickModify(content, threadId);
+    }
+  };
 
   return (
     <div
@@ -78,7 +90,7 @@ function ThreadItem(props) {
                   </IconButton>
                 </Dropdown.Trigger>
                 <Dropdown.List>
-                  <Dropdown.Item onClick={onClickModify}>수정하기</Dropdown.Item>
+                  <Dropdown.Item onClick={handleClickModify}>수정하기</Dropdown.Item>
                   <Dropdown.Item onClick={onClickDelete}>삭제하기</Dropdown.Item>
                 </Dropdown.List>
               </Dropdown>

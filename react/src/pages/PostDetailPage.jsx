@@ -1,3 +1,6 @@
+import { faCircleArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useComments from "@/hooks/api/useComments";
 import usePostDetail from "@/hooks/api/usePostDetail";
@@ -10,8 +13,10 @@ import CommentListContainer from "@/components/page/PostDetailPage/CommentListCo
 import IconButton from "@/components/ui/IconButton";
 import ProgressFragment from "@/components/ui/ProgressFragment";
 import Separator from "@/components/ui/Seperator";
-import Text from "@/components/ui/Text";
 import TextArea from "@/components/ui/TextArea";
+
+const EDIT = "EDIT";
+const CREATE = "CREATE";
 
 function PostDetailPage() {
   const { id: postId } = useParams();
@@ -28,10 +33,29 @@ function PostDetailPage() {
     mutate,
   } = useComments(postId);
 
-  const postComment = async (content) => {
+  const mode = useRef(null);
+  const commentIdRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  const createComment = async (content) => {
     try {
       await apiManager.postComment({ postId, content });
 
+      mutate();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const updateComment = async () => {
+    const content = textareaRef.current.value;
+    const commentId = commentIdRef.current;
+
+    try {
+      await apiManager.updateComment({ postId, commentId, content });
+
+      textareaRef.current.value = null;
+      textareaRef.current = null;
+      commentIdRef.current = null;
       mutate();
     } catch (error) {
       console.error(error);
@@ -47,13 +71,23 @@ function PostDetailPage() {
       return;
     }
 
-    postComment(comment);
+    if (mode.current === EDIT) {
+      updateComment();
+    } else {
+      createComment(comment);
+    }
   };
 
   const onClick = () => {
     if (!isLoggedIn) {
       navigate("/login");
     }
+  };
+
+  const onClickCommentModiFy = (content, commentId) => {
+    mode.current = EDIT;
+    textareaRef.current.value = content;
+    commentIdRef.current = commentId;
   };
 
   if (isLoading) {
@@ -88,13 +122,18 @@ function PostDetailPage() {
           ) : isCommentsError ? (
             <></>
           ) : (
-            <CommentListContainer postId={postId} comments={comments} />
+            <CommentListContainer
+              comments={comments}
+              onModify={onClickCommentModiFy}
+              userId={user?.userId}
+            />
           )}
         </div>
       </div>
       <div className="border-t-border-grey border-t px-2 py-4">
         <form onSubmit={onSubmit} onClick={onClick}>
           <TextArea
+            ref={textareaRef}
             name="comment"
             variant="outlined"
             multiline={true}
@@ -102,7 +141,7 @@ function PostDetailPage() {
             maxLength={MAX_LENGTH.COMMENT}
             endAdornment={
               <IconButton type="submit">
-                <Text variant="title">등록</Text>
+                <FontAwesomeIcon icon={faCircleArrowUp} />
               </IconButton>
             }
           />
