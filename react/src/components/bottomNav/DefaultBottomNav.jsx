@@ -14,14 +14,12 @@ function DefaultBottomNav() {
         </li>
 
         <li className="flex flex-1 justify-center">
-          {/* TODO: 비회원이 클릭 시 모달 또는 로그인 */}
           <IconButton className="bg-button-bg-hover h-14 w-14" as={Link} to={"/posts/create"}>
             <FontAwesomeIcon icon={faPlus} size="lg" className="text-gray-400" />
           </IconButton>
         </li>
 
         <li className="flex flex-1 justify-center">
-          {/* TODO: 비회원이 클릭 시 모달 또는 로그인 */}
           <BottomNavLinkButton targetName={"user-info"} to={"/user/info"} icon={faUser} />
         </li>
       </ul>
