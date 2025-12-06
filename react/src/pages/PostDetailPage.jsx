@@ -1,5 +1,5 @@
-import { startTransition } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useComments from "@/hooks/api/useComments";
 import usePostDetail from "@/hooks/api/usePostDetail";
 import useIsLoggedIn from "@/contexts/useIsLoggedIn";
 import { apiManager } from "@/lib/api/apiManager";
@@ -16,16 +16,20 @@ function PostDetailPage() {
   const { id: postId } = useParams();
   const navigate = useNavigate();
 
-  const { post, isLoading, isError } = usePostDetail(postId);
   const isLoggedIn = useIsLoggedIn();
+  const { post, isLoading, isError } = usePostDetail(postId);
+  const {
+    comments,
+    isLoading: isCommentsLoading,
+    isError: isCommentsError,
+    mutate,
+  } = useComments(postId);
 
   const postComment = async (content) => {
     try {
       await apiManager.postComment({ postId, content });
 
-      startTransition(() => {
-        navigate(0);
-      });
+      mutate();
     } catch (error) {
       console.error(error);
     }
@@ -62,13 +66,20 @@ function PostDetailPage() {
         <ThreadItem
           type={"postDetail"}
           onClickLike={() => {
+            // TODO
             alert("toggle like");
           }}
           {...post}
         />
         <Separator className={"h-2.5"} />
         <div>
-          <CommentListContainer postId={postId} />
+          {isCommentsLoading ? (
+            <ProgressFragment />
+          ) : isCommentsError ? (
+            <></>
+          ) : (
+            <CommentListContainer postId={postId} comments={comments} />
+          )}
         </div>
       </div>
       <div className="border-t-border-grey border-t px-2 py-4">

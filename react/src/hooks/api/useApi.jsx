@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { restClient } from "@/lib/api/restClient";
 
 function useApi(requestUrl, params) {
@@ -6,25 +6,25 @@ function useApi(requestUrl, params) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    async function fetchData() {
-      setIsLoading(true);
-      try {
-        const { data } = await restClient.get(requestUrl, params);
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await restClient.get(requestUrl, params);
 
-        setData(data);
-      } catch (error) {
-        console.error(error);
-        setError(true);
-      } finally {
-        setIsLoading(false);
-      }
+      setData(data);
+    } catch (error) {
+      console.error(error);
+      setError(true);
+    } finally {
+      setIsLoading(false);
     }
-
-    fetchData();
   }, [params, requestUrl]);
 
-  return { data, isLoading, isError: !!error };
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  return { data, isLoading, isError: !!error, mutate: fetchData };
 }
 
 export default useApi;

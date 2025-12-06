@@ -1,22 +1,9 @@
 import { Fragment } from "react";
-import useComments from "@/hooks/api/useComments";
-import ProgressFragment from "@/components/ui/ProgressFragment";
-import Separator from "@/components/ui/Seperator";
-import CommentList from "./CommentList";
+import CommentList from "@/components/page/PostDetailPage/CommentList";
 import Text from "@/components/ui/Text";
 
 function CommentListContainer(props) {
-  const { postId } = props;
-  const { comments, isLoading, isError } = useComments(postId);
-
-  if (isLoading) {
-    return <ProgressFragment />;
-  }
-
-  // TODO: error
-  if (isError) {
-    return <>error</>;
-  }
+  const { comments } = props;
 
   return (
     <Fragment>
