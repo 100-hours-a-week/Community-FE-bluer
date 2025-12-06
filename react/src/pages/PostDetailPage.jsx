@@ -1,12 +1,11 @@
 import { faCircleArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useRef } from "react";
+import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useComments from "@/hooks/api/useComments";
 import usePostDetail from "@/hooks/api/usePostDetail";
+import useThreadComments from "@/hooks/thread/useThreadComments";
 import useIsLoggedIn from "@/contexts/useIsLoggedIn";
 import useLoggedInUser from "@/contexts/useLoggedInUser";
-import { apiManager } from "@/lib/api/apiManager";
 import { MAX_LENGTH } from "@/lib/constants";
 import ThreadItem from "@/components/item/ThreadItem";
 import CommentListContainer from "@/components/page/PostDetailPage/CommentListContainer";
@@ -14,8 +13,6 @@ import IconButton from "@/components/ui/IconButton";
 import ProgressFragment from "@/components/ui/ProgressFragment";
 import Separator from "@/components/ui/Seperator";
 import TextArea from "@/components/ui/TextArea";
-
-const EDIT = "EDIT";
 
 function PostDetailPage() {
   const { id: postId } = useParams();
@@ -27,86 +24,19 @@ function PostDetailPage() {
   const { post, isLoading, isError } = usePostDetail(postId);
   const {
     comments,
-    isLoading: isCommentsLoading,
-    isError: isCommentsError,
-    mutate,
-  } = useComments(postId);
+    isCommentsLoading,
+    isCommentsError,
+    onSubmitComment,
+    onClickCommentModiFy,
+    onClickCommentDelete,
+    textareaRef,
+  } = useThreadComments(postId);
 
-  const mode = useRef(null);
-  const commentIdRef = useRef(null);
-  const textareaRef = useRef(null);
-
-  const createComment = async (content) => {
-    try {
-      await apiManager.postComment({ postId, content });
-
-      textareaRef.current.value = null;
-      textareaRef.current = null;
-      mutate();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const updateComment = async () => {
-    const content = textareaRef.current.value;
-    const commentId = commentIdRef.current;
-
-    try {
-      await apiManager.updateComment({ postId, commentId, content });
-
-      textareaRef.current.value = null;
-      textareaRef.current = null;
-      commentIdRef.current = null;
-      mode.current = null;
-      mutate();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const deleteComment = async (commentId) => {
-    try {
-      await apiManager.deleteComment({ postId, commentId });
-      mutate();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const comment = formData.get("comment");
-
-    if (comment.length < 1) {
-      return;
-    }
-
-    if (mode.current === EDIT) {
-      updateComment();
-    } else {
-      createComment(comment);
-    }
-  };
-
-  const onClick = () => {
+  const onFormClick = useCallback(() => {
     if (!isLoggedIn) {
       navigate("/login");
     }
-  };
-
-  const onClickCommentModiFy = (content, commentId) => {
-    mode.current = EDIT;
-    textareaRef.current.value = content;
-    commentIdRef.current = commentId;
-  };
-
-  const onClickCommentDelete = (commentId) => {
-    // TODO: dialog
-    if (confirm("정말 삭제하시겠습니까?")) {
-      deleteComment(commentId);
-    }
-  };
+  }, [isLoggedIn, navigate]);
 
   if (isLoading) {
     return <ProgressFragment />;
@@ -150,7 +80,7 @@ function PostDetailPage() {
         </div>
       </div>
       <div className="border-t-border-grey border-t px-2 py-4">
-        <form onSubmit={onSubmit} onClick={onClick}>
+        <form onSubmit={onSubmitComment} onClick={onFormClick}>
           <TextArea
             ref={textareaRef}
             name="comment"
