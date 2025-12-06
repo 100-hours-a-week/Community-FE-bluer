@@ -53,9 +53,7 @@ function ThreadItem(props) {
       return;
     }
 
-    if (type === "comment") {
-      onClickModify(content, threadId);
-    }
+    onClickModify(content, threadId);
   };
 
   const handleClickDelete = () => {

@@ -18,11 +18,11 @@ const textAreaStyles = cva(
 );
 
 function TextArea(props) {
-  const { variant = "filled", className, endAdornment, ref, ...others } = props;
+  const { variant = "filled", className, endAdornment, ref, wrapperStyle, ...others } = props;
 
   return (
-    <div className="flex w-full flex-col">
-      <div className="relative flex w-full items-center text-center">
+    <div className={`flex w-full flex-col ${wrapperStyle}`}>
+      <div className={`relative flex w-full items-center text-center ${wrapperStyle}`}>
         <textarea
           ref={ref}
           className={cn(textAreaStyles({ variant }), endAdornment && "pr-10", className)}

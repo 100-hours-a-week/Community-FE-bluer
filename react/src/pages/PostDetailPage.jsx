@@ -57,6 +57,7 @@ function PostDetailPage() {
           }}
           onClickModify={() => {
             alert("modify");
+            navigate(`/posts/${postId}/edit`);
           }}
           onClickDelete={() => {
             alert("delete");
