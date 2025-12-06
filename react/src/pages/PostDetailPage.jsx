@@ -6,6 +6,7 @@ import usePostDetail from "@/hooks/api/usePostDetail";
 import useThreadComments from "@/hooks/thread/useThreadComments";
 import useIsLoggedIn from "@/contexts/useIsLoggedIn";
 import useLoggedInUser from "@/contexts/useLoggedInUser";
+import { apiManager } from "@/lib/api/apiManager";
 import { MAX_LENGTH } from "@/lib/constants";
 import ThreadItem from "@/components/item/ThreadItem";
 import CommentListContainer from "@/components/page/PostDetailPage/CommentListContainer";
@@ -32,6 +33,21 @@ function PostDetailPage() {
     textareaRef,
   } = useThreadComments(postId);
 
+  const onDeletePost = async () => {
+    const response = confirm("정말 삭제하시겠습니끼?");
+    if (!response) {
+      return;
+    }
+
+    try {
+      await apiManager.deletePost(postId);
+
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const onFormClick = useCallback(() => {
     if (!isLoggedIn) {
       navigate("/login");
@@ -56,12 +72,9 @@ function PostDetailPage() {
             alert("toggle like");
           }}
           onClickModify={() => {
-            alert("modify");
             navigate(`/posts/${postId}/edit`);
           }}
-          onClickDelete={() => {
-            alert("delete");
-          }}
+          onClickDelete={onDeletePost}
           {...post}
         />
         <Separator className={"h-2.5"} />

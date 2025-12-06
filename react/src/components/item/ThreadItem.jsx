@@ -46,7 +46,6 @@ function ThreadItem(props) {
 
     threadId,
   } = props;
-  // TODO: API 연동 시 state 값 정리
 
   const handleClickModify = () => {
     if (!onClickModify) {
@@ -59,6 +58,11 @@ function ThreadItem(props) {
   const handleClickDelete = () => {
     if (type === "comment") {
       onClickDelete(threadId);
+      return;
+    }
+    if (type === "postDetail") {
+      onClickDelete();
+      return;
     }
   };
 
