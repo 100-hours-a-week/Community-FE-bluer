@@ -10,26 +10,37 @@ function UserContextProvider({ children }) {
     setUserInfo(null);
   };
 
+  const fetchUserInfo = async () => {
+    setIsLoading(true);
+    try {
+      const { data } = await apiManager.getUserProfile();
+      const { id, email, nickname, profileImageUrl } = data;
+
+      setUserInfo({ userId: id, email, nickname, profileImageUrl });
+      // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      clearUserInfo();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const refreshUserInfo = async () => {
+    setIsLoading(true);
+    await fetchUserInfo();
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     const getUser = async () => {
-      try {
-        const { data } = await apiManager.getUserProfile();
-        const { id, email, nickname, profileImageUrl } = data;
-
-        setUserInfo({ userId: id, email, nickname, profileImageUrl });
-
-        // eslint-disable-next-line no-unused-vars
-      } catch (error) {
-        clearUserInfo();
-      } finally {
-        setIsLoading(false);
-      }
+      await fetchUserInfo();
     };
     getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <UserContext.Provider value={{ userInfo, clearUserInfo, isLoading }}>
+    <UserContext.Provider value={{ userInfo, refreshUserInfo, clearUserInfo, isLoading }}>
       {children}
     </UserContext.Provider>
   );

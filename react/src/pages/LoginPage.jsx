@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import useRefreshUser from "@/contexts/useRefreshUser";
 import { apiManager } from "@/lib/api/apiManager";
 import { LoginErrorMessage } from "@/lib/constants";
 import { getEmailError, getPasswordError } from "@/utils/validation";
@@ -9,6 +10,9 @@ import ProgressFragment from "@/components/ui/ProgressFragment";
 import Text from "@/components/ui/Text";
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const { refreshUserInfo } = useRefreshUser();
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState({ email: null, password: null });
 
@@ -35,11 +39,9 @@ function LoginPage() {
     setIsLoading(true);
     try {
       await apiManager.login({ email, password });
-      alert("성공");
-      /*
-        TODO: set cookie, handling logic
-        redirect post-list page
-      */
+
+      refreshUserInfo();
+      navigate("/");
     } catch (error) {
       console.error(error);
       setError({ password: LoginErrorMessage.LOGIN_FAILED });
