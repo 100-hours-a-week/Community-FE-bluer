@@ -37,6 +37,10 @@ function ThreadItem(props) {
     postImageUrl,
     // title,
     onClickLike,
+    onClickModify,
+    onClickDelete,
+    showDropdown,
+
     // type: post || postDetail || comment
     type,
   } = props;
@@ -58,27 +62,28 @@ function ThreadItem(props) {
               </Text>
             </time>
           </div>
-          <div
-            className="relative"
-            onClick={(event) => {
-              event.stopPropagation();
-            }}
-          >
-            <Dropdown direction="right" className="top-[-4px]">
-              <Dropdown.Trigger asChild>
-                <IconButton
-                  className={"hover:bg-button-bg-hover rounded-xl p-2 hover:cursor-pointer"}
-                >
-                  <FontAwesomeIcon icon={faEllipsis} />
-                </IconButton>
-              </Dropdown.Trigger>
-              <Dropdown.List>
-                <Dropdown.Item>1</Dropdown.Item>
-                <Dropdown.Item>2</Dropdown.Item>
-                <Dropdown.Item>3</Dropdown.Item>
-              </Dropdown.List>
-            </Dropdown>
-          </div>
+          {showDropdown && (
+            <div
+              className="relative"
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              <Dropdown direction="right" className="top-[-4px]">
+                <Dropdown.Trigger asChild>
+                  <IconButton
+                    className={"hover:bg-button-bg-hover rounded-xl p-2 hover:cursor-pointer"}
+                  >
+                    <FontAwesomeIcon icon={faEllipsis} />
+                  </IconButton>
+                </Dropdown.Trigger>
+                <Dropdown.List>
+                  <Dropdown.Item onClick={onClickModify}>수정하기</Dropdown.Item>
+                  <Dropdown.Item onClick={onClickDelete}>삭제하기</Dropdown.Item>
+                </Dropdown.List>
+              </Dropdown>
+            </div>
+          )}
         </div>
         <div className="col-start-2 row-start-2 row-end-3">
           <div>

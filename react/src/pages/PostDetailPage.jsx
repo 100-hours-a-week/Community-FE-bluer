@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import useComments from "@/hooks/api/useComments";
 import usePostDetail from "@/hooks/api/usePostDetail";
 import useIsLoggedIn from "@/contexts/useIsLoggedIn";
+import useLoggedInUser from "@/contexts/useLoggedInUser";
 import { apiManager } from "@/lib/api/apiManager";
 import { MAX_LENGTH } from "@/lib/constants";
 import ThreadItem from "@/components/item/ThreadItem";
@@ -17,6 +18,8 @@ function PostDetailPage() {
   const navigate = useNavigate();
 
   const isLoggedIn = useIsLoggedIn();
+  const { user } = useLoggedInUser();
+
   const { post, isLoading, isError } = usePostDetail(postId);
   const {
     comments,
@@ -65,9 +68,16 @@ function PostDetailPage() {
       <div className="flex flex-col">
         <ThreadItem
           type={"postDetail"}
+          showDropdown={user?.userId === post?.authorId}
           onClickLike={() => {
             // TODO
             alert("toggle like");
+          }}
+          onClickModify={() => {
+            alert("modify");
+          }}
+          onClickDelete={() => {
+            alert("delete");
           }}
           {...post}
         />

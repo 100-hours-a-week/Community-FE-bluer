@@ -52,9 +52,13 @@ function List(props) {
 }
 
 function Item(props) {
-  const { children } = props;
+  const { children, onClick } = props;
 
-  return <li className="hover:bg-base-grey cursor-pointer list-none p-4">{children}</li>;
+  return (
+    <li className="hover:bg-base-grey cursor-pointer list-none p-4" onClick={onClick}>
+      {children}
+    </li>
+  );
 }
 
 Dropdown.Trigger = Trigger;
