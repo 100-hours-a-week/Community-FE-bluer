@@ -71,13 +71,9 @@ function UserInfoPage() {
           >
             <Text className="mx-auto">프로필 이미지 변경</Text>
           </Button>
-          <Input
-            onChange={onChange}
-            ref={inputRef}
-            type="file"
-            className="hidden"
-            accept="image/png, image/jpeg"
-          />
+          <div className="hidden">
+            <Input onChange={onChange} ref={inputRef} type="file" accept="image/png, image/jpeg" />
+          </div>
           <Button
             as={Link}
             to={`${location.pathname}/change-nickname`}
