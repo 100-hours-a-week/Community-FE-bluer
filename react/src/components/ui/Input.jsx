@@ -1,7 +1,7 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { cva } from "class-variance-authority";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { cn } from "@/utils/cn";
 import IconButton from "@/components/ui/IconButton";
 import Text from "@/components/ui/Text";
@@ -23,30 +23,23 @@ const inputStyles = cva(
 );
 
 function Input(props) {
-  const {
-    variant = "filled",
-    type = "text",
-    className,
-    helper,
-    endAdornment,
-    isPasswordVisible, // TODO: remove
-    ...others
-  } = props;
+  const { variant = "filled", type = "text", className, helper, endAdornment, ...others } = props;
 
   const [inputType, setInputType] = useState(type);
 
-  const shouldShowPasswordToggle =
-    isPasswordVisible !== undefined ? isPasswordVisible : type === "password";
-
-  const onTogglePasswordType = () => {
+  const onTogglePasswordType = useCallback(() => {
     setInputType((prev) => (prev === "password" ? "text" : "password"));
-  };
+  }, [setInputType]);
 
-  const passwordToggle = shouldShowPasswordToggle && (
-    <IconButton type="button" onClick={onTogglePasswordType}>
-      <FontAwesomeIcon icon={inputType === "text" ? faEye : faEyeSlash} />
-    </IconButton>
-  );
+  const passwordToggle = useMemo(() => {
+    return (
+      inputType === "password" && (
+        <IconButton type="button" onClick={onTogglePasswordType}>
+          <FontAwesomeIcon icon={inputType === "text" ? faEye : faEyeSlash} />
+        </IconButton>
+      )
+    );
+  }, [inputType, onTogglePasswordType]);
 
   const finalEndAdornment = endAdornment || passwordToggle;
 

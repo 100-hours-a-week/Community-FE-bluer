@@ -92,7 +92,6 @@ function ChangePasswordPage() {
           <Input
             name="originPassword"
             type="password"
-            isPasswordVisible={true}
             defaultValue={""}
             variant="outlined"
             placeholder="기존 비밀번호"
@@ -101,7 +100,6 @@ function ChangePasswordPage() {
           <Input
             name="newPassword"
             type="password"
-            isPasswordVisible={true}
             defaultValue={""}
             variant="outlined"
             placeholder="새 비밀번호"
@@ -110,7 +108,6 @@ function ChangePasswordPage() {
           <Input
             name="newPasswordConfirm"
             type="password"
-            isPasswordVisible={true}
             defaultValue={""}
             variant="outlined"
             placeholder="새 비밀번호 확인"

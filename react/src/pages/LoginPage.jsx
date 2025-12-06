@@ -73,7 +73,6 @@ function LoginPage() {
           name="password"
           type="password"
           placeholder="비밀번호"
-          isPasswordVisible={true}
           helper={
             error.password
               ? {

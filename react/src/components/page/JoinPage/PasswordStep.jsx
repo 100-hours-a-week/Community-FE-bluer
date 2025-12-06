@@ -33,7 +33,6 @@ function PasswordStep(props) {
           variant="outlined"
           placeholder="비밀번호"
           helper={error ? { type: "error", text: error } : null}
-          isPasswordVisible={true}
         />
         <div />
         <Button
