@@ -15,11 +15,16 @@ export const routePatterns = [
   { pattern: "/login", name: "login", page: <LoginPage /> },
   { pattern: "/join", name: "join-redirect", page: <Navigate to="/join/email" replace /> },
   { pattern: "/join/:step", name: "join", page: <JoinPage /> },
-  { pattern: "/posts/create", name: "post-create", page: <PostCreatePage /> },
+  { pattern: "/posts/create", name: "post-create", page: <PostCreatePage />, protected: true },
   { pattern: "/posts/:id", name: "post-detail", page: <PostDetailPage /> },
-  { pattern: "/posts/:id/edit", name: "post-edit", page: <PostEditPage /> },
-  { pattern: "/user/info", name: "user-info", page: <UserInfoPage /> },
-  { pattern: "/user/change-password", name: "change-password", page: <ChangePasswordPage /> },
+  { pattern: "/posts/:id/edit", name: "post-edit", page: <PostEditPage />, protected: true },
+  { pattern: "/user/info", name: "user-info", page: <UserInfoPage />, protected: true },
+  {
+    pattern: "/user/change-password",
+    name: "change-password",
+    page: <ChangePasswordPage />,
+    protected: true,
+  },
 ];
 
 function useRouteName() {

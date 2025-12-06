@@ -16,7 +16,6 @@ function Header() {
   const name = useRouteName();
 
   const renderHeaderByPath = useCallback(() => {
-    console.log(`routename: ${name}`);
     if (name === "login") {
       return <></>;
     }

@@ -32,12 +32,13 @@ function UserContextProvider({ children }) {
   };
 
   useEffect(() => {
-    const getUser = async () => {
-      await fetchUserInfo();
-    };
-    getUser();
+    fetchUserInfo();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <UserContext.Provider value={{ userInfo, refreshUserInfo, clearUserInfo, isLoading }}>
