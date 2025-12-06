@@ -87,7 +87,6 @@ function usePostComments(postId) {
 
   const onClickCommentDelete = useCallback(
     (commentId) => {
-      // TODO: dialog
       if (confirm("정말 삭제하시겠습니까?")) {
         deleteComment(commentId);
       }

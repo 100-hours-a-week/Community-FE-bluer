@@ -5,6 +5,7 @@ import {
   faHeart as solidHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { formatToLocalDateTime } from "@/utils/date";
 import Avatar from "@/components/ui/Avatar";
 import IconButton from "@/components/ui/IconButton";
 import Image from "@/components/ui/Image";
@@ -31,11 +32,9 @@ function PostItem(props) {
     content,
     createdAt,
     likeCount,
-    // TODO: get data from another api
     likedByMe = false,
     viewCount,
     postImageUrl,
-    // title,
     onClickLike,
     onClickModify,
     onClickDelete,
@@ -77,8 +76,7 @@ function PostItem(props) {
             <Text variant={"title"}>{authorName}</Text>
             <time>
               <Text variant={"caption"} className="text-text-secondary">
-                {/* TODO: formatting */}
-                {createdAt}
+                {formatToLocalDateTime(createdAt)}
               </Text>
             </time>
           </div>

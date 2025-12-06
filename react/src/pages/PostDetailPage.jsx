@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import usePostDetail from "@/hooks/api/usePostDetail";
 import usePostComments from "@/hooks/usePostComments";
+import useToggleLike from "@/hooks/useToggleLike";
 import useIsLoggedIn from "@/contexts/useIsLoggedIn";
 import useLoggedInUser from "@/contexts/useLoggedInUser";
 import { apiManager } from "@/lib/api/apiManager";
@@ -14,8 +15,6 @@ import IconButton from "@/components/ui/IconButton";
 import ProgressFragment from "@/components/ui/ProgressFragment";
 import Separator from "@/components/ui/Seperator";
 import TextArea from "@/components/ui/TextArea";
-import { useToast } from "@/contexts/ToastContext";
-import useToggleLike from "@/hooks/useToggleLike";
 
 function PostDetailPage() {
   const { id: postId } = useParams();

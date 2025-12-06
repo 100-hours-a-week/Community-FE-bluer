@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import usePosts from "@/hooks/api/usePosts";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import useToggleLike from "@/hooks/useToggleLike";
-import { useToast } from "@/contexts/ToastContext";
 import PostItem from "@/components/item/PostItem";
 import List from "@/components/ui/List";
 import ListItem from "@/components/ui/ListItem";

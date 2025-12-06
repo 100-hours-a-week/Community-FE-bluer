@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/contexts/ToastContext";
 import { apiManager } from "@/lib/api/apiManager";
 import { PasswordErrorMessage } from "@/lib/constants";
 import { getPasswordError } from "@/utils/validation";
@@ -9,6 +10,7 @@ import Text from "@/components/ui/Text";
 
 function ChangePasswordPage() {
   const navigate = useNavigate();
+  const toast = useToast();
   const [originPasswordError, setOriginPasswordError] = useState(null);
   const [newPasswordError, setNewpasswordError] = useState(null);
   const [newPasswordConfirmError, setNewpasswordConfirmError] = useState(null);
@@ -46,8 +48,7 @@ function ChangePasswordPage() {
         password: newPassword,
       });
 
-      // TODO: success toast
-      alert("성공");
+      toast("성공");
       navigate("/user/info");
     } catch (error) {
       console.error(error);
