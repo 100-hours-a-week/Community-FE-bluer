@@ -14,44 +14,29 @@ function ChangePasswordPage() {
   const [newPasswordConfirmError, setNewpasswordConfirmError] = useState(null);
 
   const validatePasswordForm = async (originPassword, newPassword, newPasswordConfirm) => {
-    setOriginPasswordError(null);
-    setNewpasswordError(null);
-    setNewpasswordConfirmError(null);
-
     /*
       1. 기존 비밀번호 validation 규칙 확인
       2. 기존 비밀번호가 실제와 일치하는지 확인
       3. newPassword가 validation 규칙에 적용되는지 확인
       4. newPassword와 newPasswordConfirm과 같은지 확인
     */
-
-    const originPasswordError = getPasswordError(originPassword);
-    if (originPasswordError) {
-      setOriginPasswordError(originPasswordError.message);
-      return;
+    const originError = getPasswordError(originPassword);
+    if (originError) {
+      throw { field: "originPassword", message: originError.message };
     }
-    try {
-      const { data } = await apiManager.getIsPasswordMatched({ password: originPassword });
-      const { match } = data;
 
-      if (!match) {
-        setOriginPasswordError(PasswordErrorMessage.NOT_MATCH_ORIGIN_PASSWORD);
-        return;
-      }
-    } catch (error) {
-      console.error(error);
+    const { data } = await apiManager.getIsPasswordMatched({ password: originPassword });
+    if (!data.match) {
+      throw { field: "originPassword", message: PasswordErrorMessage.NOT_MATCH_ORIGIN_PASSWORD };
     }
 
     const newPasswordError = getPasswordError(newPassword);
-
     if (newPasswordError) {
-      setNewpasswordError(newPasswordError.message);
-      return;
+      throw { field: "newPassword", message: newPasswordError.message };
     }
 
     if (newPassword !== newPasswordConfirm) {
-      setNewpasswordConfirmError(PasswordErrorMessage.NOT_MATCH_CONFIRM);
-      return;
+      throw { field: "newPasswordConfirm", message: PasswordErrorMessage.NOT_MATCH_CONFIRM };
     }
   };
 
@@ -69,7 +54,7 @@ function ChangePasswordPage() {
     }
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -77,8 +62,24 @@ function ChangePasswordPage() {
     const newPassword = formData.get("newPassword");
     const newPasswordConfirm = formData.get("newPasswordConfirm");
 
-    validatePasswordForm(originPassword, newPassword, newPasswordConfirm);
-    changePassword(newPassword);
+    setOriginPasswordError(null);
+    setNewpasswordError(null);
+    setNewpasswordConfirmError(null);
+
+    try {
+      await validatePasswordForm(originPassword, newPassword, newPasswordConfirm);
+      await changePassword(newPassword);
+    } catch (error) {
+      if (error.field === "originPassword") {
+        setOriginPasswordError(error.message);
+      } else if (error.field === "newPassword") {
+        setNewpasswordError(error.message);
+      } else if (error.field === "newPasswordConfirm") {
+        setNewpasswordConfirmError(error.message);
+      } else {
+        console.error(error);
+      }
+    }
   };
 
   return (
