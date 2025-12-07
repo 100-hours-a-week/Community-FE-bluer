@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+@theme {
+  /* font */
+  --font-base: system-ui, "Inter", "Pretendard", sans-serif;
+
+  /* color */
+  --color-blue: var(--color-blue-600); /* Key Color */
+  --color-base-white: #ffffff;
+  --color-base-black: #000000;
+  --color-base-grey: var(--color-gray-200);
+  --color-base-error: var(--color-red-600);
+  --color-fallback: #fafafa;
+
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #f7f7f9;
+
+  --color-button-bg-primary: #000000;
+  --color-button-bg-secondary: #ffffff;
+  --color-button-text-primary: #ffffff;
+  --color-button-text-secondary: #000000;
+
+  --color-text-primary: #000000;
+  --color-text-secondary: #999999;
+
+  --color-button-bg-hover: rgba(0, 0, 0, 0.035);
+  --color-button-secondary-border: #e0e0e0;
+
+  --color-border-grey: #cbd2d9;
+  --color-input-bg-filled: #f7f7f8;
+
+  /* Size */
+  --height-header-height: 60px;
+  --height-bottom-nav-height: 50px;
+  --maxwidth-app-layout: 640px;
+}
+
+body {
+  background-color: var(--color-base-grey);
+  font-family: var(--font-base);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#root {
+  max-width: var(--maxwidth-app-layout);
+  margin: 0 auto;
+  background-color: var(--color-base-white);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+@keyframes toast-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.animate-toast {
+  animation: toast-fade 3s ease forwards;
+}
