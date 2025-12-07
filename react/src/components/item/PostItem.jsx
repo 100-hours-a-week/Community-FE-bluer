@@ -74,11 +74,13 @@ function PostItem(props) {
         <div className="col-start-2 row-start-1 flex justify-between">
           <div className="flex gap-x-1.5 self-start">
             <Text variant={"title"}>{authorName}</Text>
-            <time>
-              <Text variant={"caption"} className="text-text-secondary">
-                {formatToLocalDateTime(createdAt)}
-              </Text>
-            </time>
+            {createdAt && (
+              <time>
+                <Text variant={"caption"} className="text-text-secondary">
+                  {formatToLocalDateTime(createdAt)}
+                </Text>
+              </time>
+            )}
           </div>
           {showDropdown && (
             <div

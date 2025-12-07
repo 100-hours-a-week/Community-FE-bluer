@@ -11,5 +11,5 @@ export const formatToLocalDateTime = (dateString) => {
     hour12: false,
   };
 
-  return new Intl.DateTimeFormat("sv-SE", dateOptions).format(date).replace(",", "");
+  return new Intl.DateTimeFormat("ko-KR", dateOptions).format(date).replace(",", "");
 };
