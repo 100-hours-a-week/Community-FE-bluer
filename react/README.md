@@ -28,35 +28,31 @@
 - **댓글**: 작성/수정/삭제, 작성자만 수정·삭제 가능하도록 프론트 단 권한 체크.
 - **UX 요소**: 헤더 드롭다운(뒤로가기/로그인/프로필/비밀번호 변경/로그아웃), 공용 토스트 알림, 공용 모달 확인창.
 
-### Demo 영상
+<br />
+<br />
 
-<table>
-  <tr>
-    <td style="vertical-align: top; padding: 10px;">
-      <strong>회원가입 · 로그인</strong><br/>
-      <video src="https://github.com/user-attachments/assets/0645526e-4f31-4f1f-b014-9b7cb20dce25" controls width="360"></video>
-    </td>
-    <td style="vertical-align: top; padding: 10px;">
-      <strong>로그인/로그아웃</strong><br/>
-      <video src="https://github.com/user-attachments/assets/f42b2e06-c87b-46d1-8144-a9180c5f4fee" controls width="360"></video>
-    </td>
-  </tr>
-  <tr>
-    <td style="vertical-align: top; padding: 10px;">
-      <strong>게시글 조회/작성/수정/삭제</strong><br/>
-      <video src="https://github.com/user-attachments/assets/dbece29b-8fed-4afa-b73a-4b63838f12a8" controls width="360"></video>
-    </td>
-    <td style="vertical-align: top; padding: 10px;">
-      <strong>게시글 좋아요 Toggle / 댓글</strong><br/>
-      <video src="https://github.com/user-attachments/assets/5d47fc2b-d213-415f-b8fd-409e597f47e7" controls width="360"></video>
-    </td>
-  </tr>
-</table>
+# Demo
 
-## 디렉토리 구조
+## Image
+| 회원가입 | 로그인 | 마이페이지 |
+|---|---|---|
+| <img src="https://github.com/user-attachments/assets/3bbbc57c-c7c7-435c-811a-6c096c5c5267" width="300" /> | <img src="https://github.com/user-attachments/assets/bfb20ce3-eccf-4846-886b-4c49d55e087a" width="300" /> | <img src="https://github.com/user-attachments/assets/3f35f0e6-dec3-45fe-8681-dcd4bbe492d4" width="300" />  |
 
-- <details>
-    ```
+| 게시글 리스트 |게시글 디테일/댓글/드롭다운|
+|---|---|
+| <img src="https://github.com/user-attachments/assets/6bd7a9f6-7938-4924-87c7-188686cb5e44" width="300" /> |<img src="https://github.com/user-attachments/assets/86d4e3ca-7447-4e49-88f6-09a2d574aa54" width="300" /> | 
+
+
+
+<br />
+<br />
+
+# 디렉토리 구조
+
+<details>
+   
+    
+   ```
     .
     ├── public
     └── src
@@ -81,12 +77,15 @@
         ├── router                    # 라우터 관련 공용 로직
         ├── service                   # 이외 서비스 로직
         └── utils
-    ```
+ ```   
   </details>
 
-## 기술적 특징
+<br />
+<br />
 
-### Custom Fetch Hook
+# 기술적 특징
+
+## Custom Fetch Hook
 
 - API fetch 동작은 공용화하여 hook으로 작성하였습니다. [`src/hooks/api/useApi.jsx`](./src/hooks/api/useApi.jsx)에서 확인 가능하며, `Tanstack Query`, `SWR`에서 제공하는 api 통신으로 인한 상태값 관리 hook을 본따 만들었습니다.
   - `data, isLoading, isError, mutate` 동작을 구현했습니다.
@@ -128,7 +127,10 @@
 
     </details>
 
-### Compound 패턴 적용
+
+
+
+## Compound 패턴 적용
 
 - 학습을 위해 일부 컴포넌트엔 Compound 패턴을 적용해 보았습니다.
 - 적용 코드:
